@@ -6,6 +6,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [2.0.119] - 2026-05-27
+
+### Added
+
+- **Variable comments in ACT tooltips** — embedded Automation Compare Tool previews now parse SimaticML member comments from the opened XML file and append them to LAD/FBD operand tooltips.
+- **Compact ACT preview controls** — the embedded ACT toolbar now includes quick toggles for Overview, Interface, Attributes and a Network collapse/expand-all action.
+
+### Changed
+
+- **Cleaner default ACT preview layout** — Overview, Interface, Attributes and the ACT status/title bar are hidden by default so the network diagram gets more usable space.
+- **Readable long LAD/FBD symbols** — full operand names are wrapped into compact SVG lines with collision avoidance and a background stroke so long symbols remain visible without covering contacts and coils.
+
+---
+
+## [2.0.106] - 2026-05-11
+
+### Added
+
+- **Time-based numeric import progress for large TIA imports** — project imports, single-device imports and category program imports now show a live numeric percentage, ETA and `work` counter in the VS Code notification progress UI and in the status bar, so long-running exports no longer look frozen while TIA Portal is busy.
+- **Time-based progress for category HW Config imports** — `TIA Import: Import HW Config for All Devices in Category` now uses the same progress UI, calibrated from real multi-device hardware-import timings instead of a simple `100 / deviceCount` step.
+
+### Changed
+
+- **Progress estimation is weighted by artifact type** — SD LAD/FBD/STL blocks, SCL/DB source exports, XML exports, ACT XML preview mirrors, UDTs, tag tables and watch tables now contribute different costs to the ETA model, with an additional 10% safety buffer to keep estimates from being too optimistic on large projects.
+- **New tuning setting `tiaImport.importProgress.itemsPerSecond`** — lets you scale the built-in progress calibration up or down for faster or slower TIA environments without changing the weight model.
+
+---
+
 ## [2.0.99] - 2026-05-11
 
 ### Added

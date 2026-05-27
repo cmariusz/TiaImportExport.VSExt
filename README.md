@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-2.0.100-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-2.0.119-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -63,6 +63,7 @@
 - **Instance DB creation** — creates Instance DBs directly via API (no XML import needed)
 - **Cancellation support** — cancel long-running operations via VS Code progress UI
 - **Status bar** — real-time connection state and project info
+- **Time-based import progress** — long-running project, device, device-category, and category HW Config imports show a live numeric percentage, weighted work counter, and ETA in both the notification progress UI and the status bar; block imports are weighted by export type (SD, SCL/DB source, XML, ACT XML preview, UDTs, tag/watch tables) and category HW Config imports are weighted per device with a small safety buffer so very large TIA exports do not look stalled
 - **Compile after export** — optional PLC software compilation in TIA Portal after each export (Always / Ask / Never); results shown in OUTPUT panel
 - **Compile error tracking** — compile errors and warnings mapped to VS Code PROBLEMS panel with automatic file matching, network-to-line resolution (XML, S7DCL, SCL), and direct navigation to the error location
 
@@ -138,6 +139,7 @@ Imports that overwrite existing TIA objects show a confirmation dialog unless `t
    - **HMI** — import screens, tags, and/or connections
    - **HW Config** — import hardware configuration
 4. Files are saved under `TiaExport/Projects/<ProjectName>/Devices/` in your workspace
+5. Long-running imports show a time-based progress indicator with percentage, ETA and a numeric `work` counter. Tune the pacing with `tiaImport.importProgress.itemsPerSecond` if your TIA environment is noticeably faster or slower than the default calibration.
 
 ### Exporting to TIA Portal
 
@@ -243,21 +245,22 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 
 ## Extension Settings
 
-| Setting                                 | Description                                                                                                                                                                                                                                                                                                                                                                              | Default              |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `tiaImport.exportFolderName`          | Folder name for TIA exports                                                                                                                                                                                                                                                                                                                                                              | `TiaExport`        |
-| `tiaImport.tiaPortalPath`             | Path to TIA Portal installation                                                                                                                                                                                                                                                                                                                                                          | `C:\…\Portal V21` |
-| `tiaImport.autoConnect`               | Auto-connect on activation                                                                                                                                                                                                                                                                                                                                                               | `false`            |
-| `tiaImport.includeComments`           | Include comments in export                                                                                                                                                                                                                                                                                                                                                               | `true`             |
-| `tiaImport.exportFormat`              | Block export format (`xml` / `sd`)                                                                                                                                                                                                                                                                                                                                                   | `xml`              |
-| `tiaImport.tagTableFormat`            | Tag table export format (`xml` / `xlsx`)                                                                                                                                                                                                                                                                                                                                             | `xlsx`             |
-| `tiaImport.preserveTimestamps`        | Preserve original timestamps                                                                                                                                                                                                                                                                                                                                                             | `true`             |
-| `tiaImport.excludeSystemBlocks`       | Exclude system blocks                                                                                                                                                                                                                                                                                                                                                                    | `true`             |
-| `tiaImport.dotnetPath`                | Path to .NET runtime                                                                                                                                                                                                                                                                                                                                                                     | Auto-detect          |
-| `tiaImport.dbExportFormat`            | Global DB export format (`xml` / `db`)                                                                                                                                                                                                                                                                                                                                               | `db`               |
-| `tiaImport.showImportExportDetails`   | Show detailed import/export messages in the output log                                                                                                                                                                                                                                                                                                                                   | `false`            |
-| `tiaImport.compileAfterExport`        | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
-| `tiaImport.autoExportCrossReferences` | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
+| Setting                                     | Description                                                                                                                                                                                                                                                                                                                                                                              | Default              |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `tiaImport.exportFolderName`              | Folder name for TIA exports                                                                                                                                                                                                                                                                                                                                                              | `TiaExport`        |
+| `tiaImport.tiaPortalPath`                 | Path to TIA Portal installation                                                                                                                                                                                                                                                                                                                                                          | `C:\…\Portal V21` |
+| `tiaImport.autoConnect`                   | Auto-connect on activation                                                                                                                                                                                                                                                                                                                                                               | `false`            |
+| `tiaImport.includeComments`               | Include comments in export                                                                                                                                                                                                                                                                                                                                                               | `true`             |
+| `tiaImport.exportFormat`                  | Block export format (`xml` / `sd`)                                                                                                                                                                                                                                                                                                                                                   | `xml`              |
+| `tiaImport.tagTableFormat`                | Tag table export format (`xml` / `xlsx`)                                                                                                                                                                                                                                                                                                                                             | `xlsx`             |
+| `tiaImport.preserveTimestamps`            | Preserve original timestamps                                                                                                                                                                                                                                                                                                                                                             | `true`             |
+| `tiaImport.excludeSystemBlocks`           | Exclude system blocks                                                                                                                                                                                                                                                                                                                                                                    | `true`             |
+| `tiaImport.dotnetPath`                    | Path to .NET runtime                                                                                                                                                                                                                                                                                                                                                                     | Auto-detect          |
+| `tiaImport.dbExportFormat`                | Global DB export format (`xml` / `db`)                                                                                                                                                                                                                                                                                                                                               | `db`               |
+| `tiaImport.showImportExportDetails`       | Show detailed import/export messages in the output log                                                                                                                                                                                                                                                                                                                                   | `false`            |
+| `tiaImport.importProgress.itemsPerSecond` | Speed multiplier for the time-based import progress model used by project/device/category and category HW Config imports.`1.0` uses the built-in weighted calibration plus a 10% safety buffer; increase it if your TIA exports are faster, decrease it if they are slower.                                                                                                            | `1`                |
+| `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
+| `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
 
 ### Block Export Formats
 
@@ -423,53 +426,6 @@ The author is not liable for any direct or indirect damages, production downtime
 Users are fully responsible for validating, testing, and approving all generated or imported changes before deployment to real machines, production lines, or safety-related systems.
 
 ---
-
-## Development
-
-### Debugging (F5)
-
-Use **Run and Debug** (F5) to start an Extension Development Host:
-
-| Launch Config                              | Description                                                     |
-| ------------------------------------------ | --------------------------------------------------------------- |
-| **Run Extension**                    | Builds TypeScript + .NET wrapper, then launches                 |
-| **Run Extension (watch)**            | Starts `tsc -watch` + builds .NET wrapper once, then launches |
-| **Run Extension (watch, no dotnet)** | `tsc -watch` only — fastest when C# hasn't changed           |
-
-### Building from Source
-
-```bash
-# Install dependencies
-npm install
-
-# Build TypeScript
-npm run compile
-
-# Build .NET wrapper
-npm run build:dotnet
-
-# Build everything
-# (use VS Code task "Build All")
-
-# Watch mode (TypeScript only)
-npm run watch
-
-# Run linter
-npm run lint
-
-# Run tests (includes TS↔.NET method parity check)
-npm test
-
-# Run only method parity check
-npm run test:method-parity
-
-# Package extension (.vsix)
-npm run package
-```
-
-You can also run parity check from VS Code task: **Test: method parity**.
-
-> If `npm run package` fails on Node.js 18 with `ReferenceError: File is not defined` (from `undici`), switch to **Node.js 20+**.
 
 ## Community — Share Your Scripts & Ideas
 
