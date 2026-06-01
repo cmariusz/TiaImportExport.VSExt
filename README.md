@@ -1,15 +1,18 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-2.0.119-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-2.0.149-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
 [![Author](https://img.shields.io/badge/Author-Mariusz%20Czyrnek-orange?logo=linkedin)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
+[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY)
 
 **Bidirectional bridge between VS Code and Siemens TIA Portal** — import PLC/HMI projects from TIA Portal to local files, edit them with full VS Code + Copilot power, and export changes back. Built on the TIA Portal Openness API.
+
+If this extension helps your TIA Portal workflow, you can support ongoing development with a voluntary [PayPal donation](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY).
 
 ![TIA Portal Import Overview](Screenshots/Overview.png)
 
@@ -257,7 +260,7 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 | `tiaImport.excludeSystemBlocks`           | Exclude system blocks                                                                                                                                                                                                                                                                                                                                                                    | `true`             |
 | `tiaImport.dotnetPath`                    | Path to .NET runtime                                                                                                                                                                                                                                                                                                                                                                     | Auto-detect          |
 | `tiaImport.dbExportFormat`                | Global DB export format (`xml` / `db`)                                                                                                                                                                                                                                                                                                                                               | `db`               |
-| `tiaImport.showImportExportDetails`       | Show detailed import/export messages in the output log                                                                                                                                                                                                                                                                                                                                   | `false`            |
+| `tiaImport.showImportExportDetails`       | Show detailed import/export messages plus wrapper and TIA Openness warnings/errors in the output log                                                                                                                                                                                                                                                                                     | `false`            |
 | `tiaImport.importProgress.itemsPerSecond` | Speed multiplier for the time-based import progress model used by project/device/category and category HW Config imports.`1.0` uses the built-in weighted calibration plus a 10% safety buffer; increase it if your TIA exports are faster, decrease it if they are slower.                                                                                                            | `1`                |
 | `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
 | `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |

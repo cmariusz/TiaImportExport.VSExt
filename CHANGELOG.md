@@ -6,6 +6,86 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [2.0.148] - 2026-06-01
+
+### Fixed
+
+- **Release documentation sync on Windows** — the `git commit -m` step now passes the generated commit message as a single argument instead of routing Git through the Windows shell, preventing pathspec errors such as `pathspec 'sync' did not match any file(s) known to git`.
+
+---
+
+## [2.0.147] - 2026-06-01
+
+### Added
+
+- **Release documentation sync** — `npm run release:vsix` now automatically syncs the current `README.md` and `CHANGELOG.md` into `https://github.com/cmariusz/TiaImportExport.VSExt` after VSIX packaging, committing and pushing only when those documentation copies changed. The sync can be skipped with `--skip-docs-sync`, tested with `--docs-dry-run`, or redirected with `--docs-repo` / `--docs-branch`.
+
+---
+
+## [2.0.146] - 2026-06-01
+
+### Fixed
+
+- **TIA Portal V18 project selection with WinCC Unified references** — selecting/opening projects on some V18 installations no longer fails with `TypeLoadException` for `Siemens.Engineering.HmiUnified.HmiSoftware`. Project structure discovery now detects WinCC Unified software without a hard runtime dependency on that optional/version-sensitive Openness type, while preserving Unified HMI tree discovery on newer compatible runtimes.
+
+---
+
+## [2.0.144] - 2026-06-01
+
+### Changed
+
+- **Log Details available before connecting** — the connection panel now shows the `Log Details` toggle immediately after extension startup, before a TIA Portal connection or project selection is available.
+- **Expanded wrapper/TIA diagnostics** — when `Log Details` is enabled, bridge calls now include wrapper and TIA Openness warning/error details in the `TIA Portal Import` log, including exception details, compiler warning/error summaries and failed project-selection context.
+
+### Fixed
+
+- **Project selection diagnostics** — failed project selection now logs the wrapper error and, when available, the projects visible through TIA Openness so name mismatches are easier to diagnose.
+
+---
+
+## [2.0.141] - 2026-06-01
+
+### Fixed
+
+- **Flat HW export layout for IO devices** — importing HW configuration from TIA Portal no longer leaves redundant per-device folders under `Devices/IO_Devices` when the actual `.aml` / HW files are written directly into the flat IO devices folder. Empty stale IO device folders are cleaned up safely, while folders containing user files or previous exports are preserved.
+
+---
+
+## [2.0.134] - 2026-05-29
+
+### Fixed
+
+- **Offline native module handling** — the extension no longer attempts `npm install` when pre-built Electron binaries are already bundled in the VSIX but fail to load. `npm install` and `npm reinstall` are now skipped entirely when there is no internet access (DNS lookup to `registry.npmjs.org` is used to detect offline state). A clear diagnostic message is shown instead, listing the bundled Electron versions and suggesting an extension update as the offline fix.
+
+### Changed
+
+- **Improved offline error messages** — when native module repair fails in offline mode, the output now shows which Electron versions are bundled (`35–40`) and which version the current VS Code requires, making it easier to diagnose compatibility issues without internet access.
+- **Smaller multi-version VSIX package** — shared .NET wrapper dependencies are now deduplicated into `dotnet/TiaOpennessWrapper/bin/Release/net48/common/` after building V18–V21 wrappers. Version-specific folders now ship only their own `TiaOpennessWrapper.dll`, while the runtime resolver loads common DLLs from the shared folder.
+- **Windows x64 native payload trimming** — VSIX packaging now excludes unused `darwin`, `ia32`, and `arm64` native binaries from `edge-js` and `electron-edge-js`, while keeping Windows x64 offline binaries for Electron 35–40.
+
+---
+
+## [2.0.127] - 2026-05-28
+
+### Fixed
+
+- **ACT preview startup after multiline Network comments** — embedded Automation Compare Tool previews no longer stay on the `Loading...` screen after the Network comment line-break handling change. The generated webview script now keeps newline escape sequences valid before ACT's Angular renderer mounts.
+
+---
+
+## [2.0.123] - 2026-05-28
+
+### Fixed
+
+- **FBD row layout in ACT previews** — embedded Automation Compare Tool previews now detect the rendered diagram language per network and keep FBD operand labels on a single line, restoring the original FBD row layout while preserving the LAD wrapping fix.
+- **Multiline Network comments in ACT previews** — manual line breaks in Network comments are preserved in the embedded Automation Compare Tool view, matching the multiline layout shown in TIA Portal.
+
+### Changed
+
+- **LAD-only operand wrapping** — long operand label wrapping and collision avoidance now apply only inside `lad-network` diagrams; FBD networks still show expanded full names and enriched tooltips without generated multiline SVG rows.
+
+---
+
 ## [2.0.119] - 2026-05-27
 
 ### Added
