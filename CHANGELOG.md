@@ -6,22 +6,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
-## [2.0.148] - 2026-06-01
-
-### Fixed
-
-- **Release documentation sync on Windows** — the `git commit -m` step now passes the generated commit message as a single argument instead of routing Git through the Windows shell, preventing pathspec errors such as `pathspec 'sync' did not match any file(s) known to git`.
-
----
-
-## [2.0.147] - 2026-06-01
-
-### Added
-
-- **Release documentation sync** — `npm run release:vsix` now automatically syncs the current `README.md` and `CHANGELOG.md` into `https://github.com/cmariusz/TiaImportExport.VSExt` after VSIX packaging, committing and pushing only when those documentation copies changed. The sync can be skipped with `--skip-docs-sync`, tested with `--docs-dry-run`, or redirected with `--docs-repo` / `--docs-branch`.
-
----
-
 ## [2.0.146] - 2026-06-01
 
 ### Fixed
