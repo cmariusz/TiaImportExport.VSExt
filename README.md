@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-2.0.149-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.12-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -42,6 +42,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Graphical LAD / FBD viewer**      | Render local SimaticML XML program blocks as**interactive LAD or FBD network diagrams** directly in a VS Code panel — no TIA Portal connection required, no manual screenshots. Powered by the installed SIMATIC Automation Compare Tool renderer, embedded inside the editor and themed for the active VS Code color theme (dark and light). Each network is shown as it appears in TIA Portal, with full operand names (truncated labels like `#ManMs…gToRun` are automatically expanded to the full `#ManMsgL1ToL2.oCountMsgToRun`). |
 | **Automation Compare Tool preview** | Open local SimaticML XML code blocks, DBs, PLC tag tables and UDTs in a VS Code preview panel powered by the installed Siemens SIMATIC Automation Compare Tool renderer. External ACT launch remains available as a fallback setting.                                                                                                                                                                                                                                                                                                               |
+| **Per-network XML operations in ACT preview** | Right-click any network in the embedded ACT preview to act directly on the underlying SimaticML XML: **Open XML in network *N*** jumps the source `.xml` to the matching `<SW.Blocks.CompileUnit>` for fast inspection / hand-edit, **Clear logic in network *N*** empties just that network's `<NetworkSource>` (preserving title, comment and programming language) so the block can be re-imported as a clean stub, and **Remove network *N*** deletes the whole CompileUnit. Edits are text-based (no XML reformatting) so `git diff` stays small and the file stays round-trippable through TIA Portal Import. |
 | **Git revision diff in ACT**        | Compare a local `.xml` block or `.s7dcl` SD block against another Git revision in the same embedded ACT webview. The command materializes the selected revisions to a temporary folder, resolves `.s7dcl` files through their `.tiaPreview/*.xml` mirrors, and opens a graphical side-by-side ACT diff inside VS Code.                                                                                                                                                                                                                      |
 
 ### Export to TIA Portal (local files → TIA)
@@ -81,6 +82,29 @@ The extension exposes **18 Language Model Tools** (prefix `tia_`) plus a `@tia` 
 - **Analysis** — `tia_export_cross_references` (full PLC cross-reference dump to JSONL/CSV, including unused symbols)
 
 Imports that overwrite existing TIA objects show a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled. The chat participant `@tia` is registered as `tia.assistant` and has the same toolset available.
+
+### External CLI Bridge
+
+External scripts can drive the same TIA workflows through a localhost-only JSON bridge.
+
+**The bridge is opt-in and disabled by default** — no listener is started and no `.tia/` folder is created until you enable it. Turn it on in any of these ways:
+
+- Click the **CLI Bridge** row in the *TIA Connection* view (toggles between `Off` / `On`).
+- Click the **terminal** icon (*TIA Import: Start CLI Bridge*) in the *TIA Connection* view title bar — you will be prompted to enable it.
+- Set `tiaImport.cli.enabled` to `true` in VS Code Settings.
+
+Once enabled, the extension writes `.tia/cli.json` in the workspace with the current host, port and per-session bearer token. Scripts must read that file at runtime and send authenticated `POST /api` requests. Do not hard-code or commit the token. Toggling the setting off stops the listener and removes the state file.
+
+The packaged helper wraps the bridge:
+
+```powershell
+npm run tia:cli -- current_project --pretty
+npm run tia:cli -- open_project --filePath "C:\Projects\Demo.ap21" --pretty
+npm run tia:cli -- import_blocks --device PLC_1 --blocks FB10,FC20 --pretty
+npm run tia:cli -- import_file --device PLC_1 --filePath "C:\Projects\Demo\Block.xml" --overwriteExisting true
+```
+
+Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`) and SD preview mirror behavior. Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
 
 ---
 

@@ -6,6 +6,44 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+
+## [3.0.11] - 2026-06-17
+
+### Changed
+
+- **CLI bridge is now opt-in** — `tiaImport.cli.enabled` defaults to `false`. The localhost JSON listener no longer starts on activation and no `.tia/cli.json` state file is created until the user explicitly enables it. The setting is now hot-reloadable: toggling it on starts the bridge immediately and toggling it off stops the listener and removes the state file.
+
+### Added
+
+- **CLI Bridge toggle in the TIA Connection view** — a new `CLI Bridge On/Off` row sits next to *TIA Portal Vxx* / *Log Details*. Clicking it (or running `TIA Import: Toggle CLI Bridge`) flips `tiaImport.cli.enabled` without opening Settings.
+- **Start CLI Bridge action in the view title bar** — the terminal icon (`TIA Import: Start CLI Bridge`) is visible on the Connection view before connecting to TIA Portal. When the bridge is disabled, it shows an info prompt with **Enable now** / **Open Settings** actions; when enabled, it confirms the bridge is running.
+- **Friendly guidance when the bridge is off** — external scripts that try to use the bridge while it's disabled still get the existing `.tia/cli.json not found` error pointing them at `tiaImport.cli.enabled`; users invoking the action from the palette now get an actionable dialog instead of a silent no-op.
+- **ACT preview: per-network XML actions** — right-clicking a network in the embedded Automation Compare Tool preview now exposes new actions on the underlying SimaticML XML:
+  - **Open XML in network *N*** opens the source `.xml` file and jumps the editor to the matching `<SW.Blocks.CompileUnit>` (the Nth network in document order), so the user can inspect or hand-edit that exact network without scrolling.
+  - **Clear logic in network *N*** replaces only the `<NetworkSource>...</NetworkSource>` body of the selected network with a self-closing `<NetworkSource />`, preserving the network envelope (title, comment, programming language). The preview refreshes in-place after the file is saved. Useful for producing clean stubs before re-import to TIA Portal.
+  - These actions live alongside the existing **Remove network *N***. All three editors are text-based (they do not re-serialize the document through a generic XML library), so unrelated formatting is preserved and `git diff` review and TIA Portal round-trips stay clean.
+
+
+## [3.0.0] - 2026-06-10
+
+Major version bump for the external automation CLI bridge and script-driven TIA Portal workflows.
+
+### Added
+
+- **Local JSON CLI bridge for external scripts** — the extension can now expose a localhost-only authenticated API for PowerShell, Python, Node.js and other automation clients. When `tiaImport.cli.enabled` is true, the bridge writes the active host, port and per-session token to `.tia/cli.json`; clients call `POST /api` with `Authorization: Bearer <token>`. The packaged helper is available as `npm run tia:cli -- <command>`.
+- **Headless project open from CLI** — `open_project --filePath "C:\Projects\Demo.ap21"` opens a TIA Portal project directly by path without showing the project picker, then refreshes the extension model for subsequent CLI operations.
+- **CLI-friendly project and diagnostics commands** — external scripts can now call `current_project`, `prepare_workspace`, `get_logs`, `connect`, `disconnect` / `close_project`, device/block discovery, import/export, compile, diagnostics and cross-reference commands through the same bridge.
+- **Example Python automation client** — `Documentation/Templates/Tools/cli_example.py` demonstrates reading `.tia/cli.json`, authenticating against the bridge and driving project export from an external script.
+
+### Changed
+
+- **CLI block import honours extension file-format settings** — `import_blocks` / `tia_import_blocks` now pulls selected blocks, or all blocks from a device, using the configured `tiaImport.exportFormat`, `tiaImport.dbExportFormat` and SD preview mirror behavior instead of forcing XML. `import_file` and `import_folder` remain the workspace-to-TIA push commands.
+- **CLI documentation and workspace templates refreshed** — README, generated CLI instructions and Copilot workspace instructions now describe the bridge state file, authentication model, command aliases and the distinction between pulling blocks from TIA and pushing local files back to TIA.
+- **Native dependency detection hardened for modern VS Code/Electron** — the startup checker validates the actual `electron-edge-js` payload (`lib/edge.js` and `edge_nativeclr.node`) and accepts future compatible versions via the minimal dependency range `electron-edge-js >=8.2.2`.
+
+---
+
+
 ## [2.0.146] - 2026-06-01
 
 ### Fixed
@@ -198,7 +236,7 @@ Major version bump consolidating the autonomous-agent feature wave.
   - `TIA Import: Import Library Types` — export the entire Project Library Types tree
   - `TIA Import: Import Library Folder` — export a single user folder (recursive)
   - `TIA Import: Import Library Type` — export a single library type
-  Files land under `<workspace>/<projectName>/Library/Types/...`, mirroring the in-project folder structure. Master copies are intentionally not exported.
+    Files land under `<workspace>/<projectName>/Library/Types/...`, mirroring the in-project folder structure. Master copies are intentionally not exported.
 
 ### Changed
 
