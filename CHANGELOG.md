@@ -6,6 +6,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.56] - 2026-06-22
+
+### Fixed
+
+- **HW Config export path for devices inside TIA Portal folders** — importing hardware configuration for PLCs, HMIs and IO devices placed in TIA Portal device folders now writes files to the correct mirrored workspace path: `Devices/<Category>/<FolderPath>/<Device>/DeviceConfiguration`. Previously foldered PLCs landed directly under `Devices/<Category>/<Device>/DeviceConfiguration` because the TypeScript callers ignored `folderPath`.
+- **TIA folder structure for IO devices** — IO devices inside TIA Portal folders are now exported with their folder hierarchy preserved (`Devices/IO_Devices/<FolderPath>/<Device>/DeviceConfiguration`) instead of being flattened into `Devices/IO_Devices/`. Root IO devices still use the legacy flat layout for backward compatibility.
+
+### Changed
+
+- **Unified HW Config path builder** — all HW Config import callers now use the shared `buildDeviceHwConfigPath` helper, which centralizes the decision between legacy flat IO layout and per-device folder-mirrored layout.
+
+## [3.0.46] - 2026-06-22
+
+### Added
+
+- **Export complete Software Unit to TIA Portal** — right-click a `Units/<UnitName>/` folder in VS Code Explorer and choose **Export Software Unit to TIA Portal** to push the entire unit back to TIA Portal V18+. The command reads `_unit.json`, creates the Software Unit if it does not exist, applies metadata (`author`, `comment`, `namespacePreset`), imports `Program blocks`, `PLC data types` and `PLC tags`, and cleans up orphaned items that no longer exist locally.
+- **Software Unit export Copilot tool** — new Language Model Tool `tia_import_unit` lets Copilot push a complete Software Unit folder into TIA Portal in one call. The folder path is optional and auto-detected when the workspace contains a single unit export.
+
+### Fixed
+
+- **CLI Bridge toggle respects workspace settings** — `TIA Import: Toggle CLI Bridge` now flips `tiaImport.cli.enabled` at the same configuration level where it is currently defined (workspace or global), so the On/Off state in the Connection panel updates correctly even when the setting is overridden in workspace settings.
+- **ACT preview mirror for Software Units** — importing Software Units with `tiaImport.exportFormat` set to `sd` now writes the parallel XML preview mirror into `Units/<UnitName>/.tiaPreview/Program blocks/...` instead of the device-level `.tiaPreview` folder. `findPreviewXmlForS7dcl` resolves unit paths correctly so the Automation Compare Tool can open LAD/FBD block previews inside Software Units. Fixed a bridge issue where the `s7dclPreviewXmlEnabled` flag was not passed to the .NET export call.
+- **Software Unit tag table format** — `tiaImport.tagTableFormat` is now honored when exporting Software Units. When set to `xlsx`, tag tables inside `Units/<UnitName>/PLC tags/` are exported as `.xlsx` (XML sources are removed), matching the behavior for device-level tag tables.
+- **Devices inside TIA Portal folders** — PLC/HMI/IO devices placed inside device folders are now discovered, displayed in the Project Structure tree under their folder path, and can be imported/exported. Device exports on disk follow the folder hierarchy: `Devices/<Category>/<FolderPath>/<Device>`. `FindDevice` resolves devices regardless of whether they are at the project root or inside a `DeviceGroup`.
+- **Per-device HW Config for foldered PLCs** — `ImportDeviceHwConfig` now uses the shared `IDeviceLocator`, so it can resolve PLCs inside `DeviceGroups`. It also exports only the selected device instead of falling back to a project-wide HW Config export.
 
 ## [3.0.11] - 2026-06-17
 
@@ -22,7 +47,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
   - **Open XML in network *N*** opens the source `.xml` file and jumps the editor to the matching `<SW.Blocks.CompileUnit>` (the Nth network in document order), so the user can inspect or hand-edit that exact network without scrolling.
   - **Clear logic in network *N*** replaces only the `<NetworkSource>...</NetworkSource>` body of the selected network with a self-closing `<NetworkSource />`, preserving the network envelope (title, comment, programming language). The preview refreshes in-place after the file is saved. Useful for producing clean stubs before re-import to TIA Portal.
   - These actions live alongside the existing **Remove network *N***. All three editors are text-based (they do not re-serialize the document through a generic XML library), so unrelated formatting is preserved and `git diff` review and TIA Portal round-trips stay clean.
-
 
 ## [3.0.0] - 2026-06-10
 
@@ -42,7 +66,6 @@ Major version bump for the external automation CLI bridge and script-driven TIA 
 - **Native dependency detection hardened for modern VS Code/Electron** — the startup checker validates the actual `electron-edge-js` payload (`lib/edge.js` and `edge_nativeclr.node`) and accepts future compatible versions via the minimal dependency range `electron-edge-js >=8.2.2`.
 
 ---
-
 
 ## [2.0.146] - 2026-06-01
 
