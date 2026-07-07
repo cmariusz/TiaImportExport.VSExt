@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.63] - 2026-07-07
+
+### Fixed
+
+- **HMI screen export error reporting** — WinCC Unified devices that cannot be exported through the TIA Portal Openness API now return a clear error message instead of being silently skipped with an empty error dialog.
+- **Empty error message in "Import HMI screens" command** — `importHmiScreensCommand` now falls back to the first detailed message from the .NET wrapper when `result.error` is blank, so the user sees why the import failed.
+
+### Changed
+
+- **WinCC Unified screen export fallback** — `ExportUnifiedScreen` now attempts the classic `Screen.Export(FileInfo, ExportOptions)` method via reflection before trying directory-based export variants. This aligns the Unified path with the official Siemens Openness example for classic HMI panels when the runtime type supports it.
+
 ## [3.0.56] - 2026-06-22
 
 ### Fixed
