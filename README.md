@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.0.99-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.103-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -34,6 +34,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 | **Import HMI**             | Import HMI screens, tags, and connections                                                                                                                                                                                                            |
 | **Import HW Config**       | Import hardware configuration as XML or**CAx / AutomationML (`.aml`)**. Mirrors TIA Portal device folders on disk; root IO devices stay flat in `Devices/IO_Devices/`. Toggle format via *Format HW* in the Connection panel.                                                                                                                   |
 | **Import Project Library** | Import the**Project Library &gt; Types** tree (FBs, FCs, UDTs, …) — per-type format selection: LAD/FBD/STL → `.s7dcl`/`.s7res` (V20+), SCL → `.scl`, UDT/GRAPH/CFC/SFC/DB → `.xml`. Master copies are intentionally not imported. |
+| **Import Languages & Project Texts** | Import project language settings (supported / active / editing / reference languages → `languages.json`) and export project texts (Languages & resources) to XLSX workbooks for translation. V21+ writes one workbook with all target languages; V18–V20 write one per language pair. |
 | **Project Explorer**       | Browse the full TIA Portal project hierarchy in the VS Code sidebar                                                                                                                                                                                  |
 
 > **HW Config folder layout:** `Import HW Config` mirrors TIA Portal folder structure on disk. Devices at the project root use `Devices/<Category>/<Device>/DeviceConfiguration/`, except root IO devices which keep the legacy flat `Devices/IO_Devices/` layout. Devices placed inside TIA Portal device folders are exported under `Devices/<Category>/<FolderPath>/<Device>/DeviceConfiguration/`.
@@ -54,6 +55,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 | **Export Blocks**              | Export XML / SCL / SD / DB source files back to TIA Portal                                                                                                                                        |
 | **Export Software Unit**       | Export a complete V18+ Software Unit folder (`Units/<UnitName>/{Program blocks, PLC data types, PLC tags}`) back to TIA Portal; creates the unit if missing and applies `_unit.json` metadata |
 | **Export Tag Tables**          | Export XML or XLSX tag tables to TIA Portal                                                                                                                                                       |
+| **Export Project Texts**       | Push a translated project texts XLSX back into the same TIA project (Languages & resources), with optional source-language update                                                                 |
 | **Export UDTs / Watch Tables** | Export data types and watch tables                                                                                                                                                                |
 | **Export HW Config**           | Export hardware configuration as XML or**CAx / AutomationML (`.aml`)** via `CaxProvider`                                                                                                |
 | **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → HW)                                                                                    |
@@ -76,11 +78,12 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 ### Copilot / AI Agent Integration
 
-The extension exposes **22 Language Model Tools** (prefix `tia_`) plus a `@tia` chat participant, so GitHub Copilot (and any other VS Code LM-tool consumer) can drive TIA Portal end-to-end without manual clicks:
+The extension exposes **25 Language Model Tools** (prefix `tia_`) plus a `@tia` chat participant, so GitHub Copilot (and any other VS Code LM-tool consumer) can drive TIA Portal end-to-end without manual clicks:
 
 - **Connection / discovery** — `tia_connect`, `tia_disconnect`, `tia_list_projects`, `tia_select_project`, `tia_refresh`, `tia_list_devices`, `tia_list_blocks`
 - **Pull from TIA → workspace** — `tia_export_block`, `tia_export_device`, `tia_export_project` (entire project), `tia_export_hw_config` (per-device or project-wide HW Config; honours `tiaImport.hwConfigFormat`)
 - **Push workspace → TIA** — `tia_import_file`, `tia_import_folder` (blocks, tags, UDTs, watch tables), `tia_import_unit` (complete Software Unit), `tia_import_hw_config` (HW Config XML/AML — required for HW; `tia_import_file` does not handle HW)
+- **Languages & project texts** — `tia_get_project_languages` (language settings), `tia_export_project_texts` (project texts to xlsx for translation), `tia_import_project_texts` (re-import translated xlsx into the same project)
 - **Compile loop** — `tia_compile`, `tia_get_problems`, `tia_fix_compile_errors` (orchestrates import → compile → diagnostics until clean or `tiaImport.lmTools.maxFixIterations` is reached)
 - **Analysis** — `tia_export_cross_references` (full PLC cross-reference dump to JSONL/CSV, including unused symbols)
 
@@ -169,6 +172,7 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
    - **HMI** — import screens, tags, and/or connections
    - **HW Config** — import hardware configuration
    - **Software Unit** — import a complete V18+ Software Unit (blocks, UDTs, tags) to `Devices/<Category>/<Device>/Units/<UnitName>/`
+   - **Languages & resources** — import language settings (`languages.json`) and export project texts to XLSX for translation
 4. Files are saved under `TiaExport/Projects/<ProjectName>/Devices/` in your workspace
 5. Long-running imports show a time-based progress indicator with percentage, ETA and a numeric `work` counter. Tune the pacing with `tiaImport.importProgress.itemsPerSecond` if your TIA environment is noticeably faster or slower than the default calibration.
 
@@ -180,6 +184,7 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
    - **Export Blocks to TIA** — for program blocks (`.xml`, `.scl`, `.s7dcl`, `.db`)
    - **Export Software Unit to TIA Portal** — for a complete Software Unit folder exported from TIA Portal V18+ (`Units/<UnitName>/`)
    - **Export XLSX Tags to TIA Portal** — for XLSX tag tables
+   - **Export Project Texts to TIA Portal** — for translated project texts (`.xlsx` under `Languages & resources/`)
    - **Export to TIA - Program and HW** — unified export (program + HW config)
    - **Export to TIA - Program without HW** — unified export (program only)
    - **Export to TiaPortal: HW Config XML** — hardware configuration
@@ -224,6 +229,7 @@ When you connect to TIA Portal (or run the `TIA Import: Prepare Workspace` comma
 │   ├── .tia-cache/                   # Temporary cache (git-ignored)
 │   └── Projects/
 │       └── <ProjectName>/
+│           ├── Languages & resources/    # languages.json + ProjectTexts_*.xlsx
 │           └── Devices/
 │               ├── PLCs/
 │               │   └── <PLC_Name>/
@@ -346,6 +352,7 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 | `TIA Import: Import HW Configuration`                     | Import full HW configuration                      |
 | `TIA Import: Import Device HW Configuration`              | Import HW config for a single device              |
 | `TIA Import: Import Programs for All Devices in Category` | Import all devices in a category                  |
+| `TIA Import: Import Languages & Project Texts`          | Import language settings + project texts (xlsx)   |
 
 ### Export Commands (local → TIA)
 
@@ -357,6 +364,7 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 | `Export to TiaPortal: XML Folder`         | Export an XML folder                               |
 | `Export XLSX Tags to TIA Portal`          | Export XLSX tag table to TIA Portal                |
 | `Export XLSX Tags to TIA Portal (Folder)` | Export all XLSX tag tables in a folder             |
+| `Export Project Texts to TIA Portal`      | Import a project texts xlsx into the TIA project   |
 | `Export to TiaPortal: HW Config XML`      | Export HW config (XML/AML)                         |
 | `Export to TiaPortal: HW Config Folder`   | Export HW config folder                            |
 | `Export to TIA - Program and HW`          | Unified export (program + HW config)               |
