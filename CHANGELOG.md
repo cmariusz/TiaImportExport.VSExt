@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.103] - 2026-07-18
+
+### Added
+
+- **Languages & resources support** — new `Languages & resources` node in the Project Explorer with inline icons and right-click actions for project languages and project texts:
+  - **Import Languages & Project Texts from TIA** — reads the project language settings (supported / active languages, editing and reference language) into `languages.json` and exports project texts to `Projects/<Project>/Languages & resources/` as Excel workbooks ready for translation. On TIA Portal V21+ a single `ProjectTexts_<source>.xlsx` with all target languages is written; on V18–V20 one workbook per source-target language pair is produced (older Openness API exposes only the pairwise export overload).
+  - **Export Project Texts to TIA Portal** — pushes a (translated) project texts workbook back into the same TIA project, with an optional source-language update. Available from the tree node, from the VS Code Explorer context menu on `.xlsx` files under `Languages & resources/`, and via the Command Palette. As in the TIA Portal UI, texts can only be re-imported into the project they were exported from.
+- **Copilot tools for languages & project texts** — three new Language Model Tools (25 total): `tia_get_project_languages` (read language settings), `tia_export_project_texts` (project texts to xlsx) and `tia_import_project_texts` (xlsx re-import with user confirmation). The CLI bridge mirrors them as `get_project_languages`, `export_project_texts` and `import_project_texts`.
+
 ## [3.0.97] - 2026-07-18
 
 ### Fixed
