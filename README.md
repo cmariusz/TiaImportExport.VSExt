@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.0.98-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.99-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)

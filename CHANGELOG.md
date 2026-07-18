@@ -17,10 +17,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 - Special thanks to [@KaiserFranz-98](https://github.com/KaiserFranz-98) for the outstanding bug report in [issue #5](https://github.com/cmariusz/TiaImportExport.VSExt/issues/5) — complete with a full stack trace, timing analysis, an accurate suspected root cause and a suggested fix. Reports of this quality make debugging a pleasure.
 
-### Changed
-
-- **Much smaller VSIX package (~45 MB → ~18 MB, 1402 → 654 files)** — the extension now ships only runtime files: compiled `out/`, the .NET wrapper Release DLLs, workspace templates and the production `node_modules` dependencies. Dev/release scripts (except the user-facing `scripts/tia-cli.js`), tests, .NET test assemblies and `.csproj`/`.sln` files, C# sources, PDB debug symbols, native binaries for non-x64 platforms, screenshots and repo-root scratch files are no longer packaged. `.vscodeignore` was rewritten with narrowly scoped negations, because vsce always lets a negated pattern win over ignore patterns regardless of order.
-
 ## [3.0.63] - 2026-07-07
 
 ### Fixed
