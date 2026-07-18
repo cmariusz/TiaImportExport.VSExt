@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.97] - 2026-07-18
+
+### Fixed
+
+- **Project selection crash with `EngineeringObjectDisposedException` (TIA Portal V19)** — "Connect to TIA Portal" auto-selection could fail on large/deep hardware configurations after ~30 s, even though TIA Portal kept running ([issue #5](https://github.com/cmariusz/TiaImportExport.VSExt/issues/5)). `ProjectStructureBuilder.BuildDeviceStructure` walked the `DeviceItems` tree three separate times while holding live Openness enumerators open across recursion and per-node IPC calls (`GetService`/`GetAttribute`), so TIA Portal could recycle the enumerator session mid-walk. The device tree is now scanned in a single pass with every level materialized (`ToList()`), and PLC/HMI software structures are built only after the walk finishes, so no device-item enumerator stays open while block/tag enumerations run. This also cuts most of the redundant IPC round-trips during project selection.
+- **Automatic retry when TIA Portal recycles an Openness session** — `TiaConnectionManager` now catches `EngineeringObjectDisposedException` while building the project structure, re-fetches the project and retries (up to 3 attempts) before failing, in both `SelectProjectAsync` and `OpenProjectFromPath`.
+
+### Thanks
+
+- Special thanks to [@KaiserFranz-98](https://github.com/KaiserFranz-98) for the outstanding bug report in [issue #5](https://github.com/cmariusz/TiaImportExport.VSExt/issues/5) — complete with a full stack trace, timing analysis, an accurate suspected root cause and a suggested fix. Reports of this quality make debugging a pleasure.
+
 ## [3.0.63] - 2026-07-07
 
 ### Fixed
