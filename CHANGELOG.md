@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.113] - 2026-07-20
+
+### Added
+
+- **Connection phase timing diagnostics** — every phase of "Connect to TIA Portal" is now measured inside the .NET wrapper and reported in the output channel: Openness resolver initialization, `GetProcesses`, `Attach` to the running portal, project enumeration, TIA Portal start / project open (file-based path, including the time the project file dialog was open) and the full project-structure build with retry count after an Openness session loss. Connect / select / open operations also log their total duration, and each bridge call gets a `Bridge call '<method>' completed in X ms` debug entry.
+- **Project structure read statistics** — after project selection the log breaks the structure build down by element category (blocks, tag tables, UDTs, watch tables, software units, device-item scans, HMI, library master copies / types) with item counts, plus a top-10 list of the slowest devices with a scan/PLC time split and block/tag-table counts — making it obvious which parts of a large project dominate selection time.
+- **New `GetHmiSoftwareStructure` bridge method** — builds the full HMI structure (screens, tags, connections) of a single device on demand, complementing the lazy HMI loading below.
+- **Timing logs are gated behind Log Details** — phase timings and structure statistics are only written when `tiaImport.showImportExportDetails` is enabled, keeping normal logs compact.
+
+### Changed
+
+- **Faster project selection: HMI structure loads lazily** — selection no longer enumerates HMI screens, tags and connections up front. Devices report their HMI software as a stub (name/type only); the full structure is read via `GetHmiSoftwareStructure` the first time the HMI node is expanded in the Project Explorer and is cached for the rest of the session. Measured on a 34-device project with one WinCC panel: ~8 s of the ~22 s selection time eliminated. HMI export commands are unaffected (they read from TIA Portal directly, not from the cached structure).
+- **Faster project selection: flat tag/UDT/watch-table lists without a second Openness enumeration** — the backward-compatibility flat lists on PLC software are now flattened in memory from the group trees already read, instead of enumerating the same Openness collections twice (~3 s saved on the same project).
+
 ## [3.0.103] - 2026-07-18
 
 ### Added
