@@ -15,6 +15,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
   - **Export Project Texts to TIA Portal** — pushes a (translated) project texts workbook back into the same TIA project, with an optional source-language update. Available from the tree node, from the VS Code Explorer context menu on `.xlsx` files under `Languages & resources/`, and via the Command Palette. As in the TIA Portal UI, texts can only be re-imported into the project they were exported from.
 - **Copilot tools for languages & project texts** — three new Language Model Tools (25 total): `tia_get_project_languages` (read language settings), `tia_export_project_texts` (project texts to xlsx) and `tia_import_project_texts` (xlsx re-import with user confirmation). The CLI bridge mirrors them as `get_project_languages`, `export_project_texts` and `import_project_texts`.
 
+### Fixed
+
+- **Openness session torn down by the .NET GC ~30 s after connect — the real root cause of [issue #5](https://github.com/cmariusz/TiaImportExport.VSExt/issues/5)** — `TiaConnectionManager` now roots the `TiaPortalProcess` attach proxy (and the process list) for the whole connection lifetime. Every Openness proxy releases its remote counterpart when the .NET finalizer runs; the attach proxies were previously held only in locals, so the GC eventually collected them and TIA Portal disposed the entire attached session — first surfacing as a disposed `IEnumerator<DeviceItem>` mid-walk, then as a disposed root `TiaPortal` on `get_Projects()`. This explains the variable 27–36 s failure window on a perfectly healthy TIA Portal and why an identical standalone walk with a rooted process object was stable (diagnostics by [@KaiserFranz-98](https://github.com/KaiserFranz-98), who re-ran the same walk from PowerShell against the same TIA instance). Completes the fix started in 3.0.97.
+- **Project selection retry now re-attaches instead of reusing the dead session** — when `BuildProjectStructureWithRetry` catches `EngineeringObjectDisposedException`, it re-attaches to the running TIA Portal process (rooting the new attach proxies) and rebuilds on the fresh session, instead of calling `get_Projects()` on the already-disposed one.
+- **Clear log when the session dies during selection** — `selectProject` now explicitly reports that the connection is broken and a reconnect is required, instead of only a generic "could not be selected" warning followed by a misleading "Connected!" line.
+
 ## [3.0.97] - 2026-07-18
 
 ### Fixed
