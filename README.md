@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.0.116-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.123-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -452,6 +452,7 @@ The extension uses **electron-edge-js** to call the .NET `TiaOpennessWrapper.dll
 
 - **Windows only** — TIA Portal and the Openness API are Windows-only
 - **Know-how protected blocks** — cannot be exported; the extension detects and skips placeholder files
+- **Windows-forbidden characters in TIA object names** — block, block group, tag table, UDT and watch table names become file/folder names on import, so names containing characters Windows forbids (`\ / : * ? " < > |`) cannot be imported, even though TIA Portal itself allows them. Such items are reported per item in the OUTPUT panel as `... name contains characters not allowed in file names: <name>` and skipped — the rest of the import continues normally. Rename the object in TIA Portal to make it importable.
 - **SD format (LAD/FBD)** — only supports LAD/FBD and mixed blocks (no protected blocks)
 - **Large projects** — full project import may take several minutes depending on project size
 
