@@ -6,6 +6,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.122] - 2026-07-21
+
+### Fixed
+
+- **HW Config import failed for GSD / distributed I/O devices with `Device '<technical name>' not found`** — the import commands pass the technical device name (e.g. `GSD device_92`) to the .NET wrapper, whose `FindDevice` lookup only fell back to technical-name matching in the root `Devices` list and in `DeviceGroups`, but not in `UngroupedDevicesGroup` — where GSD and distributed I/O devices actually live. Devices whose technical name differs from the name shown in the Project tree (e.g. `CS01-Q26-A76` vs `GSD device_92`) therefore failed to import. `FindDevice` now also matches by technical name in `UngroupedDevicesGroup`, fixing HW Config import (whole project, category and single device) as well as any other operation addressing such devices by technical name.
+
+## [3.0.121] - 2026-07-21
+
+### Added
+
+- **Windows file-name validation for single block / block group import** — the "Import Block" and "Import Block Group" commands now fail fast with a clear message when the TIA object name contains characters Windows forbids in file or folder names (`\ / : * ? " < > |`), instead of surfacing a raw .NET path error.
+
+### Fixed
+
+- **Block import no longer aborts on the first failing block** — a block whose name cannot be used as a file name (e.g. `DP: ALARM`, `I/O_FLT2`) previously threw while the export path was being built, outside the per-block error handling, which aborted the import of all remaining blocks of the PLC with only a generic `Error importing blocks: ...` line. Each block is now exported inside its own error handling, so the import continues with the remaining blocks and every failure is reported per block.
+- **Clear per-item messages for names Windows forbids** — blocks, block groups, PLC tag tables, UDTs, watch tables and their groups are now validated against the Windows file-name rules up front and reported as `... name contains characters not allowed in file names: <name>` with a hint to rename the object in TIA Portal, instead of the raw "Illegal characters in path" / generic `Error exporting ...` messages.
+- **A failing group no longer aborts the remaining groups** — subgroup export (blocks, tag tables, UDTs, watch tables) is isolated per group, so one bad group name no longer skips everything that follows.
+- **Per-block messages are shown even when the block import fails** — the full project import previously discarded the detailed message list whenever the overall block export reported failure, hiding which blocks had already failed.
+
 ## [3.0.114] - 2026-07-20
 
 ### Added
