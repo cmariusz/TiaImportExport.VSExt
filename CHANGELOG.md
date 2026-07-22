@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.126] - 2026-07-22
+
+### Fixed
+
+- **Extension failed to start with `Cannot find module '../tools/checkMono'` after installing 3.0.123** — the VSIX packaging rules (`.vscodeignore`) excluded `tools/checkMono.js` from both `edge-js` and `electron-edge-js` as supposedly build-time-only files, but `lib/edge.js` requires that module at load time, so the freshly installed extension could not connect to TIA Portal at all. Both files are packaged again.
+
+### Added
+
+- **Runtime self-repair of the edge-js loader files** — the extension now embeds base64 copies of every JS file the `electron-edge-js` / `edge-js` / `edge-cs` family requires at load time (generated at build time from the actual require graph, `scripts/generate-edge-repair-manifest.js`). When such a require fails because a file went missing from the install directory (broken VSIX, partial extension update, antivirus quarantine), the bridge restores the missing files from the embedded manifest and retries once, instead of failing with "edge-js not available - cannot connect to TIA Portal". Only missing files are restored; existing files are never overwritten.
+- **VSIX content verification on every packaging path** — `npm run package`, `npm run release:vsix` and the CI publish workflow now walk every static `require()` reachable from the runtime packages and fail the build if any resolved file — or any dynamically loaded asset (native `.node` binaries, CLR bootstrap DLLs, .NET wrapper DLLs, `out/extension.js`) — is missing from the package, so this class of packaging error is caught before release instead of on the user's machine.
+
 ## [3.0.122] - 2026-07-21
 
 ### Fixed
