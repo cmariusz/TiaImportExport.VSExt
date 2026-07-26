@@ -6,6 +6,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.0.145] - 2026-07-25
+
+### Added
+
+- **Built-in LAD / FBD / SCL block viewer** — local program blocks now render as interactive network diagrams in a VS Code panel without any external tools. The viewer reads SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents and shows:
+  - a TIA-style block interface table (sections Input / Output / InOut / Static / Temp / Constant in canonical order, columns Name, Data type, Default value, Retain, Accessible, Writable, Visible, Setpoint, Supervision, Comment) with collapsible nesting for Struct / UDT / FB instance members,
+  - **LAD** rungs with power rail, NO/NC contacts, coils and parallel branches (dedicated renderer module, no FBD code sharing),
+  - **FBD** networks with instruction boxes, SR/RS flip-flops, edge boxes, comparators and call instances with named pins, instance names and literal/variable operands — including system instructions with an instance DB (e.g. RCVDP/SENDDP) drawn as call boxes,
+  - **SCL** networks with configurable syntax highlighting (`--plc-scl-*` CSS variables for keyword / comment / string / number),
+  - theme-aware canvas colors (the whole diagram follows the active VS Code theme), operand tooltips with interface comments (resolved through dotted struct paths like `ioHMI.Sts.Act_M_Remote`), zoom / pan / fit-width, per-network and expand-all / collapse-all folding, and empty networks rendered as empty rungs.
+- **Pluggable viewer architecture** — source formats register in `parser/blockSource.ts` (SimaticML XML, S7 `.s7dcl` today; other vendors' formats slot in without touching the graphics layer) and graphic languages register in `renderer/languageRenderer.ts` (FBD, LAD). One shared composer (`renderer/blockRenderer.ts`) drives both the webview and the standalone HTML preview (`scripts/generate-preview-html.ts`), so previews from every source format look identical.
+
+### Changed
+
+- **Built-in viewer is the default preview engine** — `tiaImport.previewEngine` now defaults to `customViewer` (previously `act`). The right-click Explorer menu for `.xml` and `.s7dcl` files offers the built-in viewer out of the box; SIMATIC Automation Compare Tool remains available as an opt-in engine (still required for "Compare with Git Revision in ACT").
+- **SD → XML preview mirror is off by default** — `tiaImport.s7dclPreviewXml.enabled` now defaults to `false`, because the built-in viewer reads `.s7dcl` directly and the `.tiaPreview/*.xml` mirror is only needed for ACT preview / ACT Git diffs.
+
+### Fixed
+
+- **Custom viewer no longer requires the XML mirror for `.s7dcl`** — the "Preview LAD/FBD (Custom Viewer)" command previously redirected `.s7dcl` files to the cached `.tiaPreview/*.xml` mirror and refused to open without it. The command now passes the `.s7dcl` straight to the built-in parser (the matching `.s7res` is read as a sibling so network titles and comments resolve), so the preview works with `tiaImport.s7dclPreviewXml.enabled` off.
+- **Duplicate `Dev: watch` task** — `.vscode/tasks.json` declared two tasks with the same label and VS Code used the first one, which lacked the webview watch build; in watch mode the viewer bundle could go stale (e.g. missing SCL highlighting after F5).
+
 ## [3.0.126] - 2026-07-22
 
 ### Fixed
