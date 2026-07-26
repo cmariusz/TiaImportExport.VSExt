@@ -6,7 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
-## [3.0.145] - 2026-07-25
+## [3.0.150] - 2026-07-25
 
 ### Added
 
@@ -22,11 +22,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 - **Built-in viewer is the default preview engine** — `tiaImport.previewEngine` now defaults to `customViewer` (previously `act`). The right-click Explorer menu for `.xml` and `.s7dcl` files offers the built-in viewer out of the box; SIMATIC Automation Compare Tool remains available as an opt-in engine (still required for "Compare with Git Revision in ACT").
 - **SD → XML preview mirror is off by default** — `tiaImport.s7dclPreviewXml.enabled` now defaults to `false`, because the built-in viewer reads `.s7dcl` directly and the `.tiaPreview/*.xml` mirror is only needed for ACT preview / ACT Git diffs.
-
-### Fixed
-
-- **Custom viewer no longer requires the XML mirror for `.s7dcl`** — the "Preview LAD/FBD (Custom Viewer)" command previously redirected `.s7dcl` files to the cached `.tiaPreview/*.xml` mirror and refused to open without it. The command now passes the `.s7dcl` straight to the built-in parser (the matching `.s7res` is read as a sibling so network titles and comments resolve), so the preview works with `tiaImport.s7dclPreviewXml.enabled` off.
-- **Duplicate `Dev: watch` task** — `.vscode/tasks.json` declared two tasks with the same label and VS Code used the first one, which lacked the webview watch build; in watch mode the viewer bundle could go stale (e.g. missing SCL highlighting after F5).
 
 ## [3.0.126] - 2026-07-22
 
