@@ -1,7 +1,9 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.0.150-blue)](package.json)
+
+[![Version](https://img.shields.io/badge/version-3.1.0-blue)](package.json)
+
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -41,13 +43,9 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 ### Local SimaticML Preview
 
-| Capability                                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Built-in LAD / FBD / SCL viewer (default)**       | Render local program blocks as **interactive network diagrams** directly in a VS Code panel — no TIA Portal connection and **no external tools required** (ACT not needed). Reads both SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents (parser registry is open to further formats) and renders LAD rungs with power rail / contacts / coils / parallel branches, FBD boxes and call instances with named pins, and syntax-highlighted SCL — all following the active VS Code theme. The TIA-style interface table (Input / Output / InOut / Static / Temp / Constant with retain, HMI flags and comments) is collapsible, operands show interface comments on hover, and networks can be expanded/collapsed individually or all at once. |
-| **Graphical LAD / FBD viewer via ACT**                | Render local SimaticML XML program blocks as**interactive LAD or FBD network diagrams** directly in a VS Code panel — no TIA Portal connection required, no manual screenshots. Powered by the installed SIMATIC Automation Compare Tool renderer, embedded inside the editor and themed for the active VS Code color theme (dark and light). Each network is shown as it appears in TIA Portal, with full operand names (truncated labels like `#ManMs…gToRun` are automatically expanded to the full `#ManMsgL1ToL2.oCountMsgToRun`).                                                                                                |
-| **Automation Compare Tool preview**           | Open local SimaticML XML code blocks, DBs, PLC tag tables and UDTs in a VS Code preview panel powered by the installed Siemens SIMATIC Automation Compare Tool renderer. External ACT launch remains available as a fallback setting.                                                                                                                                                                                                                                                                                                                                                                                                              |
-| **Per-network XML operations in ACT preview** | Right-click any network in the embedded ACT preview to act directly on the underlying SimaticML XML:**Open XML in network *N*** jumps the source `.xml` to the matching `<SW.Blocks.CompileUnit>` for fast inspection / hand-edit, **Clear logic in network *N*** empties just that network's `<NetworkSource>` (preserving title, comment and programming language) so the block can be re-imported as a clean stub, and **Remove network *N*** deletes the whole CompileUnit. Edits are text-based (no XML reformatting) so `git diff` stays small and the file stays round-trippable through TIA Portal Import. |
-| **Git revision diff in ACT**                  | Compare a local`.xml` block or `.s7dcl` SD block against another Git revision in the same embedded ACT webview. The command materializes the selected revisions to a temporary folder, resolves `.s7dcl` files through their `.tiaPreview/*.xml` mirrors, and opens a graphical side-by-side ACT diff inside VS Code.                                                                                                                                                                                                                                                                                                                      |
+| Capability                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Built-in LAD / FBD / SCL / GRAPH viewer (default)** | Render local program blocks as**interactive network diagrams** directly in a VS Code panel — no TIA Portal connection and **no external tools required**. Reads both SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents (parser registry is open to further formats) and renders LAD rungs with power rail / contacts / coils / parallel branches, FBD boxes and call instances with named pins, syntax-highlighted SCL, and **GRAPH** sequential function charts as TIA-like flowcharts (steps, transitions, alternative/simultaneous branches, jumps) with clickable transitions (logic network popup) and steps (action table popup) — all following the active VS Code theme. The TIA-style interface table (Input / Output / InOut / Static / Temp / Constant with retain, HMI flags and comments) is collapsible, operands show interface comments on hover, and networks can be expanded/collapsed individually or all at once. |
 
 ### Export to TIA Portal (local files → TIA)
 
@@ -73,7 +71,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 - **Instance DB creation** — creates Instance DBs directly via API (no XML import needed)
 - **Cancellation support** — cancel long-running operations via VS Code progress UI
 - **Status bar** — real-time connection state and project info
-- **Time-based import progress** — long-running project, device, device-category, and category HW Config imports show a live numeric percentage, weighted work counter, and ETA in both the notification progress UI and the status bar; block imports are weighted by export type (SD, SCL/DB source, XML, ACT XML preview, UDTs, tag/watch tables) and category HW Config imports are weighted per device with a small safety buffer so very large TIA exports do not look stalled
+- **Time-based import progress** — long-running project, device, device-category, and category HW Config imports show a live numeric percentage, weighted work counter, and ETA in both the notification progress UI and the status bar; block imports are weighted by export type (SD, SCL/DB source, XML, UDTs, tag/watch tables) and category HW Config imports are weighted per device with a small safety buffer so very large TIA exports do not look stalled
 - **Compile after export** — optional PLC software compilation in TIA Portal after each export (Always / Ask / Never); results shown in OUTPUT panel
 - **Compile error tracking** — compile errors and warnings mapped to VS Code PROBLEMS panel with automatic file matching, network-to-line resolution (XML, S7DCL, SCL), and direct navigation to the error location
 
@@ -124,10 +122,6 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
 | **.NET**       | .NET 8.0 Runtime                           |
 | **VS Code**    | ≥ 1.80.0                                  |
 | **Node.js**    | 20+ (for building / packaging only)        |
-
-**SIMATIC Automation Compare Tool (ACT)** is optional and must be installed separately from Siemens Support when you want graphical local XML previews or Git revision diffs. The extension does not bundle ACT.
-
-👉 Download: [SIMATIC Automation Compare Tool — Siemens Support (109797235)](https://support.industry.siemens.com/cs/document/109797235/simatic-automation-compare-tool-?dti=0&lc=en-PL)
 
 > A single VSIX supports **TIA Portal V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry at the top of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
 >
@@ -200,26 +194,7 @@ No setup needed — the built-in viewer is the default preview engine (`tiaImpor
 1. In VS Code Explorer, right-click a local SimaticML **XML** block or a **`.s7dcl`** source document (the matching `.s7res` is picked up automatically).
 2. Choose **TIA Import: Preview LAD/FBD (Custom Viewer)**.
 
-The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands) and syntax-highlighted SCL, all following the active VS Code theme. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar.
-
-### Previewing local SimaticML XML with ACT
-
-1. Set `tiaImport.previewEngine` to `"act"`.
-2. **Install SIMATIC Automation Compare Tool** separately — download it from Siemens Industry Support: [SIMATIC Automation Compare Tool (109797235)](https://support.industry.siemens.com/cs/document/109797235/simatic-automation-compare-tool-?dti=0&lc=en-PL). The extension does not bundle ACT.
-3. Leave `tiaImport.automationCompareTool.autoDetect` enabled, or set `tiaImport.automationCompareTool.path` to the ACT executable.
-4. In VS Code Explorer, right-click a local SimaticML XML file supported by ACT: code block, DB, PLC tag table or UDT.
-5. Choose **TIA Import: Preview XML with Automation Compare Tool**.
-
-The preview command is contributed only to the Explorer right-click menu and does not require a TIA Portal connection. It validates the selected file before the ACT renderer starts; SCL, SD, DB source, hardware config XML, watch/force tables, unknown XML and know-how protected placeholders are rejected with a message. By default `tiaImport.automationCompareTool.embedMode` opens the installed ACT renderer in a VS Code webview panel that **follows the active VS Code color theme** (sidebar, tables, tabs, LAD/FBD diagram canvas and block bodies are repainted in dark mode for readability) and **expands truncated operand labels** in LAD/FBD networks (e.g. `#ManMs…gToRun` becomes the full `#ManMsgL1ToL2.oCountMsgToRun`). Set it to `external` when you want ACT to launch in its own native window. In external mode, `tiaImport.automationCompareTool.argumentsTemplate` follows ACT's documented command line syntax and supports `${file}` plus `${title}`, for example `--uiCulture=en-US --title1 "${title}" "${file}"`.
-
-### Comparing Git revisions in ACT
-
-1. Install SIMATIC Automation Compare Tool and keep `tiaImport.automationCompareTool.embedMode` set to `native` for the in-editor experience.
-2. In VS Code Explorer, right-click a supported local `.xml` SimaticML file or a `.s7dcl` SD block.
-3. Choose **TIA Import: Compare with Git Revision in ACT**.
-4. Pick the left and right revisions from the working tree plus recent Git history.
-
-The diff opens in the same embedded ACT webview used by the single-file preview, so LAD/FBD network changes stay graphical and reviewable inside VS Code. For `.s7dcl` files the command compares the generated `.tiaPreview/*.xml` mirror; commit that mirror together with the SD files if you want historical `.s7dcl` revisions to be available. If the embedded renderer cannot be loaded, or when `tiaImport.automationCompareTool.embedMode` is set to `external`, the command falls back to launching ACT externally with `tiaImport.automationCompareTool.compareArgumentsTemplate` (`${file1}`, `${file2}`, `${title1}`, `${title2}`).
+The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and GRAPH sequence flowcharts — all following the active VS Code theme. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step shows its comment and action title.
 
 ### Exported Directory Structure
 
@@ -311,8 +286,8 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 | `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
 | `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
 
-| `tiaImport.previewEngine` | Preview engine for SimaticML XML and `.s7dcl` files: `customViewer` — built-in LAD/FBD/SCL viewer, no external tools; `act` — SIMATIC Automation Compare Tool (also enables Git revision diff in ACT) | `customViewer` |
-| `tiaImport.s7dclPreviewXml.enabled` | When importing blocks in SD format, additionally write a SimaticML XML mirror under `.tiaPreview/` for ACT preview/diff. Not needed by the built-in viewer, which reads `.s7dcl` directly | `false` |
+| `tiaImport.previewEngine` | Preview engine for SimaticML XML and `.s7dcl` files: `customViewer` — built-in LAD/FBD/SCL/GRAPH viewer, no external tools | `customViewer` |
+| `tiaImport.s7dclPreviewXml.enabled` | When importing blocks in SD format, additionally write a SimaticML XML mirror under `.tiaPreview/`. Not needed by the built-in viewer, which reads `.s7dcl` directly | `false` |
 
 ### Block Export Formats
 
@@ -386,16 +361,16 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 
 ### Utility Commands
 
-| Command                              | Description                                       |
-| ------------------------------------ | ------------------------------------------------- |
-| `TIA Import: Show Logs`            | Open the extension output channel                 |
-| `TIA Import: Open Settings`        | Open extension settings page                      |
-| `TIA Import: Select Export Format` | Switch block export format                        |
-| `TIA Import: Format PLC Tags`      | Toggle tag table format (XML/XLSX)                |
-| `TIA Import: Prepare Workspace`    | Scaffold workspace (`.github/`, `TiaExport/`) |
-| `TIA Import: Preview LAD/FBD (Custom Viewer)` | Open a block (XML or `.s7dcl`) in the built-in viewer — Explorer right-click |
-| `TIA Import: Select Preview Engine` | Switch preview engine (built-in viewer / ACT) |
-| `TIA Import: Toggle SD → XML Preview Mirror` | Toggle writing `.tiaPreview/*.xml` mirrors for ACT |
+| Command                                         | Description                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------ |
+| `TIA Import: Show Logs`                       | Open the extension output channel                                              |
+| `TIA Import: Open Settings`                   | Open extension settings page                                                   |
+| `TIA Import: Select Export Format`            | Switch block export format                                                     |
+| `TIA Import: Format PLC Tags`                 | Toggle tag table format (XML/XLSX)                                             |
+| `TIA Import: Prepare Workspace`               | Scaffold workspace (`.github/`, `TiaExport/`)                              |
+| `TIA Import: Preview LAD/FBD (Custom Viewer)` | Open a block (XML or`.s7dcl`) in the built-in viewer — Explorer right-click |
+| `TIA Import: Select Preview Engine`           | Switch preview engine                                                          |
+| `TIA Import: Toggle SD → XML Preview Mirror` | Toggle writing`.tiaPreview/*.xml` mirrors                                    |
 
 ---
 
@@ -444,11 +419,11 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 
 The extension uses **electron-edge-js** to call the .NET `TiaOpennessWrapper.dll` in-process from Node.js. The wrapper communicates with TIA Portal via the official **Siemens TIA Portal Openness API** (`Siemens.Engineering` assemblies).
 
-### TiaViewer — standalone LAD/FBD/SCL rendering library
+### TiaViewer — standalone LAD/FBD/SCL/GRAPH rendering library
 
 The built-in block viewer is implemented as a separate .NET library, `dotnet/TiaViewer/` (`TiaViewer.dll`), with **no TIA Portal / Siemens dependencies**. It dual-targets **.NET Framework 4.8** (loaded in-process by the extension through edge-js) and **.NET Standard 2.0** (for reuse in modern .NET applications).
 
-The library parses SimaticML **XML** and S7 **`.s7dcl` + `.s7res`** sources into a shared block model (`TiaViewer.Parsing`), computes FBD/LAD network layouts (`TiaViewer.Layout`) and renders them to SVG/HTML strings (`TiaViewer.Rendering`), including a complete standalone HTML document with embedded styles and interactivity script.
+The library parses SimaticML **XML** and S7 **`.s7dcl` + `.s7res`** sources into a shared block model (`TiaViewer.Parsing`), computes FBD/LAD network layouts (`TiaViewer.Layout`) and GRAPH sequence flowcharts (`TiaViewer.Rendering.GraphSvgRenderer`), and renders them to SVG/HTML strings (`TiaViewer.Rendering`), including a complete standalone HTML document with embedded styles and interactivity script.
 
 **Reusing the library in other add-ons:**
 
@@ -458,7 +433,7 @@ The library parses SimaticML **XML** and S7 **`.s7dcl` + `.s7res`** sources into
   - `RenderStandaloneHtml` — same → standalone HTML document, no nonce.
 - **From a .NET application** — reference the netstandard2.0 build and call the API directly: `BlockSources.Parse(...)` for parsing, `BlockRenderer.RenderBlockContentHtml(...)` for body markup, `StandaloneHtml` for a full document.
 
-Parity with the original TypeScript viewer is frozen as golden files in `dotnet/TiaViewer.Tests/Golden/` and guarded by 60 xUnit tests (`dotnet test dotnet/TiaViewer.Tests -c Release`).
+Parity with the original TypeScript viewer is frozen as golden files in `dotnet/TiaViewer.Tests/Golden/` and guarded by 85 xUnit tests (`dotnet test dotnet/TiaViewer.Tests -c Release`).
 
 ---
 
