@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.0] - 2026-07-29
+
+### Added
+
+- **GRAPH (sequential function chart) support in the built-in block viewer** — GRAPH FBs exported as SimaticML XML now render in the built-in viewer as a TIA-like sequence flowchart instead of a "rendering is not supported" note:
+  - the sequence is drawn top-down with steps as boxes (initial step with a double border, green `S#` / `T#` labels like the TIA GRAPH editor), transitions as bars, alternative and simultaneous branches as horizontal split/join lines with side-by-side branch columns, and jumps as an arrow with the target step label,
+  - **transition logic popup** — clicking a transition opens a dialog with its condition network rendered by the regular LAD/FBD renderer, including the transition comment,
+  - **step actions popup** — clicking a step opens a TIA-style action table (Interlock / Event / Qualifier / Action) with the step's action rows,
+  - **step tooltips** — hovering a step shows its comment and action title; the block interface table works exactly like for LAD/FBD blocks.
+
 ## [3.0.150] - 2026-07-25
 
 ### Added
@@ -16,7 +26,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
   - **FBD** networks with instruction boxes, SR/RS flip-flops, edge boxes, comparators and call instances with named pins, instance names and literal/variable operands — including system instructions with an instance DB (e.g. RCVDP/SENDDP) drawn as call boxes,
   - **SCL** networks with configurable syntax highlighting (`--plc-scl-*` CSS variables for keyword / comment / string / number),
   - theme-aware canvas colors (the whole diagram follows the active VS Code theme), operand tooltips with interface comments (resolved through dotted struct paths like `ioHMI.Sts.Act_M_Remote`), zoom / pan / fit-width, per-network and expand-all / collapse-all folding, and empty networks rendered as empty rungs.
-- **Pluggable viewer architecture** — source formats register in `parser/blockSource.ts` (SimaticML XML, S7 `.s7dcl` today; other vendors' formats slot in without touching the graphics layer) and graphic languages register in `renderer/languageRenderer.ts` (FBD, LAD). One shared composer (`renderer/blockRenderer.ts`) drives both the webview and the standalone HTML preview (`scripts/generate-preview-html.ts`), so previews from every source format look identical.
 
 ### Changed
 
