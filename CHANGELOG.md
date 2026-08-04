@@ -6,7 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
-## [3.1.32] - 2026-08-03
+## [3.1.40] - 2026-08-03
 
 ### Added
 
