@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.44] - 2026-08-04
+
+### Added
+
+- **Pin tooltips on called FB/FC blocks** — hovering a pin of a call box now shows the pin's interface comment, resolved through the called block's source from the export tree (`Program blocks`): `.xml`, `.scl` and `.s7dcl` exports are supported, including `{ S7_MLC }` comments read from the `.s7res` sibling of the called block. Pins without a comment get no tooltip. Works the same in the editor preview and in generated standalone HTML previews.
+- **STL (StatementList) networks in the block viewer** — SimaticML networks exported as `<StatementList>` (STL blocks and ST inserts mixed into LAD/FBD blocks) now render as syntax-highlighted source text instead of being skipped: STL mnemonics and typed operators (`+I`, `==D`, `=`) are colored like keywords, with labels (`M001:`), indirect addressing (`DB [#var]`, `DBW [AR1,P#2.0]`), calls (`CALL Name(param := #x, …)`) and line comments preserved.
+- **Preview for classic non-optimized DB sources** — `.db` exports whose whole body is one anonymous top-level `STRUCT` (no `VAR` section, `{ S7_Optimized_Access := 'FALSE' }` style) now render the interface table instead of an empty page.
+
+### Changed
+
+- **Zoom percent input has no native spin buttons** — the redundant number steppers next to the zoom field were hidden; the `−` / `+` buttons remain.
+
 ## [3.1.40] - 2026-08-03
 
 ### Added
