@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.1.40-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.44-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -193,7 +193,7 @@ No setup needed — the built-in viewer is the default preview engine (`tiaImpor
 1. In VS Code Explorer, right-click a local SimaticML **XML** block or a **`.s7dcl`** source document (the matching `.s7res` is picked up automatically).
 2. Choose **TIA Import: Preview LAD/FBD (Custom Viewer)**.
 
-The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments — columns are resizable by dragging the header edges), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and GRAPH sequence flowcharts — all following the active VS Code theme. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step or a transition shows its comment.
+The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments — columns are resizable by dragging the header edges), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and STL (including ST inserts mixed into LAD/FBD blocks) and GRAPH sequence flowcharts — all following the active VS Code theme. Classic non-optimized `.db` sources (top-level `STRUCT`, no `VAR` section) render their interface table as well. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, call-box pins show the called block's pin comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step or a transition shows its comment.
 
 ### Generating a whole-PLC web preview
 
@@ -295,7 +295,7 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 | `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
 | `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
 
-| `tiaImport.previewEngine` | Preview engine for SimaticML XML and `.s7dcl` files: `customViewer` — built-in LAD/FBD/SCL/GRAPH viewer, no external tools | `customViewer` |
+| `tiaImport.previewEngine` | Preview engine for SimaticML XML and `.s7dcl` files: `customViewer` — built-in LAD/FBD/SCL/STL/GRAPH viewer, no external tools | `customViewer` |
 | `tiaImport.s7dclPreviewXml.enabled` | When importing blocks in SD format, additionally write a SimaticML XML mirror under `.tiaPreview/`. Not needed by the built-in viewer, which reads `.s7dcl` directly | `false` |
 
 ### Block Export Formats
