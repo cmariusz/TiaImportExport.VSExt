@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.1.26-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.40-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -43,7 +43,8 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 | Capability                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Built-in LAD / FBD / SCL / GRAPH viewer (default)** | Render local program blocks as**interactive network diagrams** directly in a VS Code panel — no TIA Portal connection and **no external tools required**. Reads both SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents (parser registry is open to further formats) and renders LAD rungs with power rail / contacts / coils / parallel branches, FBD boxes and call instances with named pins, syntax-highlighted SCL, and **GRAPH** sequential function charts as TIA-like flowcharts (steps, transitions, alternative/simultaneous branches, jumps) with clickable transitions (logic network popup) and steps (action table popup) — all following the active VS Code theme. The TIA-style interface table (Input / Output / InOut / Static / Temp / Constant with retain, HMI flags and comments) is collapsible, operands show interface comments on hover, and networks can be expanded/collapsed individually or all at once. |
+| **Built-in LAD / FBD / SCL / GRAPH viewer (default)** | Render local program blocks as**interactive network diagrams** directly in a VS Code panel — no TIA Portal connection and **no external tools required**. Reads both SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents (parser registry is open to further formats) and renders LAD rungs with power rail / contacts / coils / parallel branches, FBD boxes and call instances with named pins, syntax-highlighted SCL, and **GRAPH** sequential function charts as TIA-like flowcharts (steps, transitions, alternative/simultaneous branches, jumps) with clickable transitions (logic network popup) and steps (action table popup) — all following the active VS Code theme. The TIA-style interface table (Input / Output / InOut / Static / Temp / Constant with retain, HMI flags and comments) is collapsible with **resizable columns**, operands show interface comments on hover, and networks can be expanded/collapsed individually or all at once. |
+| **Whole-PLC Web Preview** | Generate a **complete offline browser view of an entire PLC** — right-click a PLC folder → **Generate Web Preview** → pick the output folder. Every block (`.xml` / `.s7dcl` / `.db` / `.scl`) and every `PLC tags` table (`.xlsx` / `.xml`, sorted by PLC address) becomes a standalone HTML page in a mirror folder tree, tied together by a self-contained `index.html` navigator: collapsible sidebar tree mirroring the TIA folder structure, block filter, split view for comparing two blocks, dark/light theme and cross-block navigation links. The viewer CSS/JS is shared from a single `_assets/` copy, so even ~1200-block PLCs stay compact and open fast. |
 
 ### Export to TIA Portal (local files → TIA)
 
@@ -192,7 +193,17 @@ No setup needed — the built-in viewer is the default preview engine (`tiaImpor
 1. In VS Code Explorer, right-click a local SimaticML **XML** block or a **`.s7dcl`** source document (the matching `.s7res` is picked up automatically).
 2. Choose **TIA Import: Preview LAD/FBD (Custom Viewer)**.
 
-The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and GRAPH sequence flowcharts — all following the active VS Code theme. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step shows its comment and action title.
+The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments — columns are resizable by dragging the header edges), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and GRAPH sequence flowcharts — all following the active VS Code theme. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step or a transition shows its comment.
+
+### Generating a whole-PLC web preview
+
+To get a complete offline browser view of an entire PLC:
+
+1. In VS Code Explorer, right-click the **PLC folder** (the one containing `Program blocks` / `PLC data types` / `PLC tags`).
+2. Choose **Generate Web Preview** and pick the output folder in the dialog.
+3. Open the generated `index.html` in a browser (the notification offers an **Open Preview** button).
+
+Every block source (`.xml` / `.s7dcl` / `.db` / `.scl`) under `Program blocks` and `PLC data types` is rendered into a mirror folder tree of standalone previews (with clickable cross-block navigation links), and every tag table under `PLC tags` (`.xlsx` / `.xml`) gets a table page sorted by PLC address. The `index.html` navigator provides a collapsible sidebar tree mirroring the TIA folder structure, a block filter, expand/collapse all, a split view for comparing two blocks side by side and a dark/light theme toggle. The viewer CSS/JS is written once to `_assets/` and shared by all pages, so the output stays compact even for large PLCs. Per-file progress lines in the output channel follow the **Log Details** setting (`tiaImport.showImportExportDetails`), just like import/export logs.
 
 ### Exported Directory Structure
 
@@ -367,6 +378,7 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 | `TIA Import: Format PLC Tags`                 | Toggle tag table format (XML/XLSX)                                             |
 | `TIA Import: Prepare Workspace`               | Scaffold workspace (`.github/`, `TiaExport/`)                              |
 | `TIA Import: Preview LAD/FBD (Custom Viewer)` | Open a block (XML or`.s7dcl`) in the built-in viewer — Explorer right-click |
+| `Generate Web Preview`                      | Render a whole PLC folder to a browsable HTML preview (navigator + block and tag table pages) — Explorer right-click on the PLC folder |
 | `TIA Import: Select Preview Engine`           | Switch preview engine                                                          |
 | `TIA Import: Toggle SD → XML Preview Mirror` | Toggle writing`.tiaPreview/*.xml` mirrors                                    |
 
@@ -428,10 +440,13 @@ The library parses SimaticML **XML** and S7 **`.s7dcl` + `.s7res`** sources into
 - **From Node.js / another VS Code extension** — load `TiaViewer.dll` (net48 build) via edge-js and call `TiaViewer.ViewerConnector.Invoke` with one of the string-keyed routes:
   - `ParseBlock` — `{ fileName, text, siblings? }` → the parsed block document (JSON),
   - `RenderBlock` — same + optional `nonce` → complete HTML document (nonce attributes emitted on `<style>`/`<script>` for CSP hosts),
-  - `RenderStandaloneHtml` — same → standalone HTML document, no nonce.
+  - `RenderStandaloneHtml` — same → standalone HTML document, no nonce; optional `cssHref`/`jsHref` link external viewer assets instead of embedding them,
+  - `RenderPlcIndex` — `{ plcName, sourceDisplay?, previews[] }` → navigator `index.html` / `index.css` / `index.js` for a whole-PLC web preview,
+  - `RenderTagTable` — `{ filePath, fileName?, cssHref? }` → standalone preview of a `PLC tags` export (`.xlsx` / SimaticML `.xml`),
+  - `GetViewerAssets` — `{}` → the shared viewer CSS/JS bundle for external-asset previews.
 - **From a .NET application** — reference the netstandard2.0 build and call the API directly: `BlockSources.Parse(...)` for parsing, `BlockRenderer.RenderBlockContentHtml(...)` for body markup, `StandaloneHtml` for a full document.
 
-Parity with the original TypeScript viewer is frozen as golden files in `dotnet/TiaViewer.Tests/Golden/` and guarded by 85 xUnit tests (`dotnet test dotnet/TiaViewer.Tests -c Release`).
+Parity with the original TypeScript viewer is frozen as golden files in `dotnet/TiaViewer.Tests/Golden/` and guarded by 117 xUnit tests (`dotnet test dotnet/TiaViewer.Tests -c Release`).
 
 ---
 

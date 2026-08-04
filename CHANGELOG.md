@@ -6,6 +6,35 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.32] - 2026-08-03
+
+### Added
+
+- **Generate Web Preview for a whole PLC** — right-click a PLC folder (containing `Program blocks` / `PLC data types`) → **Generate Web Preview** → pick the output folder. Every block source (`.xml` / `.s7dcl` / `.db` / `.scl`) is rendered into a mirror folder tree of standalone HTML previews with cross-block navigation links, and a self-contained `index.html` navigator is built on top: collapsible sidebar tree mirroring the TIA folder structure, block filter, expand/collapse all, split view for comparing two blocks side by side, dark/light theme and a welcome page with PLC statistics.
+- **PLC tags in the whole-PLC web preview** — every tag table under `PLC tags` (`.xlsx` or SimaticML `.xml`) gets its own preview page with a **Tags** table (name, data type, logical address, comment, retain and HMI flags) and a **Constants** table, linked from the navigator tree next to the program blocks.
+- **Column resizing in the viewer's interface table** — drag a column header's right edge to resize the column, double-click the edge to reset it. Works for FB/FC block interfaces and the flat DB/UDT view, both in the editor preview and in generated standalone HTML previews.
+
+### Changed
+
+- **Tag tables in the web preview are sorted by PLC address** — area order `%I` → `%Q` → `%M` → `%PI`/`%PQ` → `%T`/`%C`, then numeric address and bit (`%I2.0` before `%I10.0`). Tags without an address keep their file order at the end; constants keep the file order.
+- **Whole-PLC web preview shares one copy of the viewer assets** — the viewer CSS/JS is no longer embedded inline in every generated page; it is written once to `_assets/viewer.css` / `_assets/viewer.js` and every preview links it with a relative path, so the browser caches a single copy. For a PLC with ~1200 blocks this removes ~25–30 MB of duplicated code. Single-file previews and the editor webview keep self-contained inline assets.
+- **Web preview generation logs use the import/export format** — the output channel now shows a section header, `[START]` / `[END]` lines with duration, per-file `[i/n] ✓ <file>` / `[i/n] ✗ <file>: <error>` lines and a final summary. Per-file success lines follow the **Log Details** setting (`tiaImport.showImportExportDetails`); failures and the summary are always logged.
+
+### Fixed
+
+- **Missing operand tooltips for global DB members in SimaticML previews** — whole-path-quoted operands (`"DB.Member.Sub"`, the form SimaticML exports always produce) were not resolved, so DB member comments never appeared (e.g. inside GRAPH transition logic popups). Dotted block names and dotted PLC tags now resolve correctly as well.
+- **GRAPH transition tooltips include the comment** — hovering a transition in the flowchart now shows the transition comment, like steps already did.
+
+## [3.1.26] - 2026-08-03
+
+### Added
+
+- **Operand tooltips for global tags and DB members in the block viewer** — hovering an operand now shows a comment for *every* variable, not only for members of the block's own interface:
+  - **PLC tags and constants** — comments are read from the exported tag tables of the device (`PLC tags` folder, TIA `.xlsx` export with the Tags / Constants sheets, and SimaticML tag-table `.xml`); when a tag has no comment, its logical address (e.g. `%I51.2`) is shown instead,
+  - **global and instance DB members** — `"MyDb".Struct.Member` resolves through the DB export; instance DBs carry no comments themselves, so the comments of the FB they are an instance of are used,
+  - the sources are read lazily from the export folders next to the block, so nothing is loaded until an operand actually references them. Tooltips work the same in the editor preview, in generated standalone HTML previews and in the `tia_generate_html_preview` / CLI output.
+- **"Open block" navigation for calls through an external instance DB** — a call written as `"PRC2635"(…)` in a `.s7dcl` source is now recognized as an FB call: the box shows the FB type with the instance DB name above it (like the XML export), the right-click "Open block" command opens the FB, and standalone HTML previews link to it.
+
 ## [3.1.7] - 2026-07-30
 
 ### Added
