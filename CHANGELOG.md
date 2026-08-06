@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.59] - 2026-08-06
+
+### Added
+
+- **UDT import/export in SCL source format (`.udt`)** — PLC data types can now be round-tripped as SCL `TYPE` sources: export from TIA Portal can write `.udt` files (selectable via the UDT export format option), and exporting back to TIA accepts `.udt` files next to SimaticML XML. Source UDTs are dependency-sorted before import (referenced types first, including `Array[...] of "Type"` references and cross-format XML ↔ `.udt` dependencies), compared by normalized source text when "Check differences" is used, and generated into the target type group via external sources.
+
+### Fixed
+
+- **SCL/UDT source import into Software Units landed in the main PLC tree** — `.scl` / `.db` blocks and `.udt` types exported into a Software Unit were generated through the PLC's external source group, so the parameterless `GenerateBlocksFromSource` overload placed them in the main PLC tree instead of the unit. External sources are now created in the unit's own `ExternalSourceGroup` (covers block sources, UDT sources and instance-DB start values), and the orphaned-type cleanup recognizes `.udt` source files, so a freshly imported source UDT is no longer deleted right after the import.
+
 ## [3.1.44] - 2026-08-04
 
 ### Added

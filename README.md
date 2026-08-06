@@ -1,7 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.1.46-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.60-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -290,6 +290,7 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 | `tiaImport.excludeSystemBlocks`           | Exclude system blocks                                                                                                                                                                                                                                                                                                                                                                    | `true`             |
 | `tiaImport.dotnetPath`                    | Path to .NET runtime                                                                                                                                                                                                                                                                                                                                                                     | Auto-detect          |
 | `tiaImport.dbExportFormat`                | Global DB export format (`xml` / `db`)                                                                                                                                                                                                                                                                                                                                               | `db`               |
+| `tiaImport.udtExportFormat`               | UDT (PLC data type) export format (`udt` / `xml`) | `udt`              |
 | `tiaImport.showImportExportDetails`       | Show detailed import/export messages plus wrapper and TIA Openness warnings/errors in the output log                                                                                                                                                                                                                                                                                     | `false`            |
 | `tiaImport.importProgress.itemsPerSecond` | Speed multiplier for the time-based import progress model used by project/device/category and category HW Config imports.`1.0` uses the built-in weighted calibration plus a 10% safety buffer; increase it if your TIA exports are faster, decrease it if they are slower.                                                                                                            | `1`                |
 | `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
@@ -313,6 +314,15 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
 | **xml** | `.xml`  | SimaticML XML — standard TIA Portal format                                                                         |
 | **db**  | `.db`   | Text-based`DATA_BLOCK` source via `GenerateSource` API — compact, diff-friendly, importable back to TIA Portal |
+
+### UDT Export Formats
+
+Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
+
+| Format        | Extension | Description                                                                                              |
+| ------------- | --------- | -------------------------------------------------------------------------------------------------------- |
+| **udt** | `.udt`  | Text-based `TYPE ... END_TYPE` source via `GenerateSource` API — compact, diff-friendly, importable back to TIA Portal |
+| **xml** | `.xml`  | SimaticML XML — standard TIA Portal format                                                               |
 
 ### Tag Table Export Formats
 
