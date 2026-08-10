@@ -6,6 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.70] - 2026-08-10
+
+### Added
+
+- **Technology Objects import/export (round-trip)** — technological instance DBs (PID_Compact, Motion Control axes, counters, …) can now be pulled from TIA Portal and pushed back:
+  - **TIA → workspace:** new **TIA Import: Import Technology Objects** device context-menu command exports every TO of the device to `Devices/<Category>/<Device>/Technology objects/` as SimaticML `.xml`, mirroring the TIA user group structure as subfolders (V19+; V18 exports the flat system group). Import Device / Import Entire Project now include Technology Objects automatically. Unchanged objects are detected by normalized XML comparison ("No changes"), and orphaned local `.xml` files/folders whose TO was deleted in TIA are removed, so the workspace mirrors the PLC.
+  - **workspace → TIA:** TO XMLs are auto-detected by content (`SW.Technological*` elements) on any XML file/folder export and imported through the TechnologicalObjects API into the PLC's root *Technology objects* group, with the usual "Check and overwrite differences" comparison and overwrite handling. Whole-PLC unified export (*Export to TIA - Program and HW / Program without HW*) now includes the `Technology objects` folder and deletes orphaned TOs in TIA that no longer exist in the workspace.
+  - Covered by new C# and TS unit tests (SimaticML type detection, export ordering, folder matching); builds against TIA Portal V18–V21.
+
+### Removed
+
+- **PLC viewer, HTML/web preview and ACT preview moved out of tia-import** — the LAD/FBD/SCL/GRAPH block viewer (custom viewer + `dotnet/TiaViewer`), the standalone HTML preview generation (`tia_generate_html_preview` LM tool, `generateHtmlPreview` / `generateWebPreview` commands) and the SIMATIC Automation Compare Tool integration (preview engine, `Compare with Git Revision in ACT`) were removed from this extension. The graphical viewer and the web generator now live in the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — install it to keep viewing blocks and generating whole-PLC web previews from the exports produced by this extension. The related settings (`tiaImport.previewEngine`, `tiaImport.automationCompareTool.*`, `tiaImport.customViewer.maxNetworks`, `tiaImport.s7dclPreviewXml.enabled`) and the `xml2js` / `linkedom` dependencies were dropped.
+
 ## [3.1.60] - 2026-08-06
 
 ### Added
