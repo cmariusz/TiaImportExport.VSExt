@@ -1,16 +1,18 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.1.60-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.70-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
-[![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.80.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
+[![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
 [![Author](<https://img.shields.io/badge/Author-Mariusz%20Czyrnek-orange?logo=linkedin>)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
 [![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY)
 
 **Bidirectional bridge between VS Code and Siemens TIA Portal** — import PLC/HMI projects from TIA Portal to local files, edit them with full VS Code + Copilot power, and export changes back. Built on the TIA Portal Openness API.
+
+> 💡 **Tip:** The PLC block **viewer** and **web preview generator** live in the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — it renders LAD/FBD/SCL/GRAPH blocks, data blocks, UDTs and tag tables from the export folders this extension produces, both inside VS Code and as standalone whole-PLC HTML web previews. The two extensions are built to work together.
 
 If this extension helps your TIA Portal workflow, you can support ongoing development with a voluntary [PayPal donation](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY).
 
@@ -31,6 +33,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 | **Import Tag Tables**                | Import PLC tag tables as SimaticML XML or Excel XLSX spreadsheets                                                                                                                                                                                                                        |
 | **Import UDTs**                      | Import PLC data types (user-defined types)                                                                                                                                                                                                                                               |
 | **Import Watch Tables**              | Import watch and force tables                                                                                                                                                                                                                                                            |
+| **Import Technology Objects**        | Import Technology Objects (technological instance DBs: PID, Motion Control axes, counters, …) as SimaticML XML, mirroring the TIA user group structure into `Technology objects/` — per device or automatically with device/project import                                                                                                              |
 | **Import HMI**                       | Import HMI screens, tags, and connections                                                                                                                                                                                                                                                |
 | **Import HW Config**                 | Import hardware configuration as XML or**CAx / AutomationML (`.aml`)**. Mirrors TIA Portal device folders on disk; root IO devices stay flat in `Devices/IO_Devices/`. Toggle format via *Format HW* in the Connection panel.                                                |
 | **Import Project Library**           | Import the**Project Library &gt; Types** tree (FBs, FCs, UDTs, …) — per-type format selection: LAD/FBD/STL → `.s7dcl`/`.s7res` (V20+), SCL → `.scl`, UDT/GRAPH/CFC/SFC/DB → `.xml`. Master copies are intentionally not imported.                                     |
@@ -39,12 +42,9 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 > **HW Config folder layout:** `Import HW Config` mirrors TIA Portal folder structure on disk. Devices at the project root use `Devices/<Category>/<Device>/DeviceConfiguration/`, except root IO devices which keep the legacy flat `Devices/IO_Devices/` layout. Devices placed inside TIA Portal device folders are exported under `Devices/<Category>/<FolderPath>/<Device>/DeviceConfiguration/`.
 
-### Local SimaticML Preview
+### Viewing imported blocks — companion extension
 
-| Capability                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Built-in LAD / FBD / SCL / GRAPH viewer (default)** | Render local program blocks as**interactive network diagrams** directly in a VS Code panel — no TIA Portal connection and **no external tools required**. Reads both SimaticML **XML** and **`.s7dcl` + `.s7res`** source documents (parser registry is open to further formats) and renders LAD rungs with power rail / contacts / coils / parallel branches, FBD boxes and call instances with named pins, syntax-highlighted SCL, and **GRAPH** sequential function charts as TIA-like flowcharts (steps, transitions, alternative/simultaneous branches, jumps) with clickable transitions (logic network popup) and steps (action table popup) — all following the active VS Code theme. The TIA-style interface table (Input / Output / InOut / Static / Temp / Constant with retain, HMI flags and comments) is collapsible with **resizable columns**, operands show interface comments on hover, and networks can be expanded/collapsed individually or all at once. |
-| **Whole-PLC Web Preview** | Generate a **complete offline browser view of an entire PLC** — right-click a PLC folder → **Generate Web Preview** → pick the output folder. Every block (`.xml` / `.s7dcl` / `.db` / `.scl`) and every `PLC tags` table (`.xlsx` / `.xml`, sorted by PLC address) becomes a standalone HTML page in a mirror folder tree, tied together by a self-contained `index.html` navigator: collapsible sidebar tree mirroring the TIA folder structure, block filter, split view for comparing two blocks, dark/light theme and cross-block navigation links. The viewer CSS/JS is shared from a single `_assets/` copy, so even ~1200-block PLCs stay compact and open fast. |
+The block viewer and web preview generator were moved to the separate **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)). Install it to render imported blocks (SimaticML XML, `.s7dcl` + `.s7res`, `.db`, `.scl`, `.udt`) as interactive LAD/FBD/SCL/GRAPH diagrams inside VS Code, and to generate a complete offline whole-PLC HTML web preview from the export folders this extension produces.
 
 ### Export to TIA Portal (local files → TIA)
 
@@ -55,10 +55,11 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 | **Export Tag Tables**          | Export XML or XLSX tag tables to TIA Portal                                                                                                                                                       |
 | **Export Project Texts**       | Push a translated project texts XLSX back into the same TIA project (Languages & resources), with optional source-language update                                                                 |
 | **Export UDTs / Watch Tables** | Export data types and watch tables                                                                                                                                                                |
+| **Export Technology Objects**  | Export Technology Object XMLs back to TIA Portal (auto-detected by content) — objects are imported into the PLC's root *Technology objects* group                                           |
 | **Export HW Config**           | Export hardware configuration as XML or**CAx / AutomationML (`.aml`)** via `CaxProvider`                                                                                                |
-| **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → HW)                                                                                    |
+| **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → Technology Objects → HW)                                                             |
 | **Smart Comparison**           | Only overwrite items that actually changed (normalized XML diff; Instance DBs compared by StartValues only)                                                                                       |
-| **Orphan Cleanup**             | Auto-delete blocks, groups, tag tables, and UDTs in TIA that no longer exist locally                                                                                                              |
+| **Orphan Cleanup**             | Auto-delete blocks, groups, tag tables, UDTs and Technology Objects in TIA that no longer exist locally (and orphaned local files on import from TIA)                                         |
 | **Dependency Ordering**        | Files sorted automatically: UDT → FB → FC → OB → GlobalDB → InstanceDB                                                                                                                       |
 | **Compile after Export**       | Automatically compile PLC software in TIA Portal after export — configurable: Always / Ask / Never                                                                                               |
 | **Compile Error Tracking**     | Compile results mapped to VS Code PROBLEMS panel with file and line resolution (network / SCL line mapping)                                                                                       |
@@ -108,7 +109,7 @@ npm run tia:cli -- import_blocks --device PLC_1 --blocks FB10,FC20 --pretty
 npm run tia:cli -- import_file --device PLC_1 --filePath "C:\Projects\Demo\Block.xml" --overwriteExisting true
 ```
 
-Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`) and SD preview mirror behavior. Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
+Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`). Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
 
 ---
 
@@ -119,7 +120,7 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
 | **OS**         | Windows 10 / 11                            |
 | **TIA Portal** | V18, V19, V20 or V21 with Openness license |
 | **.NET**       | .NET 8.0 Runtime                           |
-| **VS Code**    | ≥ 1.80.0                                  |
+| **VS Code**    | ≥ 1.95.0                                  |
 | **Node.js**    | 20+ (for building / packaging only)        |
 
 > A single VSIX supports **TIA Portal V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry at the top of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
@@ -163,6 +164,7 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
    - **Tag Tables** — import PLC tag tables (XML or XLSX)
    - **UDTs** — import PLC data types
    - **Watch Tables** — import observation/force tables
+   - **Technology Objects** — import technological instance DBs (PID, Motion Control, …) to `Technology objects/`
    - **HMI** — import screens, tags, and/or connections
    - **HW Config** — import hardware configuration
    - **Software Unit** — import a complete V18+ Software Unit (blocks, UDTs, tags) to `Devices/<Category>/<Device>/Units/<UnitName>/`
@@ -179,31 +181,16 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
    - **Export Software Unit to TIA Portal** — for a complete Software Unit folder exported from TIA Portal V18+ (`Units/<UnitName>/`)
    - **Export XLSX Tags to TIA Portal** — for XLSX tag tables
    - **Export Project Texts to TIA Portal** — for translated project texts (`.xlsx` under `Languages & resources/`)
-   - **Export to TIA - Program and HW** — unified export (program + HW config)
-   - **Export to TIA - Program without HW** — unified export (program only)
+   - **Export to TIA - Program and HW** — unified export (program + HW config, incl. `Technology objects`)
+   - **Export to TIA - Program without HW** — unified export (program only, incl. `Technology objects`)
    - **Export to TiaPortal: HW Config XML** — hardware configuration
 4. Select overwrite mode: *Compare & overwrite changes* or *Force overwrite all*
 5. If **Compile after Export** is enabled (`always` or `ask`), the extension compiles PLC software in TIA Portal after a successful export
 6. Compile results are shown in the **OUTPUT** panel; errors and warnings appear in the **PROBLEMS** panel with clickable file links
 
-### Previewing local blocks (built-in viewer, default)
+### Viewing local blocks and web previews
 
-No setup needed — the built-in viewer is the default preview engine (`tiaImport.previewEngine: "customViewer"`):
-
-1. In VS Code Explorer, right-click a local SimaticML **XML** block or a **`.s7dcl`** source document (the matching `.s7res` is picked up automatically).
-2. Choose **TIA Import: Preview LAD/FBD (Custom Viewer)**.
-
-The viewer renders the block interface (TIA-style table with retain, HMI accessibility/writable/visible/setpoint flags and comments — columns are resizable by dragging the header edges), LAD rungs (power rail, contacts, coils, parallel branches), FBD networks (instruction boxes, call instances with named pins, literal and variable operands), syntax-highlighted SCL and STL (including ST inserts mixed into LAD/FBD blocks) and GRAPH sequence flowcharts — all following the active VS Code theme. Classic non-optimized `.db` sources (top-level `STRUCT`, no `VAR` section) render their interface table as well. Networks and the interface panel are collapsible (including Expand all / Collapse all), operand labels show the interface comment as a tooltip, call-box pins show the called block's pin comment as a tooltip, and Ctrl+wheel zoom / pan / fit-width are available in the toolbar. In a GRAPH flowchart, clicking a transition opens a popup with its LAD/FBD logic network, clicking a step opens its action table (Interlock / Event / Qualifier / Action), and hovering a step or a transition shows its comment.
-
-### Generating a whole-PLC web preview
-
-To get a complete offline browser view of an entire PLC:
-
-1. In VS Code Explorer, right-click the **PLC folder** (the one containing `Program blocks` / `PLC data types` / `PLC tags`).
-2. Choose **Generate Web Preview** and pick the output folder in the dialog.
-3. Open the generated `index.html` in a browser (the notification offers an **Open Preview** button).
-
-Every block source (`.xml` / `.s7dcl` / `.db` / `.scl`) under `Program blocks` and `PLC data types` is rendered into a mirror folder tree of standalone previews (with clickable cross-block navigation links), and every tag table under `PLC tags` (`.xlsx` / `.xml`) gets a table page sorted by PLC address. The `index.html` navigator provides a collapsible sidebar tree mirroring the TIA folder structure, a block filter, expand/collapse all, a split view for comparing two blocks side by side and a dark/light theme toggle. The viewer CSS/JS is written once to `_assets/` and shared by all pages, so the output stays compact even for large PLCs. Per-file progress lines in the output channel follow the **Log Details** setting (`tiaImport.showImportExportDetails`), just like import/export logs.
+Block previews are provided by the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension: right-click a local SimaticML **XML** block or a **`.s7dcl`** source document to open it in the graphical LAD/FBD/SCL/GRAPH viewer, or right-click a PLC folder and choose **Generate Web Preview** to render a complete offline HTML view of the whole PLC (blocks, data types and tag tables with an `index.html` navigator). No TIA Portal connection is needed — the viewer reads the export files produced by this extension directly.
 
 ### Exported Directory Structure
 
@@ -239,8 +226,10 @@ When you connect to TIA Portal (or run the `TIA Import: Prepare Workspace` comma
 │               │           │   └── Default tag table.xlsx
 │               │           ├── PLC data types/
 │               │           │   └── MyUDT.xml
-│               │           └── Watch and force tables/
-│               │               └── Watch_1.xml
+│               │           ├── Watch and force tables/
+│               │           │   └── Watch_1.xml
+│               │           └── Technology objects/
+│               │               └── PID_Compact_1.xml
 │               ├── HMIs/
 │               │   └── <HMI_Name>/
 │               │       └── <HMI_Software>/
@@ -290,14 +279,11 @@ On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspac
 | `tiaImport.excludeSystemBlocks`           | Exclude system blocks                                                                                                                                                                                                                                                                                                                                                                    | `true`             |
 | `tiaImport.dotnetPath`                    | Path to .NET runtime                                                                                                                                                                                                                                                                                                                                                                     | Auto-detect          |
 | `tiaImport.dbExportFormat`                | Global DB export format (`xml` / `db`)                                                                                                                                                                                                                                                                                                                                               | `db`               |
-| `tiaImport.udtExportFormat`               | UDT (PLC data type) export format (`udt` / `xml`) | `udt`              |
+| `tiaImport.udtExportFormat`               | UDT (PLC data type) export format (`udt` / `xml`)                                                                                                                                                                                                                                                                                                                                    | `udt`              |
 | `tiaImport.showImportExportDetails`       | Show detailed import/export messages plus wrapper and TIA Openness warnings/errors in the output log                                                                                                                                                                                                                                                                                     | `false`            |
 | `tiaImport.importProgress.itemsPerSecond` | Speed multiplier for the time-based import progress model used by project/device/category and category HW Config imports.`1.0` uses the built-in weighted calibration plus a 10% safety buffer; increase it if your TIA exports are faster, decrease it if they are slower.                                                                                                            | `1`                |
 | `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
 | `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
-
-| `tiaImport.previewEngine` | Preview engine for SimaticML XML and `.s7dcl` files: `customViewer` — built-in LAD/FBD/SCL/STL/GRAPH viewer, no external tools | `customViewer` |
-| `tiaImport.s7dclPreviewXml.enabled` | When importing blocks in SD format, additionally write a SimaticML XML mirror under `.tiaPreview/`. Not needed by the built-in viewer, which reads `.s7dcl` directly | `false` |
 
 ### Block Export Formats
 
@@ -319,10 +305,10 @@ Controlled by `tiaImport.dbExportFormat` (applies only to Global Data Blocks; In
 
 Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
-| Format        | Extension | Description                                                                                              |
-| ------------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| **udt** | `.udt`  | Text-based `TYPE ... END_TYPE` source via `GenerateSource` API — compact, diff-friendly, importable back to TIA Portal |
-| **xml** | `.xml`  | SimaticML XML — standard TIA Portal format                                                               |
+| Format        | Extension | Description                                                                                                                |
+| ------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **udt** | `.udt`  | Text-based`TYPE ... END_TYPE` source via `GenerateSource` API — compact, diff-friendly, importable back to TIA Portal |
+| **xml** | `.xml`  | SimaticML XML — standard TIA Portal format                                                                                |
 
 ### Tag Table Export Formats
 
@@ -353,6 +339,7 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 | `TIA Import: Import Data Type`                            | Import a single UDT                               |
 | `TIA Import: Import Watch Tables`                         | Import all watch tables                           |
 | `TIA Import: Import Watch Table`                          | Import a single watch table                       |
+| `TIA Import: Import Technology Objects`                   | Import all Technology Objects of a device (PID, Motion, …) |
 | `TIA Import: Import HMI Screens`                          | Import HMI screens                                |
 | `TIA Import: Import HMI Tags`                             | Import HMI tags                                   |
 | `TIA Import: Import HMI Connections`                      | Import HMI connections                            |
@@ -380,17 +367,13 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
 ### Utility Commands
 
-| Command                                         | Description                                                                    |
-| ----------------------------------------------- | ------------------------------------------------------------------------------ |
-| `TIA Import: Show Logs`                       | Open the extension output channel                                              |
-| `TIA Import: Open Settings`                   | Open extension settings page                                                   |
-| `TIA Import: Select Export Format`            | Switch block export format                                                     |
-| `TIA Import: Format PLC Tags`                 | Toggle tag table format (XML/XLSX)                                             |
-| `TIA Import: Prepare Workspace`               | Scaffold workspace (`.github/`, `TiaExport/`)                              |
-| `TIA Import: Preview LAD/FBD (Custom Viewer)` | Open a block (XML or`.s7dcl`) in the built-in viewer — Explorer right-click |
-| `Generate Web Preview`                      | Render a whole PLC folder to a browsable HTML preview (navigator + block and tag table pages) — Explorer right-click on the PLC folder |
-| `TIA Import: Select Preview Engine`           | Switch preview engine                                                          |
-| `TIA Import: Toggle SD → XML Preview Mirror` | Toggle writing`.tiaPreview/*.xml` mirrors                                    |
+| Command                              | Description                                       |
+| ------------------------------------ | ------------------------------------------------- |
+| `TIA Import: Show Logs`            | Open the extension output channel                 |
+| `TIA Import: Open Settings`        | Open extension settings page                      |
+| `TIA Import: Select Export Format` | Switch block export format                        |
+| `TIA Import: Format PLC Tags`      | Toggle tag table format (XML/XLSX)                |
+| `TIA Import: Prepare Workspace`    | Scaffold workspace (`.github/`, `TiaExport/`) |
 
 ---
 
@@ -439,24 +422,9 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
 The extension uses **electron-edge-js** to call the .NET `TiaOpennessWrapper.dll` in-process from Node.js. The wrapper communicates with TIA Portal via the official **Siemens TIA Portal Openness API** (`Siemens.Engineering` assemblies).
 
-### TiaViewer — standalone LAD/FBD/SCL/GRAPH rendering library
+### TiaViewer rendering library
 
-The built-in block viewer is implemented as a separate .NET library, `dotnet/TiaViewer/` (`TiaViewer.dll`), with **no TIA Portal / Siemens dependencies**. It dual-targets **.NET Framework 4.8** (loaded in-process by the extension through edge-js) and **.NET Standard 2.0** (for reuse in modern .NET applications).
-
-The library parses SimaticML **XML** and S7 **`.s7dcl` + `.s7res`** sources into a shared block model (`TiaViewer.Parsing`), computes FBD/LAD network layouts (`TiaViewer.Layout`) and GRAPH sequence flowcharts (`TiaViewer.Rendering.GraphSvgRenderer`), and renders them to SVG/HTML strings (`TiaViewer.Rendering`), including a complete standalone HTML document with embedded styles and interactivity script.
-
-**Reusing the library in other add-ons:**
-
-- **From Node.js / another VS Code extension** — load `TiaViewer.dll` (net48 build) via edge-js and call `TiaViewer.ViewerConnector.Invoke` with one of the string-keyed routes:
-  - `ParseBlock` — `{ fileName, text, siblings? }` → the parsed block document (JSON),
-  - `RenderBlock` — same + optional `nonce` → complete HTML document (nonce attributes emitted on `<style>`/`<script>` for CSP hosts),
-  - `RenderStandaloneHtml` — same → standalone HTML document, no nonce; optional `cssHref`/`jsHref` link external viewer assets instead of embedding them,
-  - `RenderPlcIndex` — `{ plcName, sourceDisplay?, previews[] }` → navigator `index.html` / `index.css` / `index.js` for a whole-PLC web preview,
-  - `RenderTagTable` — `{ filePath, fileName?, cssHref? }` → standalone preview of a `PLC tags` export (`.xlsx` / SimaticML `.xml`),
-  - `GetViewerAssets` — `{}` → the shared viewer CSS/JS bundle for external-asset previews.
-- **From a .NET application** — reference the netstandard2.0 build and call the API directly: `BlockSources.Parse(...)` for parsing, `BlockRenderer.RenderBlockContentHtml(...)` for body markup, `StandaloneHtml` for a full document.
-
-Parity with the original TypeScript viewer is frozen as golden files in `dotnet/TiaViewer.Tests/Golden/` and guarded by 117 xUnit tests (`dotnet test dotnet/TiaViewer.Tests -c Release`).
+The standalone LAD/FBD/SCL/GRAPH rendering library (`TiaViewer.dll`, previously `dotnet/TiaViewer/`) moved together with the viewer to the [TIA Viewer extension repository](https://github.com/cmariusz/TiaViewer.VSExt) — see its README for reuse from Node.js/edge-js or .NET.
 
 ---
 
