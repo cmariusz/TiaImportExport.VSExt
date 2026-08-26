@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.71] - 2026-08-26
+
+### Added
+
+- **TIA Portal V17 support** — V17 is now selectable in the TIA Portal version picker (Connection panel and `tiaImport.tiaPortalVersion` setting) and the .NET wrapper builds against V17 reference assemblies (`dotnet/refs/V17/`). Features added to Openness after V17 degrade gracefully: cross-reference dump, Software Units and WinCC Unified screen/tag-table groups report "requires V18+", SD format falls back to XML (as on V18/V19), and extended project-texts / technology-object groups stay V21+/V19+ only. `LibraryType.Namespace` is read via reflection so the project structure tree works on V17 (namespace shown on V18+).
+
 ## [3.1.70] - 2026-08-10
 
 ### Added

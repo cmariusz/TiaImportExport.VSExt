@@ -1,7 +1,9 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-3.1.70-blue)](package.json)
+
+[![Version](https://img.shields.io/badge/version-3.1.71-blue)](package.json)
+
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -26,14 +28,14 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 | Capability                                 | Description                                                                                                                                                                                                                                                                              |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Connect to TIA Portal**            | Auto-detect running TIA Portal instances or open a project file (`.ap18` /`.ap19` / `.ap20` / `.ap21`)                                                                                                                                                                          |
+| **Connect to TIA Portal**            | Auto-detect running TIA Portal instances or open a project file (`.ap17/.ap18` /`.ap19` / `.ap20` / `.ap21`)                                                                                                                                                                    |
 | **Import Entire Project**            | Import complete project structure with all devices, blocks, tags, UDTs, and HW config                                                                                                                                                                                                    |
 | **Import Devices**                   | Import individual devices or all devices in a category (PLCs, HMIs, IO_Devices, Computers)                                                                                                                                                                                               |
 | **Import Program Blocks**            | Import OB, FB, FC, F-FB, F-FC, DB blocks in XML, SCL, SD (`.s7dcl` / `.s7res`), or DB source (`.db`) format                                                                                                                                                                        |
 | **Import Tag Tables**                | Import PLC tag tables as SimaticML XML or Excel XLSX spreadsheets                                                                                                                                                                                                                        |
 | **Import UDTs**                      | Import PLC data types (user-defined types)                                                                                                                                                                                                                                               |
 | **Import Watch Tables**              | Import watch and force tables                                                                                                                                                                                                                                                            |
-| **Import Technology Objects**        | Import Technology Objects (technological instance DBs: PID, Motion Control axes, counters, …) as SimaticML XML, mirroring the TIA user group structure into `Technology objects/` — per device or automatically with device/project import                                                                                                              |
+| **Import Technology Objects**        | Import Technology Objects (technological instance DBs: PID, Motion Control axes, counters, …) as SimaticML XML, mirroring the TIA user group structure into`Technology objects/` — per device or automatically with device/project import                                            |
 | **Import HMI**                       | Import HMI screens, tags, and connections                                                                                                                                                                                                                                                |
 | **Import HW Config**                 | Import hardware configuration as XML or**CAx / AutomationML (`.aml`)**. Mirrors TIA Portal device folders on disk; root IO devices stay flat in `Devices/IO_Devices/`. Toggle format via *Format HW* in the Connection panel.                                                |
 | **Import Project Library**           | Import the**Project Library &gt; Types** tree (FBs, FCs, UDTs, …) — per-type format selection: LAD/FBD/STL → `.s7dcl`/`.s7res` (V20+), SCL → `.scl`, UDT/GRAPH/CFC/SFC/DB → `.xml`. Master copies are intentionally not imported.                                     |
@@ -55,11 +57,11 @@ The block viewer and web preview generator were moved to the separate **[TIA Vie
 | **Export Tag Tables**          | Export XML or XLSX tag tables to TIA Portal                                                                                                                                                       |
 | **Export Project Texts**       | Push a translated project texts XLSX back into the same TIA project (Languages & resources), with optional source-language update                                                                 |
 | **Export UDTs / Watch Tables** | Export data types and watch tables                                                                                                                                                                |
-| **Export Technology Objects**  | Export Technology Object XMLs back to TIA Portal (auto-detected by content) — objects are imported into the PLC's root *Technology objects* group                                           |
+| **Export Technology Objects**  | Export Technology Object XMLs back to TIA Portal (auto-detected by content) — objects are imported into the PLC's root*Technology objects* group                                               |
 | **Export HW Config**           | Export hardware configuration as XML or**CAx / AutomationML (`.aml`)** via `CaxProvider`                                                                                                |
-| **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → Technology Objects → HW)                                                             |
+| **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → Technology Objects → HW)                                                              |
 | **Smart Comparison**           | Only overwrite items that actually changed (normalized XML diff; Instance DBs compared by StartValues only)                                                                                       |
-| **Orphan Cleanup**             | Auto-delete blocks, groups, tag tables, UDTs and Technology Objects in TIA that no longer exist locally (and orphaned local files on import from TIA)                                         |
+| **Orphan Cleanup**             | Auto-delete blocks, groups, tag tables, UDTs and Technology Objects in TIA that no longer exist locally (and orphaned local files on import from TIA)                                             |
 | **Dependency Ordering**        | Files sorted automatically: UDT → FB → FC → OB → GlobalDB → InstanceDB                                                                                                                       |
 | **Compile after Export**       | Automatically compile PLC software in TIA Portal after export — configurable: Always / Ask / Never                                                                                               |
 | **Compile Error Tracking**     | Compile results mapped to VS Code PROBLEMS panel with file and line resolution (network / SCL line mapping)                                                                                       |
@@ -115,18 +117,20 @@ Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into th
 
 ## Requirements
 
-| Requirement          | Version                                    |
-| -------------------- | ------------------------------------------ |
-| **OS**         | Windows 10 / 11                            |
-| **TIA Portal** | V18, V19, V20 or V21 with Openness license |
-| **.NET**       | .NET 8.0 Runtime                           |
-| **VS Code**    | ≥ 1.95.0                                  |
-| **Node.js**    | 20+ (for building / packaging only)        |
+| Requirement          | Version                                         |
+| -------------------- | ----------------------------------------------- |
+| **OS**         | Windows 10 / 11                                 |
+| **TIA Portal** | V17, V18, V19, V20 or V21 with Openness license |
+| **.NET**       | .NET 8.0 Runtime                                |
+| **VS Code**    | ≥ 1.95.0                                       |
+| **Node.js**    | 20+ (for building / packaging only)             |
 
-> A single VSIX supports **TIA Portal V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry at the top of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
+> A single VSIX supports **TIA Portal V17, V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry at the top of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
 >
-> - **SD format** (`.s7dcl` / `.s7res`) requires **V20+**. On V18/V19 the extension automatically falls back to XML for LAD/FBD/STL blocks; SCL blocks continue to export as `.scl`.
+> - **SD format** (`.s7dcl` / `.s7res`) requires **V20+**. On V17–V19 the extension automatically falls back to XML for LAD/FBD/STL blocks; SCL blocks continue to export as `.scl`.
 > - **Cross-reference dump** (`tia_export_cross_references`) requires **V18+**. **Heads-up:** building a full cross-reference table is performed by TIA Portal itself and can take **several minutes — sometimes 10 min+ on large PLCs** (thousands of blocks, large fault-tolerant projects). Progress is logged line-by-line in the *TIA Portal Import* output channel; the operation is non-blocking, so other imports/compiles continue normally.
+> - **Software Units** require **V18+**; on V17 unit commands report `supported:false`.
+> - **WinCC Unified** screen/tag-table **groups** and tag-table tag export require **V18+**; on V17 only root-level screens and tag tables are exported.
 > - **CAx / AutomationML HW Config** is available on all supported versions.
 >
 > The Windows user running VS Code must be a member of the **Siemens TIA Openness** user group. See [Adding users to the Siemens TIA Openness user group](https://docs.tia.siemens.cloud/r/en-us/v20/tia-portal-openness-api-for-automation-of-engineering-workflows/basics/installation/adding-users-to-the-siemens-tia-openness-user-group) for details.
@@ -323,31 +327,31 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
 ### Import Commands (TIA → local)
 
-| Command                                                     | Description                                       |
-| ----------------------------------------------------------- | ------------------------------------------------- |
-| `TIA Import: Connect to TIA Portal`                       | Connect / attach to a running TIA Portal instance |
-| `TIA Import: Disconnect from TIA Portal`                  | Disconnect from TIA Portal                        |
-| `TIA Import: Select Project`                              | Select a project from the connected TIA Portal    |
-| `TIA Import: Import Entire Project`                       | Import full project structure                     |
-| `TIA Import: Refresh Project Structure`                   | Refresh the project tree                          |
-| `TIA Import: Import Device`                               | Import a device with all software                 |
-| `TIA Import: Import Block`                                | Import a single block                             |
-| `TIA Import: Import Block Folder`                         | Import a block group/folder                       |
-| `TIA Import: Import Tag Tables`                           | Import all tag tables                             |
-| `TIA Import: Import Tag Table`                            | Import a single tag table                         |
-| `TIA Import: Import Data Types`                           | Import all UDTs                                   |
-| `TIA Import: Import Data Type`                            | Import a single UDT                               |
-| `TIA Import: Import Watch Tables`                         | Import all watch tables                           |
-| `TIA Import: Import Watch Table`                          | Import a single watch table                       |
+| Command                                                     | Description                                                 |
+| ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `TIA Import: Connect to TIA Portal`                       | Connect / attach to a running TIA Portal instance           |
+| `TIA Import: Disconnect from TIA Portal`                  | Disconnect from TIA Portal                                  |
+| `TIA Import: Select Project`                              | Select a project from the connected TIA Portal              |
+| `TIA Import: Import Entire Project`                       | Import full project structure                               |
+| `TIA Import: Refresh Project Structure`                   | Refresh the project tree                                    |
+| `TIA Import: Import Device`                               | Import a device with all software                           |
+| `TIA Import: Import Block`                                | Import a single block                                       |
+| `TIA Import: Import Block Folder`                         | Import a block group/folder                                 |
+| `TIA Import: Import Tag Tables`                           | Import all tag tables                                       |
+| `TIA Import: Import Tag Table`                            | Import a single tag table                                   |
+| `TIA Import: Import Data Types`                           | Import all UDTs                                             |
+| `TIA Import: Import Data Type`                            | Import a single UDT                                         |
+| `TIA Import: Import Watch Tables`                         | Import all watch tables                                     |
+| `TIA Import: Import Watch Table`                          | Import a single watch table                                 |
 | `TIA Import: Import Technology Objects`                   | Import all Technology Objects of a device (PID, Motion, …) |
-| `TIA Import: Import HMI Screens`                          | Import HMI screens                                |
-| `TIA Import: Import HMI Tags`                             | Import HMI tags                                   |
-| `TIA Import: Import HMI Connections`                      | Import HMI connections                            |
-| `TIA Import: Import All HMI Elements`                     | Import all HMI elements                           |
-| `TIA Import: Import HW Configuration`                     | Import full HW configuration                      |
-| `TIA Import: Import Device HW Configuration`              | Import HW config for a single device              |
-| `TIA Import: Import Programs for All Devices in Category` | Import all devices in a category                  |
-| `TIA Import: Import Languages & Project Texts`            | Import language settings + project texts (xlsx)   |
+| `TIA Import: Import HMI Screens`                          | Import HMI screens                                          |
+| `TIA Import: Import HMI Tags`                             | Import HMI tags                                             |
+| `TIA Import: Import HMI Connections`                      | Import HMI connections                                      |
+| `TIA Import: Import All HMI Elements`                     | Import all HMI elements                                     |
+| `TIA Import: Import HW Configuration`                     | Import full HW configuration                                |
+| `TIA Import: Import Device HW Configuration`              | Import HW config for a single device                        |
+| `TIA Import: Import Programs for All Devices in Category` | Import all devices in a category                            |
+| `TIA Import: Import Languages & Project Texts`            | Import language settings + project texts (xlsx)             |
 
 ### Export Commands (local → TIA)
 
