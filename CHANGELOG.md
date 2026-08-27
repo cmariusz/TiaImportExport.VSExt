@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.80] - 2026-08-27
+
+### Added
+
+- **Download to PLC (reload) via TIA Openness** — new `tia_download_to_plc` Language Model Tool loads software/hardware from TIA Portal into the physical PLC through `DownloadProvider.Download`:
+  - **Scopes:** `changes` (default; delta download of changed software — the closest equivalent to reloading a single edited block, as Openness has no single-block download), `software` (full program), `hardwareAndSoftware` (full station reload). Pre/post-download dialogs are answered automatically (`StopModules`, `ConsistentBlocksDownload`, `StartModules`, …) while `DataBlockReinitialization` conservatively stays `NoAction`.
+  - **Blocked by default** — new setting `tiaImport.lmTools.allowPlcDownload` (`false` by default) gates the tool; the *PLC Download* row in the TIA Connection view toggles it (`Blocked` / `Allowed`) without opening Settings. Every download still requires an explicit confirmation dialog, and the tool returns an unlock hint while blocked.
+  - **Secure credential prompt** — when the PLC rejects the download as unauthorized ("illegitimate connection"), the tool asks the *user* (never the model) for credentials via masked VS Code input boxes: user name first (only for UMAC local user management, V19+, answered through the `OnlineLegitimation` event with `UserType.ProjectUser`), then password (legacy access-level / safety prompts answered through `DownloadPasswordConfiguration.SetPassword`). Credentials are never logged or stored.
+  - **Full error transparency** — failed downloads return the complete TIA message list (not just errors) plus the top-level `error`, and are logged to the *TIA Portal Import* output channel.
+- **`download_to_plc` CLI bridge command** — external scripts can reload the PLC through the localhost bridge (`npm run tia:cli -- download_to_plc --device PLC_1 --scope changes --username admin --password secret`). Same `allowPlcDownload` gate as the LM tool; `username`/`password` are passed as per-call parameters (CLI has no interactive prompt).
+- **Docs** — README, both copilot-instruction files, the workspace templates (`CLI-instruction.md`, AGENTS.md, CLAUDE.md) and the CLI helper's `--help` text describe the new tool/command, its gate and the credential flow.
+
 ## [3.1.71] - 2026-08-26
 
 ### Added
