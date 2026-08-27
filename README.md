@@ -1,9 +1,7 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-
-[![Version](https://img.shields.io/badge/version-3.1.71-blue)](package.json)
-
+[![Version](https://img.shields.io/badge/version-3.1.80-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
@@ -79,16 +77,17 @@ The block viewer and web preview generator were moved to the separate **[TIA Vie
 
 ### Copilot / AI Agent Integration
 
-The extension exposes **25 Language Model Tools** (prefix `tia_`) plus a `@tia` chat participant, so GitHub Copilot (and any other VS Code LM-tool consumer) can drive TIA Portal end-to-end without manual clicks:
+The extension exposes **26 Language Model Tools** (prefix `tia_`) plus a `@tia` chat participant, so GitHub Copilot (and any other VS Code LM-tool consumer) can drive TIA Portal end-to-end without manual clicks:
 
 - **Connection / discovery** — `tia_connect`, `tia_disconnect`, `tia_list_projects`, `tia_select_project`, `tia_refresh`, `tia_list_devices`, `tia_list_blocks`
 - **Pull from TIA → workspace** — `tia_export_block`, `tia_export_device`, `tia_export_project` (entire project), `tia_export_hw_config` (per-device or project-wide HW Config; honours `tiaImport.hwConfigFormat`)
 - **Push workspace → TIA** — `tia_import_file`, `tia_import_folder` (blocks, tags, UDTs, watch tables), `tia_import_unit` (complete Software Unit), `tia_import_hw_config` (HW Config XML/AML — required for HW; `tia_import_file` does not handle HW)
 - **Languages & project texts** — `tia_get_project_languages` (language settings), `tia_export_project_texts` (project texts to xlsx for translation), `tia_import_project_texts` (re-import translated xlsx into the same project)
 - **Compile loop** — `tia_compile`, `tia_get_problems`, `tia_fix_compile_errors` (orchestrates import → compile → diagnostics until clean or `tiaImport.lmTools.maxFixIterations` is reached)
+- **Download to PLC** — `tia_download_to_plc` (loads changed software / full program / hardware+software into the physical PLC; **disabled by default** — requires `tiaImport.lmTools.allowPlcDownload`)
 - **Analysis** — `tia_export_cross_references` (full PLC cross-reference dump to JSONL/CSV, including unused symbols)
 
-Imports that overwrite existing TIA objects show a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled. The chat participant `@tia` is registered as `tia.assistant` and has the same toolset available.
+Imports that overwrite existing TIA objects show a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled. `tia_download_to_plc` always asks for confirmation and is blocked entirely until `tiaImport.lmTools.allowPlcDownload` is enabled — a download can stop the CPU and overwrite the running program. The chat participant `@tia` is registered as `tia.assistant` and has the same toolset available.
 
 ### External CLI Bridge
 
@@ -109,7 +108,10 @@ npm run tia:cli -- current_project --pretty
 npm run tia:cli -- open_project --filePath "C:\Projects\Demo.ap21" --pretty
 npm run tia:cli -- import_blocks --device PLC_1 --blocks FB10,FC20 --pretty
 npm run tia:cli -- import_file --device PLC_1 --filePath "C:\Projects\Demo\Block.xml" --overwriteExisting true
+npm run tia:cli -- download_to_plc --device PLC_1 --scope changes --username admin --password secret
 ```
+
+`download_to_plc` writes to the physical PLC: it is gated by `tiaImport.lmTools.allowPlcDownload` (same switch as the LM tool) and takes `--device` (required), `--scope changes|software|hardwareAndSoftware` (default `changes`) and optional `--username` / `--password` for password-protected CPUs (UMAC needs both).
 
 Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`). Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
 
