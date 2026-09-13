@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.81] - 2026-09-05
+
+### Fixed
+
+- **Single-block export via CLI bridge / LM tool failed with "Could not find device/PLC path"** ([#9](https://github.com/cmariusz/TiaImportExport.VSExt/issues/9)) — `export_block` (and `import_blocks`, which shares the code path) resolved the block correctly but passed only the device id as the parent path to the import service, while `buildDevicePlcPath` expects the full `deviceId/plcName` PLC path — so the PLC lookup failed for every single-block export through the API (the tree-view import worked because it passes the full PLC id). `exportBlock` now resolves the PLC that owns the block (by the `block.id` prefix, falling back to the device's only PLC) and passes its full id, and `buildDevicePlcPath` additionally accepts a bare device id when the device has exactly one PLC software. Covered by a new `buildDevicePlcPath` unit test.
+
 ## [3.1.80] - 2026-08-27
 
 ### Added
