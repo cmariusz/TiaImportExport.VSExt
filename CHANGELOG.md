@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.83] - 2026-09-15
+
+### Added
+
+- **Companion extensions wizard** — on the first activation after install/update a multi-select checklist offers optional companion extensions to install from the Marketplace: **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** (checked by default) and **[Step7 Import/Export](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.step7-import)** (unchecked by default). Each extension is offered only once, so entries added to the list in future releases are offered again to existing users. The wizard can be reopened anytime with the new **TIA Import: Install Companion Extensions** command, and both companions are also listed in the extension's *Extension Pack Recommendations*.
+
 ## [3.1.81] - 2026-09-05
 
 ### Fixed
