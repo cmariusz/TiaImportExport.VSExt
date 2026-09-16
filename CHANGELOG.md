@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [3.1.84] - 2026-09-16
+
+### Fixed
+
+- **`export_block` wrote files into a duplicated `Program blocks\Program blocks` folder** ([#11](https://github.com/cmariusz/TiaImportExport.VSExt/issues/11)) — `list_blocks` reports the block's `groupPath` including the top-level group name (e.g. `Program blocks/00_OB`), while the single-block export path already targets the `Program blocks` folder — combining the two produced an extra directory level, and re-importing such a file could land the block in a wrong PLC program group. `exportBlock` now strips the root block-group name from the `groupPath` before exporting (matching the tree-view import semantics), via a new `relativeToRootBlockGroup` helper covered by unit tests.
+
 ## [3.1.83] - 2026-09-15
 
 ### Added
