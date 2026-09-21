@@ -6,7 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
-## [4.0.3] - 2026-09-21
+## [4.0.7] - 2026-09-21
 
 ### Added
 
@@ -23,7 +23,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
   - Third-party components keep their own open-source licenses — see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Nothing in the new EULA restricts your rights under those licenses.
   - Files you export or edit with the extension remain entirely yours.
   - A one-time notification points existing users to the new terms after the update.
-- **All current functionality stays free of charge in 4.0.0.** Paid plans are planned for a later release; when they arrive, the split between free and paid features will be documented in the README and on the purchase page before it takes effect.
 
 ### Added
 
