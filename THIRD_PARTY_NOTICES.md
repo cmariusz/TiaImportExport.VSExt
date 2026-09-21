@@ -6,7 +6,9 @@ This project includes third-party components. Redistribution of this extension s
 
 ## Project License
 
-- This project source code is licensed under MIT (see `LICENSE`).
+- Version **4.0.0 and later** of this extension is proprietary commercial software licensed under the End User License Agreement in `LICENSE.md`. It is not open source.
+- Versions **3.1.85 and earlier** were released under the MIT License; that grant remains in force for those versions only (reproduced in `LICENSE.md`, section 20).
+- The terms of `LICENSE.md` do **not** restrict your rights under the open-source licenses of the third-party components listed below. Where a component's license grants broader rights, that license prevails for that component.
 
 ## Runtime dependencies (Node.js)
 
@@ -45,12 +47,22 @@ These packages are provided under Siemens "Royalty-free Software" terms with add
 3. Keep Siemens package notices and terms available to recipients.
 4. Verify export-control and regional restrictions where applicable.
 
+## Apache-2.0 components — required notices
+
+`edge-js` and `edge-cs` are distributed under the Apache License, Version 2.0.
+A copy of the license is available at <https://www.apache.org/licenses/LICENSE-2.0>
+and in the packaged `node_modules/edge-js/` and `node_modules/edge-cs/` folders.
+These components are redistributed **unmodified**; no changes were made to their
+source files. Their copyright, patent, trademark and attribution notices are
+preserved in the packaged files and must not be removed.
+
 ## Recommended compliance checklist
 
 - Keep this `THIRD_PARTY_NOTICES.md` file in source and packaged artifacts.
-- Preserve the project `LICENSE` file.
+- Preserve the project `LICENSE.md` file.
 - Do not remove third-party copyright/license notices from redistributed artifacts.
 - Re-run dependency license checks before each release (`npm` and `dotnet`) because dependency graphs can change.
+- Reject any new dependency under a copyleft license (GPL / LGPL / AGPL / SSPL) — it is incompatible with shipping this extension under a proprietary EULA.
 
 ## Audit basis (current snapshot)
 
