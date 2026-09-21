@@ -6,6 +6,37 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.0.3] - 2026-09-21
+
+### Added
+
+- **MCP server (Model Context Protocol)** — the extension now runs a localhost-only Streamable HTTP MCP server exposing the same 26 `tia_*` tools as the Copilot Language Model Tools to any MCP client (VS Code Copilot, Claude Desktop, Cursor, custom agents). **Enabled by default** via the new `tiaImport.mcp.enabled` setting (set it to `false` to stop the server); the **TIA Import: Start MCP Server** command re-enables it. The endpoint URL and Bearer token are written to `.tia/mcp.json` (workspace + global storage); VS Code 1.99+ discovers the server automatically through the `mcpServerDefinitionProviders` contribution. `tia_download_to_plc` stays gated by `tiaImport.lmTools.allowPlcDownload`, and PLC credentials are always prompted from the local user — never passed through the MCP client.
+- New parity test `npm run test:mcp-tool-parity` (part of `npm test`) that keeps the MCP tool registry in sync with `contributes.languageModelTools`.
+
+## [4.0.0] - 2026-09-21
+
+### Changed
+
+- **⚠️ License change: MIT → commercial End User License Agreement.** Starting with version 4.0.0 the extension is proprietary commercial software, licensed under [`LICENSE.md`](LICENSE.md). It is no longer open source.
+  - **Versions 3.1.85 and earlier remain under the MIT License.** That grant is irrevocable for those versions and is reproduced in section 20 of `LICENSE.md`. It does not extend to 4.0.0 or later.
+  - The extension package may be redistributed **only** by the Visual Studio Marketplace and the Open VSX Registry. Re-uploading it elsewhere, or mirroring it outside your organization, is no longer permitted.
+  - Third-party components keep their own open-source licenses — see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Nothing in the new EULA restricts your rights under those licenses.
+  - Files you export or edit with the extension remain entirely yours.
+  - A one-time notification points existing users to the new terms after the update.
+- **All current functionality stays free of charge in 4.0.0.** Paid plans are planned for a later release; when they arrive, the split between free and paid features will be documented in the README and on the purchase page before it takes effect.
+
+### Added
+
+- **[`LICENSE.md`](LICENSE.md)** — End User License Agreement (license grant, restrictions, EU reverse-engineering carve-out, Siemens trademark and Openness notice, liability limits, Polish governing law). Section 14 states explicitly that **all content the extension imports, exports, converts or generates — including AI-generated code — is the user's responsibility**, and that it must be reviewed and tested before it reaches a machine.
+- **[`TERMS.md`](TERMS.md)** — terms of sale for future paid plans (subscription, renewal, EU right of withdrawal, refunds, support).
+- **[`PRIVACY.md`](PRIVACY.md)** — privacy policy. Confirms what has always been true: **no telemetry, no usage analytics, and no project data, PLC program or source code ever leaves your machine.** Only license activation — which you trigger explicitly — transmits data.
+- Manifest metadata required by the extension registries: `license`, `pricing`, `homepage`, `bugs`, `qna` and `capabilities` (the extension declares that it requires a trusted, non-virtual workspace).
+- `scripts/verify-vsix-contents.js` now fails the build if `LICENSE.md`, `TERMS.md`, `PRIVACY.md` or `THIRD_PARTY_NOTICES.md` is missing from the packaged VSIX.
+
+### Removed
+
+- `LICENSE` (MIT) — superseded by `LICENSE.md`.
+
 ## [3.1.84] - 2026-09-16
 
 ### Fixed

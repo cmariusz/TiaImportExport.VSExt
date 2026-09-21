@@ -1,15 +1,13 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-
-[![Version](https://img.shields.io/badge/version-3.1.85-blue)](package.json)
-
+[![Version](https://img.shields.io/badge/version-4.0.6-blue)](package.json)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: Commercial EULA](https://img.shields.io/badge/License-Commercial%20EULA-blue.svg)](LICENSE.md)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
-[![Author](<https://img.shields.io/badge/Author-Mariusz%20Czyrnek-orange?logo=linkedin>)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
+[![Author](<https://img.shields.io/badge/Author-CmSoft-orange?logo=linkedin>)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
 [![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY)
 
 **Bidirectional bridge between VS Code and Siemens TIA Portal** — import PLC/HMI projects from TIA Portal to local files, edit them with full VS Code + Copilot power, and export changes back. Built on the TIA Portal Openness API.
@@ -116,6 +114,20 @@ npm run tia:cli -- download_to_plc --device PLC_1 --scope changes --username adm
 `download_to_plc` writes to the physical PLC: it is gated by `tiaImport.lmTools.allowPlcDownload` (same switch as the LM tool) and takes `--device` (required), `--scope changes|software|hardwareAndSoftware` (default `changes`) and optional `--username` / `--password` for password-protected CPUs (UMAC needs both).
 
 Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`). Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
+
+### MCP Server (for AI agents)
+
+The extension runs a built-in **MCP server** (Model Context Protocol, Streamable HTTP) that exposes the same 26 `tia_*` tools to any MCP client — VS Code Copilot, Claude Desktop, Cursor or custom agents.
+
+**The server is enabled by default** (`tiaImport.mcp.enabled`) and starts with the extension. While running, it writes `.tia/mcp.json` (workspace + extension global storage) with the endpoint URL and a per-session bearer token:
+
+```json
+{ "version": 1, "host": "127.0.0.1", "port": 58470, "token": "...", "endpoint": "/mcp", "transport": "streamable-http" }
+```
+
+- **VS Code 1.99+** discovers the server automatically (MCP server definition provider) — no configuration needed. Disable it via `tiaImport.mcp.enabled` if you don't want it.
+- **External MCP clients**: read `.tia/mcp.json` at runtime (never hard-code or commit the token), connect to `http://<host>:<port>/mcp` with `Authorization: Bearer <token>`, then call `tools/list` / `tools/call`. `GET /health` lists the tool names without auth.
+- The server binds to `127.0.0.1` only. Note that `tia_import_*` tools run **autonomously** over MCP (no confirmation dialogs — unlike Copilot LM tools). `tia_download_to_plc` is still gated by `tiaImport.lmTools.allowPlcDownload`, and PLC credentials are prompted from the local user via a masked VS Code input — they never pass through the MCP client.
 
 ---
 
@@ -442,16 +454,24 @@ The standalone LAD/FBD/SCL/GRAPH rendering library (`TiaViewer.dll`, previously 
 - [Documentation/API/](Documentation/API/) — XML intellisense files for the Openness API
 - [Documentation/Schemas/](Documentation/Schemas/) — SimaticML XSD schemas for all block types
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) — third-party components and redistribution notes
+- [LICENSE.md](LICENSE.md) / [TERMS.md](TERMS.md) / [PRIVACY.md](PRIVACY.md) — license agreement, terms of sale, privacy policy
 
 ---
 
 ## Third-Party Licensing & Redistribution
 
-- This extension code is released under [MIT](LICENSE).
-- Third-party notices for npm/NuGet components are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- This extension is proprietary commercial software licensed under the [End User License Agreement](LICENSE.md). Versions 3.1.85 and earlier were released under the MIT License and remain MIT-licensed; version 4.0.0 and later are not.
+- Redistribution of the extension package by anyone other than the Visual Studio Marketplace and the Open VSX Registry is not permitted.
+- Third-party notices for npm/NuGet components are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); those components keep their own (open-source) licenses.
 - For Siemens Openness components, use and distribution are subject to Siemens package terms; evaluate those terms for your release scenario.
 - Do **not** bundle or redistribute `Siemens.Engineering.*` binaries with this extension unless explicitly allowed by Siemens terms.
 - End users must provide their own licensed TIA Portal installation and Openness entitlement.
+
+---
+
+## Trademarks
+
+This extension is an independent product. It is **not** developed, endorsed, sponsored by or affiliated with Siemens AG. *TIA Portal*, *SIMATIC*, *STEP 7*, *WinCC* and *Openness* are trademarks or registered trademarks of Siemens AG, used here solely for identification and interoperability purposes. *Visual Studio Code* is a trademark of Microsoft Corporation.
 
 ---
 
@@ -471,7 +491,11 @@ The extension is a development and automation tool, and all imports/exports modi
 
 The author is not liable for any direct or indirect damages, production downtime, data loss, project corruption, safety incidents, or other consequences resulting from changes made to TIA Portal projects using this extension.
 
-Users are fully responsible for validating, testing, and approving all generated or imported changes before deployment to real machines, production lines, or safety-related systems.
+**You are responsible for all content the extension moves, converts or generates** — program blocks, SCL/LAD/FBD sources, data blocks, UDTs, tag tables, watch tables, technology objects, hardware configuration and project texts — regardless of whether you wrote it, the extension generated it, or an AI assistant (GitHub Copilot, `@tia` chat participant, `tia_*` language model tools) produced it. **AI-generated code is not reviewed or verified by the author.**
+
+Users are fully responsible for validating, testing, and approving all generated or imported changes before deployment to real machines, production lines, or safety-related systems — and for keeping verified project backups before any import, export, synchronisation or PLC download.
+
+These terms are binding as section 14 of the [End User License Agreement](LICENSE.md#14-your-content-generated-code-and-safety-critical-use).
 
 ---
 
@@ -488,8 +512,23 @@ This extension ships with a `Tools/` directory for utility scripts and a `copilo
 
 Every shared script or instruction improves the experience for all users. Don't hesitate to share even small utilities — they often save the most time!
 
+> By submitting a contribution you confirm that it is your own work and you grant CmSoft a perpetual, worldwide, royalty-free right to use, modify and distribute it as part of this product. Contributions are published under the terms of the [EULA](LICENSE.md); the extension's own source code is not open source.
+
 ---
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 Mariusz Czyrnek
+Proprietary commercial software — see the [End User License Agreement](LICENSE.md).
+Copyright © 2026 CmSoft. All rights reserved.
+
+**CmSoft** — Kornatka 23, 32-410 Dobczyce, Poland · NIP (VAT-ID) PL 894-253-07-59
+· [office@cmsoft.com.pl](mailto:office@cmsoft.com.pl) · [www.cmsoft.com.pl](https://www.cmsoft.com.pl)
+
+| Document | Purpose |
+| --- | --- |
+| [LICENSE.md](LICENSE.md) | End User License Agreement (terms of use) |
+| [TERMS.md](TERMS.md) | Terms of sale for paid plans |
+| [PRIVACY.md](PRIVACY.md) | Privacy policy — no telemetry, no project data leaves your machine |
+| [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Third-party components and their licenses |
+
+**Versions 3.1.85 and earlier** were published under the MIT License. That grant is irrevocable for those versions and is reproduced in section 20 of [LICENSE.md](LICENSE.md). It does not apply to version 4.0.0 or later.
