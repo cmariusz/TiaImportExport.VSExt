@@ -1,13 +1,15 @@
 # TIA Portal Import — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-4.0.6-blue)](package.json)
+
+[![Version](https://img.shields.io/badge/version-4.0.7-blue)](package.json)
+
 <!-- /VERSION-BADGE -->
 
 [![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
-[![License: Commercial EULA](https://img.shields.io/badge/License-Commercial%20EULA-blue.svg)](LICENSE.md)
+[![License: Commercial EULA](<https://img.shields.io/badge/License-Commercial%20EULA-blue.svg>)](LICENSE.md)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
-[![Author](<https://img.shields.io/badge/Author-CmSoft-orange?logo=linkedin>)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
+[![Author](https://img.shields.io/badge/Author-CmSoft-orange?logo=linkedin)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
 [![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY)
 
 **Bidirectional bridge between VS Code and Siemens TIA Portal** — import PLC/HMI projects from TIA Portal to local files, edit them with full VS Code + Copilot power, and export changes back. Built on the TIA Portal Openness API.
@@ -524,11 +526,11 @@ Copyright © 2026 CmSoft. All rights reserved.
 **CmSoft** — Kornatka 23, 32-410 Dobczyce, Poland · NIP (VAT-ID) PL 894-253-07-59
 · [office@cmsoft.com.pl](mailto:office@cmsoft.com.pl) · [www.cmsoft.com.pl](https://www.cmsoft.com.pl)
 
-| Document | Purpose |
-| --- | --- |
-| [LICENSE.md](LICENSE.md) | End User License Agreement (terms of use) |
-| [TERMS.md](TERMS.md) | Terms of sale for paid plans |
-| [PRIVACY.md](PRIVACY.md) | Privacy policy — no telemetry, no project data leaves your machine |
-| [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Third-party components and their licenses |
+| Document                                        | Purpose                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------- |
+| [LICENSE.md](LICENSE.md)                         | End User License Agreement (terms of use)                           |
+| [TERMS.md](TERMS.md)                             | Terms of sale for paid plans                                        |
+| [PRIVACY.md](PRIVACY.md)                         | Privacy policy — no telemetry, no project data leaves your machine |
+| [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Third-party components and their licenses                           |
 
 **Versions 3.1.85 and earlier** were published under the MIT License. That grant is irrevocable for those versions and is reproduced in section 20 of [LICENSE.md](LICENSE.md). It does not apply to version 4.0.0 or later.
