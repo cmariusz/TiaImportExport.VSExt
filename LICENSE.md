@@ -3,7 +3,7 @@
 **Product:** TIA Portal Import — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
 **Licensor:** CmSoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59 — `office@cmsoft.com.pl`, <https://www.cmsoft.com.pl> ("Licensor", "we", "us")
 **Applies to:** version **4.0.0** and later
-**Version of this EULA:** 1.0 — 2026-09-21
+**Version of this EULA:** 1.1 — 2026-09-23
 
 > **IMPORTANT — READ CAREFULLY.** This End User License Agreement ("Agreement")
 > is a legal agreement between you (an individual or a legal entity, "you") and
@@ -21,8 +21,20 @@
 
 ## 1. Definitions
 
-- **"Seat"** — one named individual authorized to use the Software, or one
-  workstation on which the Software is activated, as stated in your order.
+- **"Seat"** — the right of one named individual, identified by an e-mail
+  address, to use Paid Features on one activated workstation (physical or
+  virtual) at a time, unless your order states a different number of
+  activations per Seat.
+- **"Business Customer"** — anyone who acquires or uses the Software in
+  connection with a trade, business, craft or profession, including public
+  bodies. **"Consumer"** — a natural person acting for purposes outside such
+  activity.
+- **"AI Assistant"** — any language-model based tool that you connect to the
+  Software, for example GitHub Copilot through the VS Code Language Model Tools
+  API or any client of the built-in MCP server.
+- **"Safety Program"** — any fail-safe program part, including F-blocks, safety
+  software units (`PlcSafetyUnit`), F-parameters, safety-related data and
+  hardware configuration of fail-safe modules or F-CPUs.
 - **"Free Features"** — the functionality the Licensor makes available without a
   paid subscription, as described in the product documentation for the
   applicable version.
@@ -51,6 +63,19 @@ to install and use the Software:
 You may make a reasonable number of backup copies of the installation package
 for archival purposes.
 
+**Virtual and remote environments.** You may run the Software in virtual
+machines, VDI, terminal-server, RDP, Citrix or cloud workstations. For Paid
+Features, each such instance counts as a workstation; the activation must remain
+bound to exactly one instance, and cloning an activated instance does not create
+additional Seats.
+
+**Multi-Seat and organisation licenses.** Where Seats are purchased by an
+organisation, the organisation (a) assigns each Seat to one named individual and
+may reassign it when that individual leaves or changes role, (b) ensures that
+its users comply with this Agreement, and (c) is responsible for their breaches
+of it as for its own. When the organisation's subscription ends, the Paid
+Features of all assigned Seats end with it.
+
 ## 3. Restrictions
 
 Except to the extent expressly permitted by this Agreement or by mandatory
@@ -65,7 +90,8 @@ applicable law, you must **not**:
    notice contained in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md);
 4. circumvent, disable or tamper with the activation, licensing, quota or
    integrity mechanisms of the Software, or use a License Key you did not
-   lawfully obtain, or share a License Key beyond the Seats you purchased;
+   lawfully obtain, or share a License Key beyond the Seats you purchased, or
+   let several individuals use one Seat (including through a shared account);
 5. use the Software to develop a competing product, or to provide the
    functionality of the Software to third parties as a service or in a
    time-sharing, service-bureau or hosting arrangement;
@@ -136,6 +162,13 @@ processed, on what legal basis and for how long, are described in
 [`PRIVACY.md`](PRIVACY.md). The Software does not transmit your project files,
 PLC programs or source code to the Licensor.
 
+Versions that validate License Keys online may re-check the license status
+periodically. Paid Features then remain available without an internet
+connection for a grace period stated in the product documentation, which will
+not be shorter than **14 days**; after the grace period a successful online
+validation is required to continue using Paid Features. Free Features never
+require an internet connection.
+
 ## 10. Updates and support
 
 The Licensor may, but is not obliged to, provide updates. Updates are governed
@@ -147,6 +180,12 @@ versions; your existing installation continues to work under the terms it was
 licensed with, but you are not entitled to receive further updates on those
 terms.
 
+The extension is updated through the Authorized Registry from which you
+installed it, according to your Visual Studio Code update settings. Security
+vulnerabilities are handled according to [`SECURITY.md`](SECURITY.md), which
+describes how to report them, the handling timeline and the period during which
+security updates are provided.
+
 ## 11. Term and termination
 
 This Agreement is effective upon installation and continues until terminated.
@@ -155,7 +194,11 @@ cancelled. The Licensor may terminate this Agreement with immediate effect if
 you materially breach it, in particular [Section 3](#3-restrictions) or
 [Section 4](#4-reverse-engineering). On termination you must stop using the
 Software and remove it from all systems under your control. Sections 3, 4, 6, 7,
-8, 12, 13, 14, 17 and 19 survive termination.
+8, 12, 13, 14, 17, 19, 21 and 22 survive termination.
+
+The Licensor may also suspend or terminate the license with immediate effect
+where continuing to provide the Software to you would violate export-control or
+sanctions law (see [Section 15](#15-export-control)).
 
 ## 12. Disclaimer of warranty
 
@@ -232,10 +275,87 @@ project or on the controller.
 rights necessary to process Your Content with the Software, including rights in
 library blocks, know-how protected blocks and vendor-supplied code.
 
+**14.6 Fail-safe controllers and Safety Programs.** The Software can read,
+export, compare, convert and import Safety Programs. The Licensor makes no
+statement about, and accepts no responsibility for, the functional safety of any
+Safety Program processed with the Software. In particular:
+
+1. the specification, implementation, verification, validation and approval of
+   every Safety Program remain entirely with you, in accordance with the
+   standards applicable to your machine or plant (for example IEC 61508,
+   IEC 62061, ISO 13849-1/-2, IEC 61511) and with the Siemens safety system
+   manuals for the respective F-CPU;
+2. any change to a Safety Program that was generated, converted or modified by
+   the Software or by an AI Assistant must be checked by a qualified person
+   **other than the one who initiated the change** (independent review) before
+   it is compiled for, or downloaded to, a controller, and must then pass the
+   safety acceptance procedure that your organisation requires, including a
+   comparison of the F-signature / collective signature;
+3. managing safety passwords, F-administration access rights and access-
+   protection levels is your responsibility; the Software never bypasses them;
+4. you must not let an AI Assistant import, compile or download a Safety
+   Program without that independent review.
+
+**14.7 Built-in MCP server, CLI bridge and local automation.** The Software
+contains a Model Context Protocol (MCP) server, **enabled by default**, and an
+optional CLI bridge. Both listen on `127.0.0.1` only and require a per-session
+token. Any program that you connect to them, or that can read the token files in
+`.tia/`, can call the Software's TIA Portal operations **without further
+confirmation**, including imports that overwrite or delete objects in the open
+project. You therefore:
+
+1. decide which MCP clients, agents and scripts you connect, and assess their
+   trustworthiness yourself;
+2. protect your user account and workspace so that untrusted software cannot
+   read the token files;
+3. switch the MCP server off (`tiaImport.mcp.enabled = false`) if you do not
+   use it.
+
+The Licensor is responsible only for the Software working as described,
+including the local-only binding, the token check and the safeguards that apply
+to PLC downloads (`tiaImport.lmTools.allowPlcDownload` and the local credential
+prompt). The Licensor is not liable for actions performed by clients you
+connected or for damage caused by malicious or compromised third-party software
+on your computer, including data leakage or unauthorised changes to your
+projects.
+
+**14.8 AI providers and transfer of project data.** You choose the AI Assistant
+and the model behind it. The Software is not a party to your relationship with
+that provider. You are solely responsible for:
+
+1. having a valid agreement and any required subscription or API key with the
+   provider;
+2. complying with the provider's terms of use, acceptable-use rules and privacy
+   terms;
+3. deciding whether project data may be sent to the provider — an AI Assistant
+   that calls the Software's tools receives the results (for example block
+   sources, tag names, device names, compile messages) and typically forwards
+   them to its model provider; this is done by the AI Assistant, not by the
+   Licensor, and may be restricted by your confidentiality obligations, by your
+   customer's requirements or by data-protection law;
+4. the consequences of changes, outages, price changes or discontinuation of
+   models or services on the provider's side.
+
+**14.9 Qualified users.** The Software is intended for automation engineers.
+You may use it on TIA Portal projects only if you — or the persons you allow to
+use it — have sound knowledge of PLC programming and TIA Portal, can assess the
+effect of engineering changes on the machine or process, and can critically
+evaluate automatically generated or AI-generated content. By using the Software
+you confirm that this is the case.
+
 ## 15. Export control
 
 You must comply with all applicable export control and sanctions laws and must
-not use or transfer the Software in violation of them.
+not use or transfer the Software in violation of them — in particular Regulation
+(EU) 2021/821 (dual-use items), the EU restrictive measures, and, where they
+apply to you, the U.S. Export Administration Regulations and OFAC sanctions
+programs. You must not make the Software available in embargoed countries or to
+persons or entities on applicable sanctions lists. The Software contains
+standard cryptographic functions (for example TLS provided by the platform and
+the Windows Data Protection API) and interfaces to AI services; you are
+responsible for any authorisation your jurisdiction requires for them, and for
+export-control compliance when you use the Software or access your projects
+across borders.
 
 ## 16. Consumers
 
@@ -267,13 +387,22 @@ retroactively change the terms of versions already licensed to you. Continuing
 to install a new version after the revised EULA has been published constitutes
 acceptance of it for that version.
 
+If you hold an active subscription and a revised EULA changes the terms for
+the Paid Features you already use, the Licensor will inform you by e-mail or
+in-product notice at least **30 days** before the change takes effect. You may
+cancel the subscription before that date; the Terms of Sale then govern any
+refund of prepaid fees for the unused period. Changes required by law or by a
+decision of a public authority may take effect earlier where this is
+unavoidable.
+
 ## 19. Miscellaneous
 
 If any provision of this Agreement is held invalid or unenforceable, the
 remaining provisions remain in full force, and the invalid provision is replaced
 by a valid one that comes closest to its economic purpose. Failure to enforce a
 provision is not a waiver. This Agreement, together with
-[`TERMS.md`](TERMS.md), [`PRIVACY.md`](PRIVACY.md) and
+[`TERMS.md`](TERMS.md), [`PRIVACY.md`](PRIVACY.md),
+[`SECURITY.md`](SECURITY.md) and
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md), constitutes the entire
 agreement regarding the Software and supersedes all prior understandings. The
 authoritative language of this Agreement is **English**; any translation is
@@ -312,7 +441,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## 21. Contact
+## 21. Indemnification (Business Customers only)
+
+If you are a Business Customer, you will defend and indemnify the Licensor
+against third-party claims, fines imposed by authorities and reasonable costs of
+legal defence arising from:
+
+1. Your Content, including AI-generated content, that you applied to a machine,
+   plant or controller;
+2. your breach of this Agreement, of Siemens' license terms or of an AI
+   provider's terms;
+3. processing of confidential information or personal data of third parties
+   (for example your customers' projects) with the Software or through an AI
+   Assistant;
+4. your breach of export-control, sanctions or data-protection law.
+
+The Licensor will notify you promptly of such a claim, give you control of its
+defence and settlement (a settlement that imposes obligations on the Licensor
+requires its consent) and provide reasonable cooperation at your expense. This
+obligation does not apply to the extent the claim results from the Licensor's
+intentional or grossly negligent conduct. This Section does not apply to
+Consumers.
+
+## 22. Artificial-intelligence regulation
+
+The Software is an engineering tool that exposes TIA Portal operations to AI
+Assistants chosen by you; it does not contain or train its own AI model. In the
+Licensor's assessment it is not an AI system placed on the market for a
+high-risk purpose within the meaning of Article 6 and Annex III of Regulation
+(EU) 2024/1689 (AI Act), and it is not marketed for such purposes.
+
+1. **Transparency.** This Agreement and the product documentation inform you
+   that AI Assistants can create and modify Your Content through the Software.
+   Content produced in this way is not verified by the Licensor (see
+   Section 14.3).
+2. **Your own assessment.** If you integrate the Software into a system that
+   falls under the AI Act — for example as part of a safety component of
+   machinery or of critical infrastructure — you are responsible for the
+   classification of that system and for all obligations that result from it,
+   including risk management, technical documentation, human oversight and
+   conformity assessment.
+3. **Prohibited practices.** You must not use the Software for any practice
+   prohibited by Article 5 of the AI Act.
+
+The Licensor is not liable for regulatory breaches caused by use of the
+Software outside its intended purpose.
+
+## 23. Contact
 
 **CmSoft**
 Kornatka 23, 32-410 Dobczyce, Poland
