@@ -2,7 +2,7 @@
 
 **Product:** TIA Portal Import — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
 **Seller:** CmSoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59 — `office@cmsoft.com.pl`, <https://www.cmsoft.com.pl>
-**Version:** 1.0 — 2026-09-21
+**Version:** 1.1 — 2026-09-23
 
 These Terms of Sale govern the purchase of paid plans for the Software. Use of
 the Software itself is governed by the [End User License Agreement](LICENSE.md)
@@ -42,6 +42,11 @@ the purchased number of Seats and for the purchased term. Activation is bound to
 the workstations on which it is used; a Seat can be released and reassigned by
 deactivating it on the previous machine.
 
+For organisation orders with several Seats, the ordering organisation names a
+contact person who manages the assignment of Seats and the billing relationship
+and keeps the organisation's billing data up to date. The rules for assigning
+Seats to named individuals are set out in Section 2 of the EULA.
+
 ## 5. Subscription term, renewal and cancellation
 
 1. Subscriptions run for the period selected at purchase (for example monthly or
@@ -53,6 +58,11 @@ deactivating it on the previous machine.
 4. If a payment fails or a subscription expires, Paid Features stop working.
    Free Features and all files previously exported to your workspace remain
    fully usable.
+5. Licenses bought on invoice for a fixed term do not renew automatically; they
+   end when the paid term ends.
+6. If you cancel because of a change to the EULA announced under Section 18 of
+   the EULA, the Seller refunds the prepaid fee for the part of the billing
+   period after the change takes effect.
 
 ## 6. Right of withdrawal (consumers)
 
@@ -88,14 +98,35 @@ The Seller's liability is limited as set out in Section 13 of the
 [EULA](LICENSE.md). Mandatory statutory liability, in particular towards
 consumers, is not affected.
 
-## 10. Governing law and disputes
+## 10. Force majeure
+
+Neither party is responsible for a delay or failure in performing its
+obligations to the extent it is caused by events beyond its reasonable control,
+such as natural disasters, epidemics, war, terrorism, riots, strikes, measures
+of public authorities, large-scale failures of the internet or of power supply,
+outages of the Visual Studio Marketplace, Open VSX, the payment provider or
+e-mail provider, outages of AI providers, or cyber-attacks on third-party
+infrastructure.
+
+1. The affected party informs the other party without undue delay about the
+   event and its expected duration.
+2. The affected obligations are suspended for the duration of the event; all
+   other obligations remain in force. Free Features and features that work
+   offline are not affected by outages of online services.
+3. If the event prevents the use of Paid Features for more than 14 consecutive
+   days, the Seller refunds the fee for that period pro rata on request.
+4. If the event lasts more than 60 consecutive days, either party may terminate
+   the affected subscription with immediate effect; prepaid fees for the
+   remaining period are refunded pro rata.
+
+## 11. Governing law and disputes
 
 Polish law applies, excluding conflict-of-law rules. For consumers, the
 mandatory consumer-protection rules of their country of habitual residence
 continue to apply, and the EU Online Dispute Resolution platform is available at
 <https://ec.europa.eu/consumers/odr>.
 
-## 11. Contact
+## 12. Contact
 
 **CmSoft**
 Kornatka 23, 32-410 Dobczyce, Poland

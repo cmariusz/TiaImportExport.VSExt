@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.0.9] - 2026-09-24
+
+### Added
+
+- **TIA Portal instance picker on connect** — when several TIA Portal instances are running, **TIA Import: Connect to TIA Portal** (and the `tia_connect` tool) now shows a list of instances (project, PID, mode) so you can choose which one to attach to. With a single running instance the connection is made automatically, without asking. The `tia_connect` tool accepts an optional `processId` to pick an instance explicitly. Re-attach after a lost Openness session now also targets the instance you originally connected to instead of the first one found.
+
+### Changed
+
+- **Offline support for Electron 43 and 44** — `electron-edge-js` updated to 44.0.0, so the extension bundles pre-built native binaries for Electron 39–44 (previously 37–42). VS Code builds running on Electron 43 no longer hit the "Electron 43 is NOT bundled" error in offline environments. Note: binaries for Electron 37/38 are no longer included upstream; affected users need an older extension version or a newer VS Code.
+
+## [4.0.8] - 2026-09-23
+
+### Changed
+
+- **`.tia` state files no longer pollute every workspace** — the MCP server (`mcp.json`) and CLI bridge (`cli.json`) now write their state file to the workspace folder only when the workspace is actually used for TIA work (an existing `.tia` or TIA export folder, or after connecting to TIA Portal / calling a tool). The global-storage copy is always written, so external agents can still discover the endpoint via the documented fallback. New setting `tiaImport.mcp.writeWorkspaceStateFile` (default `true`) allows opting out of the workspace copy entirely.
+- Stopping the MCP server or CLI bridge now also removes the `.tia` directory when it became empty (previously only the state file was deleted, leaving an empty folder behind).
+
 ## [4.0.7] - 2026-09-21
 
 ### Added
