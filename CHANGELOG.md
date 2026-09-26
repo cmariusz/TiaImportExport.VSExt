@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.0.10] - 2026-09-26
+
+### Added
+
+- **Intuitive license purchase: two buttons + license-server wizard** — the license panel now offers two purchase paths instead of the `tiaImport.license.deliveryMode` setting: **„Zamówienie e-mail"** (generates the activation token and opens a pre-filled e-mail to the vendor in one step) and **„Serwer licencji"** — a 4-step wizard that registers the activation request on the license server, opens the Paddle checkout in the browser (with a „Otwórz ponownie" button), polls the server for the payment confirmation and then **activates the delivered key automatically**, unlocking PRO without any copy-paste. The wizard is cancellable („Anuluj") and reports each step's progress in the panel; when the key was already delivered (or is missing), the wizard points to the e-mail delivery instead. Both paths require EULA acceptance, a valid e-mail address and RODO consent.
+
+### Removed
+
+- The `tiaImport.license.deliveryMode` setting — the delivery path is now chosen directly with the two order buttons in the license panel.
+
 ## [4.0.9] - 2026-09-24
 
 ### Added
