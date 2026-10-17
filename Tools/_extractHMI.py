@@ -3,6 +3,14 @@ Extract HMI-accessible variables from TIA Portal DB/IDB XML and .db exports.
 Outputs Excel with columns matching TIA Portal DB monitor view.
 Resolves UDT structures recursively from PLC data type definitions.
 
+Dependencies:
+    pip install pyyaml openpyxl
+
+If you get:
+    ModuleNotFoundError: No module named 'yaml'
+install the missing package with:
+    pip install pyyaml
+
 Usage:
     python Tools\\_extractHMI.py                           # auto-detect TiaExport in cwd
     python Tools\\_extractHMI.py <plc_base_dir>             # explicit PLC folder path
@@ -877,6 +885,10 @@ def write_excel(results, output_file):
 
     ws.freeze_panes = "A2"
     ws.auto_filter.ref = ws.dimensions
+
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
 
     wb.save(output_file)
     print(f"  Saved {len(results)} rows → {output_file}")

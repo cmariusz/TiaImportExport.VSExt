@@ -1,0 +1,8 @@
+# CMsoft Import for TiaPortal: cache and MCP / CLI state files
+.tia-cache
+.tia
+# Local-only Claude Code notes
+CLAUDE.local.md
+# User-generated script outputs
+UserFiles/*
+!UserFiles/.gitkeep
