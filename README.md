@@ -1,22 +1,21 @@
-# TIA Portal Import — VS Code Extension
+# CMsoft Import for TiaPortal — VS Code Extension
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-4.0.9-blue)](package.json)
+[![Version](https://img.shields.io/badge/version-4.1.0-blue)](CHANGELOG.md)
 <!-- /VERSION-BADGE -->
 
-[![VS Code](<https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode>)](https://code.visualstudio.com/)
-[![License: Commercial EULA](<https://img.shields.io/badge/License-Commercial%20EULA-blue.svg>)](LICENSE.md)
+[![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
+[![License: Commercial EULA](https://img.shields.io/badge/License-Commercial%20EULA-blue.svg)](LICENSE.md)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
-[![Author](https://img.shields.io/badge/Author-CmSoft-orange?logo=linkedin)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
-[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY)
+[![Author](https://img.shields.io/badge/Author-CMsoft-orange?logo=linkedin)](https://www.linkedin.com/in/mariusz-czyrnek-a33b87a6)
 
 **Bidirectional bridge between VS Code and Siemens TIA Portal** — import PLC/HMI projects from TIA Portal to local files, edit them with full VS Code + Copilot power, and export changes back. Built on the TIA Portal Openness API.
 
-> 💡 **Tip:** The PLC block **viewer** and **web preview generator** live in the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — it renders LAD/FBD/SCL/GRAPH blocks, data blocks, UDTs and tag tables from the export folders this extension produces, both inside VS Code and as standalone whole-PLC HTML web previews. The two extensions are built to work together.
+> 💡 **Tip:** The PLC block **viewer** and **web preview generator** live in the companion **[CMsoft Viewer for TiaPortal](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — it renders LAD/FBD/SCL/GRAPH blocks, data blocks, UDTs and tag tables from the export folders this extension produces, both inside VS Code and as standalone whole-PLC HTML web previews. The two extensions are built to work together.
 
-If this extension helps your TIA Portal workflow, you can support ongoing development with a voluntary [PayPal donation](https://www.paypal.com/donate/?hosted_button_id=68KF5N2K5QQVY).
+> 📖 **User manual:** built into the extension — Command Palette → **CMsoft Import for TiaPortal: Open User Manual** (screenshots, a complete worked example, Copilot / MCP / CLI examples, troubleshooting; works offline).
 
-![TIA Portal Import Overview](Screenshots/Overview.png)
+![CMsoft Import for TiaPortal Overview](Screenshots/Overview.png)
 
 ---
 
@@ -44,7 +43,7 @@ If this extension helps your TIA Portal workflow, you can support ongoing develo
 
 ### Viewing imported blocks — companion extension
 
-The block viewer and web preview generator were moved to the separate **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)). Install it to render imported blocks (SimaticML XML, `.s7dcl` + `.s7res`, `.db`, `.scl`, `.udt`) as interactive LAD/FBD/SCL/GRAPH diagrams inside VS Code, and to generate a complete offline whole-PLC HTML web preview from the export folders this extension produces.
+The block viewer and web preview generator were moved to the separate **[CMsoft Viewer for TiaPortal](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)). Install it to render imported blocks (SimaticML XML, `.s7dcl` + `.s7res`, `.db`, `.scl`, `.udt`) as interactive LAD/FBD/SCL/GRAPH diagrams inside VS Code, and to generate a complete offline whole-PLC HTML web preview from the export folders this extension produces.
 
 ### Export to TIA Portal (local files → TIA)
 
@@ -70,7 +69,7 @@ The block viewer and web preview generator were moved to the separate **[TIA Vie
 - **Know-how protected block detection** — detects and skips placeholder files for protected blocks
 - **Instance DB creation** — creates Instance DBs directly via API (no XML import needed)
 - **Cancellation support** — cancel long-running operations via VS Code progress UI
-- **Status bar** — real-time connection state and project info
+- **Status bar** — real-time connection state and project info; the **CMsoft** item lists your CMsoft add-on licenses and the user manuals of the installed CMsoft add-ons (hover for details, click to pick a license and manage it or a manual and open it; **Help: CMsoft Manuals…** in the Command Palette lists the manuals alone)
 - **Time-based import progress** — long-running project, device, device-category, and category HW Config imports show a live numeric percentage, weighted work counter, and ETA in both the notification progress UI and the status bar; block imports are weighted by export type (SD, SCL/DB source, XML, UDTs, tag/watch tables) and category HW Config imports are weighted per device with a small safety buffer so very large TIA exports do not look stalled
 - **Compile after export** — optional PLC software compilation in TIA Portal after each export (Always / Ask / Never); results shown in OUTPUT panel
 - **Compile error tracking** — compile errors and warnings mapped to VS Code PROBLEMS panel with automatic file matching, network-to-line resolution (XML, S7DCL, SCL), and direct navigation to the error location
@@ -87,7 +86,7 @@ The extension exposes **26 Language Model Tools** (prefix `tia_`) plus a `@tia` 
 - **Download to PLC** — `tia_download_to_plc` (loads changed software / full program / hardware+software into the physical PLC; **disabled by default** — requires `tiaImport.lmTools.allowPlcDownload`)
 - **Analysis** — `tia_export_cross_references` (full PLC cross-reference dump to JSONL/CSV, including unused symbols)
 
-Imports that overwrite existing TIA objects show a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled. `tia_download_to_plc` always asks for confirmation and is blocked entirely until `tiaImport.lmTools.allowPlcDownload` is enabled — a download can stop the CPU and overwrite the running program. The chat participant `@tia` is registered as `tia.assistant` and has the same toolset available.
+Imports that overwrite existing TIA objects show a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled. `tia_download_to_plc` always asks for confirmation and is blocked entirely until `tiaImport.lmTools.allowPlcDownload` is enabled — a download can stop the CPU and overwrite the running program. When TIA Portal must reinitialize data blocks for a download (their values, retain data included, go back to the start values), the row **DB Reinit on Download** of the Connection view (`tiaImport.lmTools.reinitializeDataBlocks`) decides: **Never**, **Ask** (default — you are asked in VS Code) or **Always**. The chat participant `@tia` is registered as `tia.assistant` and has the same toolset available.
 
 ### External CLI Bridge
 
@@ -96,22 +95,31 @@ External scripts can drive the same TIA workflows through a localhost-only JSON 
 **The bridge is opt-in and disabled by default** — no listener is started and no `.tia/` folder is created until you enable it. Turn it on in any of these ways:
 
 - Click the **CLI Bridge** row in the *TIA Connection* view (toggles between `Off` / `On`).
-- Click the **terminal** icon (*TIA Import: Start CLI Bridge*) in the *TIA Connection* view title bar — you will be prompted to enable it.
+- Click the **terminal** icon (*CMsoft Import for TiaPortal: Start CLI Bridge*) in the *TIA Connection* view title bar — you will be prompted to enable it.
 - Set `tiaImport.cli.enabled` to `true` in VS Code Settings.
 
 Once enabled, the extension writes `.tia/cli.json` in the workspace with the current host, port and per-session bearer token. Scripts must read that file at runtime and send authenticated `POST /api` requests. Do not hard-code or commit the token. Toggling the setting off stops the listener and removes the state file.
 
-The packaged helper wraps the bridge:
+The bridge is plain HTTP, so any language works — PowerShell needs nothing else installed:
 
 ```powershell
-npm run tia:cli -- current_project --pretty
-npm run tia:cli -- open_project --filePath "C:\Projects\Demo.ap21" --pretty
-npm run tia:cli -- import_blocks --device PLC_1 --blocks FB10,FC20 --pretty
-npm run tia:cli -- import_file --device PLC_1 --filePath "C:\Projects\Demo\Block.xml" --overwriteExisting true
-npm run tia:cli -- download_to_plc --device PLC_1 --scope changes --username admin --password secret
+$s = Get-Content .tia\cli.json | ConvertFrom-Json
+$h = @{ Authorization = "Bearer $($s.token)" }
+Invoke-RestMethod -Method Post -Uri "http://$($s.host):$($s.port)/api" -Headers $h -ContentType 'application/json' `
+                  -Body '{"command":"list_blocks","args":{"device":"PLC_1","limit":2}}'
 ```
 
-`download_to_plc` writes to the physical PLC: it is gated by `tiaImport.lmTools.allowPlcDownload` (same switch as the LM tool) and takes `--device` (required), `--scope changes|software|hardwareAndSoftware` (default `changes`) and optional `--username` / `--password` for password-protected CPUs (UMAC needs both).
+For the command line, the extension ships the helper `tia-cli.js`. It runs on the runtime built into VS Code, so no Node.js is needed; the user manual (section 13.4, **CMsoft Import for TiaPortal: Open User Manual**) has a ready-made `tia` PowerShell function for it:
+
+```powershell
+tia current_project --pretty
+tia open_project --filePath "C:\Projects\Demo.ap21" --pretty
+tia import_blocks --device PLC_1 --blocks FB10,FC20 --pretty
+tia import_file --device PLC_1 --filePath "C:\Projects\Demo\Block.xml" --overwriteExisting true
+tia download_to_plc --device PLC_1 --scope changes --username admin --password secret
+```
+
+`download_to_plc` writes to the physical PLC: it is gated by `tiaImport.lmTools.allowPlcDownload` (same switch as the LM tool) and takes `--device` (required), `--scope changes|software|hardwareAndSoftware` (default `changes`) and optional `--username` / `--password` for password-protected CPUs (UMAC needs both). A script cannot answer the data-block reinitialization question: with `tiaImport.lmTools.reinitializeDataBlocks` on `ask` (default) a download that needs it stops without loading anything — set `always` for scripted downloads.
 
 Use `import_blocks` / `tia_import_blocks` to pull blocks from TIA Portal into the workspace; it honours the configured block formats (`tiaImport.exportFormat`, `tiaImport.dbExportFormat`). Use `import_file`, `import_folder` and `import_hw_config` when pushing local files back into TIA Portal.
 
@@ -127,7 +135,7 @@ The extension runs a built-in **MCP server** (Model Context Protocol, Streamable
 
 - **VS Code 1.99+** discovers the server automatically (MCP server definition provider) — no configuration needed. Disable it via `tiaImport.mcp.enabled` if you don't want it.
 - **External MCP clients**: read `.tia/mcp.json` at runtime (never hard-code or commit the token), connect to `http://<host>:<port>/mcp` with `Authorization: Bearer <token>`, then call `tools/list` / `tools/call`. `GET /health` lists the tool names without auth.
-- The server binds to `127.0.0.1` only. Note that `tia_import_*` tools run **autonomously** over MCP (no confirmation dialogs — unlike Copilot LM tools). `tia_download_to_plc` is still gated by `tiaImport.lmTools.allowPlcDownload`, and PLC credentials are prompted from the local user via a masked VS Code input — they never pass through the MCP client.
+- The server binds to `127.0.0.1` only. Note that `tia_import_*` tools run **autonomously** over MCP (no confirmation dialogs — unlike Copilot LM tools). `tia_download_to_plc` is still gated by `tiaImport.lmTools.allowPlcDownload`, and PLC credentials are prompted from the local user via a masked VS Code input — they never pass through the MCP client. The same goes for the question whether data blocks may be reinitialized (`tiaImport.lmTools.reinitializeDataBlocks`: `ask`).
 
 ---
 
@@ -137,14 +145,15 @@ The extension runs a built-in **MCP server** (Model Context Protocol, Streamable
 | -------------------- | ----------------------------------------------- |
 | **OS**         | Windows 10 / 11                                 |
 | **TIA Portal** | V17, V18, V19, V20 or V21 with Openness license |
-| **.NET**       | .NET 8.0 Runtime                                |
+| **.NET**       | .NET Framework 4.8 (part of Windows 10 / 11)    |
 | **VS Code**    | ≥ 1.95.0                                       |
-| **Node.js**    | 20+ (for building / packaging only)             |
 
-> A single VSIX supports **TIA Portal V17, V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry at the top of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
+Nothing else needs to be installed — no Node.js, npm or build tools: the extension comes ready to run, and VS Code provides its runtime.
+
+> A single VSIX supports **TIA Portal V17, V18, V19, V20 and V21** — pick the active version via the **TIA Portal** entry of the Connection panel (or the `tiaImport.tiaPortalVersion` setting). Newer Openness features degrade gracefully on older versions:
 >
 > - **SD format** (`.s7dcl` / `.s7res`) requires **V20+**. On V17–V19 the extension automatically falls back to XML for LAD/FBD/STL blocks; SCL blocks continue to export as `.scl`.
-> - **Cross-reference dump** (`tia_export_cross_references`) requires **V18+**. **Heads-up:** building a full cross-reference table is performed by TIA Portal itself and can take **several minutes — sometimes 10 min+ on large PLCs** (thousands of blocks, large fault-tolerant projects). Progress is logged line-by-line in the *TIA Portal Import* output channel; the operation is non-blocking, so other imports/compiles continue normally.
+> - **Cross-reference dump** (`tia_export_cross_references`) requires **V18+**. **Heads-up:** building a full cross-reference table is performed by TIA Portal itself and can take **several minutes — sometimes 10 min+ on large PLCs** (thousands of blocks, large fault-tolerant projects). Progress is logged line-by-line in the *CMsoft Import for TiaPortal* output channel; the operation is non-blocking, so other imports/compiles continue normally.
 > - **Software Units** require **V18+**; on V17 unit commands report `supported:false`.
 > - **WinCC Unified** screen/tag-table **groups** and tag-table tag export require **V18+**; on V17 only root-level screens and tag tables are exported.
 > - **CAx / AutomationML HW Config** is available on all supported versions.
@@ -155,10 +164,9 @@ The extension runs a built-in **MCP server** (Model Context Protocol, Streamable
 
 ## Installation
 
-1. Install the extension from VS Code Marketplace (or `code --install-extension mariusz-czyrnek.tia-import`)
+1. Install the extension from VS Code Marketplace (or `code --install-extension MariuszCzyrnek.tia-import`)
 2. Make sure TIA Portal is installed with an Openness license
-3. Make sure end users of your distributed package also have their own valid TIA Portal + Openness license
-4. Optionally adjust settings via **File → Preferences → Settings → TIA Portal Import**
+3. Optionally adjust settings via **File → Preferences → Settings → CMsoft Import for TiaPortal**
 
 ---
 
@@ -169,7 +177,7 @@ The extension runs a built-in **MCP server** (Model Context Protocol, Streamable
 1. Start TIA Portal and open a project
 2. Open VS Code in a workspace folder
 3. Click the **TIA Portal** icon in the Activity Bar
-4. Click **Connect to TIA Portal** or run the command `TIA Import: Connect to TIA Portal`
+4. Click **Connect to TIA Portal** or run the command `CMsoft Import for TiaPortal: Connect to TIA Portal`
 5. The extension auto-detects running instances; if multiple are found, you pick one
 
 ### Importing from TIA Portal
@@ -210,22 +218,25 @@ The extension runs a built-in **MCP server** (Model Context Protocol, Streamable
 
 ### Viewing local blocks and web previews
 
-Block previews are provided by the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension: right-click a local SimaticML **XML** block or a **`.s7dcl`** source document to open it in the graphical LAD/FBD/SCL/GRAPH viewer, or right-click a PLC folder and choose **Generate Web Preview** to render a complete offline HTML view of the whole PLC (blocks, data types and tag tables with an `index.html` navigator). No TIA Portal connection is needed — the viewer reads the export files produced by this extension directly.
+Block previews are provided by the companion **[CMsoft Viewer for TiaPortal](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension: right-click a local SimaticML **XML** block or a **`.s7dcl`** source document to open it in the graphical LAD/FBD/SCL/GRAPH viewer, or right-click a PLC folder and choose **Generate Web Preview** to render a complete offline HTML view of the whole PLC (blocks, data types and tag tables with an `index.html` navigator). No TIA Portal connection is needed — the viewer reads the export files produced by this extension directly.
 
 ### Exported Directory Structure
 
-When you connect to TIA Portal (or run the `TIA Import: Prepare Workspace` command), the extension scaffolds the workspace with template files:
+When you connect to TIA Portal (or run the `CMsoft Import for TiaPortal: Prepare Workspace` command), the extension scaffolds the workspace with template files:
 
 ```
 <Workspace>/
-├── .gitignore                        # TIA-specific ignores (from template)
-├── CLAUDE.md                         # Claude Code instructions (re-exports .github/copilot-instructions.md)
-├── AGENTS.md                         # Open agents.md standard (Cursor / Aider / Codex / Gemini CLI / Jules)
+├── .gitignore                        # a section with the TIA-specific ignores
+├── CLAUDE.md                         # a section: Claude Code imports .github/instructions/tia-import.instructions.md
+├── AGENTS.md                         # a section: open agents.md standard (Cursor / Aider / Codex / Gemini CLI / Jules)
 ├── .github/
-│   ├── copilot-instructions.md       # AI coding rules for TIA XML files
-│   ├── ProjectDescription.md         # Auto-generated project description
+│   ├── copilot-instructions.md       # a section pointing to the instructions below
+│   ├── instructions/
+│   │   ├── tia-import.instructions.md      # AI coding rules for TIA XML files (all files)
+│   │   └── tia-import-cli.instructions.md  # MCP server and CLI bridge (Tools/)
+│   ├── ProjectDescription.md         # Living project description (created once)
 │   └── Schemas/                      # SimaticML XSD schemas
-├── Tools/                            # Utility scripts (Python, PS, etc.)
+├── Tools/                            # Utility scripts (README section, tia_cli_example.py, _extractHMI.py, …)
 ├── UserFiles/                        # Output dir for scripts (git-ignored)
 ├── TiaExport/
 │   ├── .tia-cache/                   # Temporary cache (git-ignored)
@@ -262,24 +273,25 @@ When you connect to TIA Portal (or run the `TIA Import: Prepare Workspace` comma
 │               └── Computers/
 ```
 
-Template files (`.gitignore`, `.github/`) are only created if they don't already exist — existing files are never overwritten. Templates are maintained in `Documentation/Templates/`.
+The template (`Documentation/Templates/`) follows the CMsoft workspace protocol, so the CMsoft add-ons can prepare the same workspace side by side (for example the migrator from MELSEC to TIA Portal next to this extension): each keeps its own files named after it (`.github/instructions/tia-import*.instructions.md`, `Tools/tia_cli_example.py`) and **one section** in `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.gitignore` and `Tools/README.md`, between `cmsoft:begin` / `cmsoft:end` markers. Running *Prepare Workspace* again updates this extension's section and files; your own text outside the sections — and a file from which you deleted its `cmsoft:managed` line — is never touched. `ProjectDescription.md`, the schemas and the HMI scripts are only created when missing. Unchanged copies of the templates of earlier versions (`.github/copilot-instructions.md`, `.github/CLI-instruction.md`, `Tools/cli_example.py`, …) are replaced.
 
 `UserFiles/` is always created during workspace preparation, even if the template folder is empty in the packaged extension.
 
-You can also scaffold the workspace manually at any time via `TIA Import: Prepare Workspace` command (available in the Command Palette and in the Connection panel title bar).
+You can also scaffold the workspace manually at any time via `CMsoft Import for TiaPortal: Prepare Workspace` command (available in the Command Palette and in the Connection panel title bar).
 
 ### Workspace Templates (`.github/`)
 
-On first connection to TIA Portal (or when you run `TIA Import: Prepare Workspace`), the extension copies template files from `Documentation/Templates/` into your workspace root. The `.github/` directory contains resources that enhance both AI-assisted development and XML validation:
+On first connection to TIA Portal (or when you run `CMsoft Import for TiaPortal: Prepare Workspace`), the extension copies template files from `Documentation/Templates/` into your workspace root. The `.github/` directory contains resources that enhance both AI-assisted development and XML validation:
 
 | File / Folder                                 | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`.github/copilot-instructions.md`** | Instructions for GitHub Copilot (and other AI assistants) that teach the model how to work with Siemens TIA Portal XML files. Covers SimaticML XML structure,`.s7dcl` / `.s7res` file conventions, MLC ID handling, network titles/comments, and rules for updating `ProjectDescription.md`. These instructions are automatically picked up by Copilot in VS Code.                                                        |
-| **`.github/ProjectDescription.md`**   | A living document describing the project's architecture, communication topology, block hierarchy, data structures, and data flow. Initially empty — it is populated automatically by Copilot when you start analyzing the project (as instructed by`copilot-instructions.md`). Should be kept up to date when blocks, communication channels, or data structures change. Includes Mermaid diagrams for visual documentation. |
+| **`.github/instructions/tia-import.instructions.md`** | Instructions for GitHub Copilot (and other AI assistants) that teach the model how to work with Siemens TIA Portal XML files. Covers SimaticML XML structure,`.s7dcl` / `.s7res` file conventions, MLC ID handling, network titles/comments, and rules for updating `ProjectDescription.md`. Copilot applies them to every file (`applyTo: "**"`); `tia-import-cli.instructions.md` next to it describes the MCP server and the CLI bridge (applied to `Tools/`). |
+| **`.github/copilot-instructions.md`** | A section of this extension pointing to the instructions above — next to the sections of the other CMsoft add-ons of the workspace. |
+| **`.github/ProjectDescription.md`**   | A living document describing the project's architecture, communication topology, block hierarchy, data structures, and data flow. Created once — it is populated automatically by Copilot when you start analyzing the project (as instructed by `tia-import.instructions.md`). Should be kept up to date when blocks, communication channels, or data structures change. Includes Mermaid diagrams for visual documentation. |
 | **`.github/Schemas/`**                | SimaticML XSD schema files (`SW.PlcBlocks.*.xsd`, `SW.Common_v3.xsd`, etc.) copied from `Documentation/Schemas/`. These schemas enable XML validation and IntelliSense for exported TIA Portal block files directly in VS Code.                                                                                                                                                                                           |
-| **`.gitignore`**                      | TIA-specific ignore rules (e.g.`.tia-cache`, `CLAUDE.local.md`) to keep temporary/cache files out of version control.                                                                                                                                                                                                                                                                                                       |
-| **`CLAUDE.md`**                       | Instructions for[Claude Code](https://docs.anthropic.com/claude/docs/claude-code). Uses Claude's native `@<path>` import syntax to re-export the full ruleset from `.github/copilot-instructions.md`, so all AI agents share a single source of truth. Add machine-local notes to `CLAUDE.local.md` (already gitignored).                                                                                                  |
-| **`AGENTS.md`**                       | Follows the open[agents.md](https://agents.md) standard — read by Cursor, Aider, OpenAI Codex, Gemini CLI, Jules and other AI coding agents. Links to `.github/copilot-instructions.md` for the full ruleset and lists build / test / code-style essentials.                                                                                                                                                                  |
+| **`.gitignore`**                      | A section with the TIA-specific ignore rules (e.g. `.tia-cache`, `.tia`, `CLAUDE.local.md`, `UserFiles/*`) to keep temporary/cache files out of version control. |
+| **`CLAUDE.md`**                       | A section for [Claude Code](https://docs.anthropic.com/claude/docs/claude-code). Uses Claude's native `@<path>` import syntax to import the full ruleset from `.github/instructions/tia-import.instructions.md`, so all AI agents share a single source of truth. Add machine-local notes to `CLAUDE.local.md` (already gitignored). |
+| **`AGENTS.md`**                       | A section following the open [agents.md](https://agents.md) standard — read by Cursor, Aider, OpenAI Codex, Gemini CLI, Jules and other AI coding agents. Links to the instructions for the full ruleset and lists the MCP / code-style essentials. |
 
 > **Tip:** Commit the `.github/` directory to your Git repository so that every team member and CI pipeline benefits from the same AI instructions, project documentation, and XML schemas.
 
@@ -345,29 +357,29 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
 | Command                                                     | Description                                                 |
 | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| `TIA Import: Connect to TIA Portal`                       | Connect / attach to a running TIA Portal instance           |
-| `TIA Import: Disconnect from TIA Portal`                  | Disconnect from TIA Portal                                  |
-| `TIA Import: Select Project`                              | Select a project from the connected TIA Portal              |
-| `TIA Import: Import Entire Project`                       | Import full project structure                               |
-| `TIA Import: Refresh Project Structure`                   | Refresh the project tree                                    |
-| `TIA Import: Import Device`                               | Import a device with all software                           |
-| `TIA Import: Import Block`                                | Import a single block                                       |
-| `TIA Import: Import Block Folder`                         | Import a block group/folder                                 |
-| `TIA Import: Import Tag Tables`                           | Import all tag tables                                       |
-| `TIA Import: Import Tag Table`                            | Import a single tag table                                   |
-| `TIA Import: Import Data Types`                           | Import all UDTs                                             |
-| `TIA Import: Import Data Type`                            | Import a single UDT                                         |
-| `TIA Import: Import Watch Tables`                         | Import all watch tables                                     |
-| `TIA Import: Import Watch Table`                          | Import a single watch table                                 |
-| `TIA Import: Import Technology Objects`                   | Import all Technology Objects of a device (PID, Motion, …) |
-| `TIA Import: Import HMI Screens`                          | Import HMI screens                                          |
-| `TIA Import: Import HMI Tags`                             | Import HMI tags                                             |
-| `TIA Import: Import HMI Connections`                      | Import HMI connections                                      |
-| `TIA Import: Import All HMI Elements`                     | Import all HMI elements                                     |
-| `TIA Import: Import HW Configuration`                     | Import full HW configuration                                |
-| `TIA Import: Import Device HW Configuration`              | Import HW config for a single device                        |
-| `TIA Import: Import Programs for All Devices in Category` | Import all devices in a category                            |
-| `TIA Import: Import Languages & Project Texts`            | Import language settings + project texts (xlsx)             |
+| `CMsoft Import for TiaPortal: Connect to TIA Portal`                       | Connect / attach to a running TIA Portal instance           |
+| `CMsoft Import for TiaPortal: Disconnect from TIA Portal`                  | Disconnect from TIA Portal                                  |
+| `CMsoft Import for TiaPortal: Select Project`                              | Select a project from the connected TIA Portal              |
+| `CMsoft Import for TiaPortal: Import Entire Project`                       | Import full project structure                               |
+| `CMsoft Import for TiaPortal: Refresh Project Structure`                   | Refresh the project tree                                    |
+| `CMsoft Import for TiaPortal: Import Device`                               | Import a device with all software                           |
+| `CMsoft Import for TiaPortal: Import Block`                                | Import a single block                                       |
+| `CMsoft Import for TiaPortal: Import Block Folder`                         | Import a block group/folder                                 |
+| `CMsoft Import for TiaPortal: Import Tag Tables`                           | Import all tag tables                                       |
+| `CMsoft Import for TiaPortal: Import Tag Table`                            | Import a single tag table                                   |
+| `CMsoft Import for TiaPortal: Import Data Types`                           | Import all UDTs                                             |
+| `CMsoft Import for TiaPortal: Import Data Type`                            | Import a single UDT                                         |
+| `CMsoft Import for TiaPortal: Import Watch Tables`                         | Import all watch tables                                     |
+| `CMsoft Import for TiaPortal: Import Watch Table`                          | Import a single watch table                                 |
+| `CMsoft Import for TiaPortal: Import Technology Objects`                   | Import all Technology Objects of a device (PID, Motion, …) |
+| `CMsoft Import for TiaPortal: Import HMI Screens`                          | Import HMI screens                                          |
+| `CMsoft Import for TiaPortal: Import HMI Tags`                             | Import HMI tags                                             |
+| `CMsoft Import for TiaPortal: Import HMI Connections`                      | Import HMI connections                                      |
+| `CMsoft Import for TiaPortal: Import All HMI Elements`                     | Import all HMI elements                                     |
+| `CMsoft Import for TiaPortal: Import HW Configuration`                     | Import full HW configuration                                |
+| `CMsoft Import for TiaPortal: Import Device HW Configuration`              | Import HW config for a single device                        |
+| `CMsoft Import for TiaPortal: Import Programs for All Devices in Category` | Import all devices in a category                            |
+| `CMsoft Import for TiaPortal: Import Languages & Project Texts`            | Import language settings + project texts (xlsx)             |
 
 ### Export Commands (local → TIA)
 
@@ -389,70 +401,32 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 
 | Command                              | Description                                       |
 | ------------------------------------ | ------------------------------------------------- |
-| `TIA Import: Show Logs`            | Open the extension output channel                 |
-| `TIA Import: Open Settings`        | Open extension settings page                      |
-| `TIA Import: Select Export Format` | Switch block export format                        |
-| `TIA Import: Format PLC Tags`      | Toggle tag table format (XML/XLSX)                |
-| `TIA Import: Prepare Workspace`    | Scaffold workspace (`.github/`, `TiaExport/`) |
+| `CMsoft Import for TiaPortal: Show Logs`            | Open the extension output channel                 |
+| `CMsoft Import for TiaPortal: Open Settings`        | Open extension settings page                      |
+| `CMsoft Import for TiaPortal: Select Export Format` | Switch block export format                        |
+| `CMsoft Import for TiaPortal: Format PLC Tags`      | Toggle tag table format (XML/XLSX)                |
+| `CMsoft Import for TiaPortal: Prepare Workspace`    | Scaffold workspace (`.github/`, `TiaExport/`) |
 
 ---
 
-## Architecture
+## How it works
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                       VS Code Extension                     │
-│                                                             │
-│  ┌────────────┐  ┌─────────────┐  ┌───────────────────────┐│
-│  │  Commands   │  │  Providers  │  │       Utilities       ││
-│  │ (import/    │  │ (tree view, │  │ (logger, config,      ││
-│  │  export)    │  │  connection)│  │  statusBar, workspace)││
-│  └──────┬─────┘  └──────┬──────┘  └───────────────────────┘│
-│         │               │                                   │
-│  ┌──────▼───────────────▼──────────────────────────────────┐│
-│  │              Services Layer                             ││
-│  │  tiaConnection · projectImport · tiaOpennessBridge      ││
-│  │  blockImport · tagTableImport · udtImport               ││
-│  │  watchTableImport · hmiImport                           ││
-│  └──────────────────────┬──────────────────────────────────┘│
-│                         │  electron-edge-js                 │
-└─────────────────────────┼───────────────────────────────────┘
-                          │
-┌─────────────────────────▼───────────────────────────────────┐
-│                  .NET Wrapper (C#)                           │
-│                                                             │
-│  TiaConnector.cs ─► TiaPortalService.cs                     │
-│                         │                                   │
-│  ┌──────────────────────┼──────────────────────────────┐    │
-│  │  Services/Export/                                   │    │
-│  │   Software: BlockExportHandler, TagTableExport,     │    │
-│  │     UdtExport, WatchTableExport, SdExportHandler,   │    │
-│  │     SclExportHandler, XmlComparisonService           │    │
-│  │   HW: HwConfigExportToTia, DeviceExportHelper       │    │
-│  ├──────────────────────────────────────────────────────┤    │
-│  │  Services/Import/                                   │    │
-│  │   Software: BlockImport, TagTableImport, UdtImport, │    │
-│  │     WatchTableImport, HmiImport, TagTableXlsx       │    │
-│  │   HW: HwConfigImport, DeviceItemHelper              │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                         │                                   │
-│              Siemens.Engineering.dll (TIA Openness API)      │
-└─────────────────────────────────────────────────────────────┘
+VS Code
+  └─ CMsoft Import for TiaPortal      the extension and its .NET Framework wrapper, in-process
+       └─ TIA Portal Openness API     Siemens.Engineering, installed with TIA Portal
+            └─ TIA Portal V17 – V21   on the same computer
 ```
 
-The extension uses **electron-edge-js** to call the .NET `TiaOpennessWrapper.dll` in-process from Node.js. The wrapper communicates with TIA Portal via the official **Siemens TIA Portal Openness API** (`Siemens.Engineering` assemblies).
-
-### TiaViewer rendering library
-
-The standalone LAD/FBD/SCL/GRAPH rendering library (`TiaViewer.dll`, previously `dotnet/TiaViewer/`) moved together with the viewer to the [TIA Viewer extension repository](https://github.com/cmariusz/TiaViewer.VSExt) — see its README for reuse from Node.js/edge-js or .NET.
+The extension runs inside VS Code and talks to TIA Portal on the same computer through the official **Siemens TIA Portal Openness API**, loaded in-process by a .NET Framework wrapper that ships with the extension. That is why it works on Windows only and needs the Openness option of TIA Portal and a Windows account in the *Siemens TIA Openness* group.
 
 ---
 
 ## Documentation
 
+- **User manual — inside the extension.** Installation, setting up TIA Portal Openness, every function with screenshots, a complete worked example with tests, Copilot / MCP / CLI examples, settings, license and troubleshooting. Open it with **CMsoft Import for TiaPortal: Open User Manual** (Command Palette, or the links in the *Get Started* walkthrough and in the empty **Project Structure** view); **CMsoft Import for TiaPortal: Search the User Manual** jumps to a chapter or section; the **CMsoft** status bar item and **Help: CMsoft Manuals…** list it next to the manuals of your other CMsoft add-ons. It works offline: the manual ships in the extension as one Markdown file with its screenshots and opens in VS Code's Markdown preview.
 - [TIA Portal Openness API (Siemens)](https://docs.tia.siemens.cloud/r/en-us/v21/tia-portal-openness-api-for-automation-of-engineering-workflows) — official Openness API documentation
-- [Documentation/API/](Documentation/API/) — XML intellisense files for the Openness API
-- [Documentation/Schemas/](Documentation/Schemas/) — SimaticML XSD schemas for all block types
+- SimaticML XSD schemas for all block types — **Prepare Workspace** copies them into your workspace as `.github/Schemas/` (see *Workspace Templates* above)
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) — third-party components and redistribution notes
 - [LICENSE.md](LICENSE.md) / [TERMS.md](TERMS.md) / [PRIVACY.md](PRIVACY.md) — license agreement, terms of sale, privacy policy
 
@@ -471,7 +445,7 @@ The standalone LAD/FBD/SCL/GRAPH rendering library (`TiaViewer.dll`, previously 
 
 ## Trademarks
 
-This extension is an independent product. It is **not** developed, endorsed, sponsored by or affiliated with Siemens AG. *TIA Portal*, *SIMATIC*, *STEP 7*, *WinCC* and *Openness* are trademarks or registered trademarks of Siemens AG, used here solely for identification and interoperability purposes. *Visual Studio Code* is a trademark of Microsoft Corporation.
+This extension is an independent product. It is **not** developed, endorsed, sponsored by or affiliated with Siemens AG. *TIA Portal*, *SIMATIC*, *STEP 7*, *WinCC* and *Openness* are trademarks or registered trademarks of Siemens AG, used here solely for identification and interoperability purposes; *for TiaPortal* in the name *CMsoft Import for TiaPortal* only states which software the extension works with. *Visual Studio Code* is a trademark of Microsoft Corporation.
 
 ---
 
@@ -489,40 +463,39 @@ This extension is an independent product. It is **not** developed, endorsed, spo
 
 The extension is a development and automation tool, and all imports/exports modify engineering data at your own risk.
 
-The author is not liable for any direct or indirect damages, production downtime, data loss, project corruption, safety incidents, or other consequences resulting from changes made to TIA Portal projects using this extension.
+To the extent permitted by applicable law, the author is not liable for indirect or consequential damages — production downtime, data loss, project corruption or other consequences — resulting from changes made to TIA Portal projects using this extension, and any other liability is limited. Liability that the law does not allow to exclude (for example for damage caused intentionally, or for death or personal injury) and the statutory rights of consumers are not affected.
 
-**You are responsible for all content the extension moves, converts or generates** — program blocks, SCL/LAD/FBD sources, data blocks, UDTs, tag tables, watch tables, technology objects, hardware configuration and project texts — regardless of whether you wrote it, the extension generated it, or an AI assistant (GitHub Copilot, `@tia` chat participant, `tia_*` language model tools) produced it. **AI-generated code is not reviewed or verified by the author.**
+**You are responsible for all content the extension moves, converts or generates** — program blocks, SCL/LAD/FBD sources, data blocks, UDTs, tag tables, watch tables, technology objects, hardware configuration and project texts — regardless of whether you wrote it, the extension generated it, or an AI assistant (GitHub Copilot, `@tia` chat participant, `tia_*` language model tools, an MCP client) produced it. **AI-generated code is not reviewed or verified by the author.**
 
 Users are fully responsible for validating, testing, and approving all generated or imported changes before deployment to real machines, production lines, or safety-related systems — and for keeping verified project backups before any import, export, synchronisation or PLC download.
 
-These terms are binding as section 14 of the [End User License Agreement](LICENSE.md#14-your-content-generated-code-and-safety-critical-use).
+These terms are binding as sections 12 (warranty), 13 (liability) and 14 (your content, generated code and safety-critical use) of the [End User License Agreement](LICENSE.md#14-your-content-generated-code-and-safety-critical-use); where this summary and the agreement differ, the agreement applies.
 
 ---
 
 ## Community — Share Your Scripts & Ideas
 
-This extension ships with a `Tools/` directory for utility scripts and a `copilot-instructions.md` file that teaches AI assistants how to work with TIA Portal projects.
+This extension ships with a `Tools/` directory for utility scripts and the instructions `.github/instructions/tia-import.instructions.md` that teach AI assistants how to work with TIA Portal projects.
 
 **We encourage you to contribute!** If you have created useful scripts, automation tools, or improvements to the Copilot instructions:
 
 1. **Fork** the [TiaImportExport.VSExt](https://github.com/cmariusz/TiaImportExport.VSExt) repository on GitHub
 2. Add your scripts to `Tools/` (with a matching `.md` description)
-3. Or propose changes to `.github/copilot-instructions.md`
+3. Or propose changes to `.github/instructions/tia-import.instructions.md`
 4. **Open a Pull Request** — your contribution will help the entire TIA Portal + VS Code community
 
 Every shared script or instruction improves the experience for all users. Don't hesitate to share even small utilities — they often save the most time!
 
-> By submitting a contribution you confirm that it is your own work and you grant CmSoft a perpetual, worldwide, royalty-free right to use, modify and distribute it as part of this product. Contributions are published under the terms of the [EULA](LICENSE.md); the extension's own source code is not open source.
+> By submitting a contribution you confirm that it is your own work and you grant CMsoft a perpetual, worldwide, royalty-free right to use, modify and distribute it as part of this product. Contributions are published under the terms of the [EULA](LICENSE.md); the extension's own source code is not open source.
 
 ---
 
 ## License
 
 Proprietary commercial software — see the [End User License Agreement](LICENSE.md).
-Copyright © 2026 CmSoft. All rights reserved.
+Copyright © 2026 CMsoft. All rights reserved.
 
-**CmSoft** — Kornatka 23, 32-410 Dobczyce, Poland · NIP (VAT-ID) PL 894-253-07-59
-· [office@cmsoft.com.pl](mailto:office@cmsoft.com.pl) · [www.cmsoft.com.pl](https://www.cmsoft.com.pl)
+**CMsoft** · [office@cmsoft.com.pl](mailto:office@cmsoft.com.pl) · [shop.cmsoft.com.pl](https://shop.cmsoft.com.pl)
 
 | Document                                        | Purpose                                                             |
 | ----------------------------------------------- | ------------------------------------------------------------------- |

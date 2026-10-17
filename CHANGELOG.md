@@ -1,14 +1,69 @@
 # Change Log
 
-All notable changes to the **TIA Portal Import** extension will be documented in this file.
+All notable changes to the **CMsoft Import for TiaPortal** extension (formerly TIA Portal Import) will be documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [4.0.10] - 2026-09-26
+## [4.1.0] - 2026-10-17
 
+### Added
 
+- **Prepare Workspace next to the other CMsoft extensions** (CMsoft workspace protocol) — the instructions for AI agents are in files named after the extension (`.github/instructions/tia-import.instructions.md` — applied by Copilot to every file —, `tia-import-cli.instructions.md`, `Tools/tia_cli_example.py`); `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.gitignore` and `Tools/README.md` get one section of CMsoft Import for TiaPortal next to the sections of the migrator from MELSEC to TIA Portal and CMsoft Import for Melsec, so a shared workspace holds the instructions of all of them. Running it again updates the extension's own section and files; your text outside the sections, and files you made your own, stay. Unchanged copies of the templates of earlier versions are replaced; `prepare_workspace` returns what changed. The workspace `.gitignore` no longer ignores itself and now ignores `UserFiles/*` (as the README always said); the template `.gitignore` is now part of the package.
+
+- **The user manual inside the extension** — **CMsoft Import for TiaPortal: Open User Manual** shows the manual (installation, TIA Portal Openness setup, every function with screenshots, a complete worked example, Copilot / MCP / CLI examples, settings, license, troubleshooting) in VS Code, offline; **CMsoft Import for TiaPortal: Search the User Manual** opens a chapter or section. The manual also opens from the *Get Started* walkthrough, from a link in the empty **Project Structure** view and from the **Open Help** button when a connection fails. The **CMsoft** item in the status bar and **Help: CMsoft Manuals…** list the manuals of all installed CMsoft extensions.
+- **Preview before anything is deleted in TIA Portal** — the exports to TIA Portal (**Export to TIA Portal** on a PLC folder, the block / tag / UDT / watch table / technology object folder exports, **Export Software Unit**) used to delete the TIA objects missing in the workspace right away. They now list them first — one dialog for the whole export, the full list in the output — and delete only after **Delete in TIA Portal**; "keep" leaves TIA Portal untouched. Objects inside a Software Unit are previewed the same way.
+- **Audit log of deletions** — every deletion in TIA Portal (confirmed in the export dialog, or requested by an agent with `deleteOrphans: true`) is appended to `<workspace>/.tia/audit.log`: time, command or tool, project, device, folder and the deleted objects.
+- **Reinitializing data blocks during a PLC download** — when a download (`tia_download_to_plc`) needs TIA Portal to reinitialize data blocks (their structure in the PLC differs from the project: the PLC is stopped and their values, retain data included, are reset to the start values), the new row **DB Reinit on Download** of the **Connection** view (setting `tiaImport.lmTools.reinitializeDataBlocks`) decides: **Never**, **Ask** (default) or **Always**. *Ask* shows a question in VS Code — also for MCP clients, never to the model — and downloads only after **Reinitialize and Download** (or **Keep Actual Values** where TIA Portal V21 offers it); *Never* downloads keeping the actual values where TIA Portal offers that and otherwise stops. A download that is not allowed to reinitialize loads nothing and says why. Before, such a download always failed. The download result lists what TIA Portal asked and the answers in the Output channel.
+- **`tiaImport.lmTools.allowOutputOutsideWorkspace`** — Copilot tools, the MCP server and the CLI bridge write exports (cross-references, project texts) only into the open workspace folders unless this setting allows other folders. Relative paths are resolved against the workspace folder.
+- **A failed connection says so** — when **Connect** cannot attach to TIA Portal (the Openness API of the selected version is not installed, the user is not in the *Siemens TIA Openness* group, …), a message shows the reason with **Open Help** (the troubleshooting section of the manual) and **Show Logs**; before, the error was only logged. A cancelled connection shows nothing, as before.
+- **License panel** — in English; with an active license it shows *Your license* (plan, validity, renewal) with **Extend license** and **Cancel subscription**. When buying you choose between a subscription that renews automatically and a one-time payment for one or twelve months; the order asks for the company and the country that go on the license. Every purchase comes with a 14-day money-back guarantee, and each license covers one computer ([Terms of Sale](TERMS.md)). The **CMsoft** item in the status bar replaces *TIA: PRO / FREE* and lists the licenses of all installed CMsoft extensions.
+
+### Changed
+
+- **New name: CMsoft Import for TiaPortal** — the extension formerly called *TIA Portal Import* is now *CMsoft Import for TiaPortal*: the commands (*CMsoft Import for TiaPortal: …*), the views, the Output channel, the walkthrough, the chat participant (`@tia` keeps its handle) and the MCP server carry the new name. The extension ID (`MariuszCzyrnek.tia-import`), the command IDs, the settings and the files it writes stay the same. The companion extensions are now *CMsoft Viewer for TiaPortal* (formerly TIA Viewer) and *CMsoft Import for Step7* (formerly Step7 Import/Export).
+- **New icons** — the CMsoft cloud with *cm* and *Import* in mint; in the activity bar the same cloud with a *T*, in the colour of the theme.
+- **Agents delete nothing unless asked** — `tia_import_folder` and `tia_import_unit` (Copilot, `@tia`, MCP, CLI) keep TIA objects that have no local file unless the call says `deleteOrphans: true`; `tia_import_unit` deleted them by default before. With `deleteOrphans: true` the tools always ask, even with `autoConfirmImports`.
+- **One TIA Portal operation at a time** — the UI, Copilot, `@tia`, the MCP server and the CLI bridge no longer run Openness calls in parallel; a call waits for the running one. The connection check does not wait: it reports TIA Portal as busy ("busy: ExportBlocks for 42 s") instead of as lost.
+- **Native module repair asks first** — when `electron-edge-js` does not load in a new VS Code version, the extension asks before it downloads the matching package from npm; the download runs no package scripts.
+- **`tia_export_hw_config` without `includeSubnets`** — the option never had an effect and is gone from the tool.
+- **The CMsoft shop has its own address** — the README, the user manual and the documents that ship with the extension (End User License Agreement, Terms of Sale, Privacy Policy) point to <https://shop.cmsoft.com.pl>: the extension's page, the plans and the Terms of Sale, Refund and Privacy policies. The terms of the documents are unchanged.
+- **The disclaimer of liability in the user manual and the walkthrough** — the user manual sums up sections 12–14 of the End User License Agreement in section 15.10 (*Disclaimer of liability*), warns in section 2.7 and says in section 11.9 that code written by an AI assistant is not reviewed or verified by CMsoft; the *Get Started* walkthrough has a step **Work safely**. The README's *Disclaimer of Liability* follows the agreement: liability is excluded or limited to the extent permitted by law, and liability that the law does not allow to exclude and the rights of consumers are not affected. The one-time license notice of version 4 no longer says that all features are free of charge (the PRO features need a license); it says that imports, exports and PLC downloads are at your own risk. `@tia` and the instructions of **Prepare Workspace** tell assistants to leave safety programs alone unless you confirm an independent review. The terms of the documents are unchanged.
+
+### Removed
+
+- The setting `tiaImport.license.deliveryMode` — the license panel offers the ways to buy directly.
+
+### Fixed
+
+- **A source with an error was imported as an empty block** — exporting an `.scl`, `.db` or `.udt` file whose declaration TIA Portal cannot generate (a syntax error, e.g. a member named `Counter`, a reserved word of SCL) reported *Successfully imported*, while TIA Portal created the data block or data type **empty** — also in place of an existing one, whose content was lost. Now the export of that file fails with TIA Portal's message and line (*TIA Portal rejected Motor.db: line 6: Syntax error: The specified value "Counter" is invalid. - nothing was imported*) and TIA Portal stays unchanged: an existing block or data type is no longer deleted before the new one is generated, TIA Portal replaces it only when the source is correct. A data type that does not exist yet is reported the same way (*Data type "X" is unknown*) instead of creating an inconsistent block. Errors in the code of an FB, FC or OB still import the block and show up when compiling. A block whose file lies in another folder than its group in TIA Portal is still moved to that folder's group. Applies to the exports to TIA Portal in VS Code, `tia_import_file`, `tia_import_folder`, `tia_import_unit` and `tia_fix_compile_errors`; the start values of an instance DB that TIA Portal rejects are reported as before and no longer touch the instance DB.
+- **The rows of the Connection view did not follow the Settings editor** — a setting changed in the Settings editor or in `settings.json` (for example `tiaImport.lmTools.allowPlcDownload`) showed its old value in the **Connection** view until the connection changed. The rows now update at once.
+- **The *Get Started* walkthrough was never shown** — VS Code drops a whole walkthrough, without any message, when one of its steps has no picture, and none of the steps had one: **Welcome: Open Walkthrough…** listed only VS Code's own walkthroughs. Every step now shows a screenshot of the manual.
+- **Importing a block file deleted an unrelated block** — a file such as `Pump_Station_DB.db` (or `Tank_DB1.db`, `Valve_FC_Handler.scl`, …) whose own block did not exist yet was matched with the block `Pump_Station` (`Tank`, `Valve`): the import guessed an "old format" name (`Name_FB123`) by cutting `_FB`, `_FC`, `_OB`, `_DB`, `_IDB` or `_GlobalDB` off the file name, took the unrelated block for its target and deleted it before importing the file. The target is now the block named like the file or named inside the file (the quoted name after `FUNCTION_BLOCK` / `FUNCTION` / `ORGANIZATION_BLOCK` / `DATA_BLOCK` of an `.scl`, `.db` or `.s7dcl` source, the `Name` of a block `.xml`) — never a name guessed from the file name. Files of the old format (`Name_FB123.scl`) are still found through the name they declare. Applies to every import of block files: the exports to TIA Portal in VS Code, `tia_import_file`, `tia_import_folder`, `tia_import_unit`, `tia_fix_compile_errors`.
+- **"Check and overwrite differences" stopped at a LAD block** — for the default LAD `Main [OB1]` of every new project the export of `Main.scl` (and `compareBeforeImport: true` of `tia_import_file`) failed with "Error when calling method 'GenerateSource' … Select a block that only includes SCL or STL". A block written in LAD, FBD, GRAPH, CFC or SFC cannot equal an SCL source, so it is now reported as differing and replaced like any other changed block; know-how protected and failsafe (F-) blocks are kept and reported instead. SCL, STL and data blocks are compared as before. The hint of the "comparison failed" messages names **Overwrite All** (it said "Nadpisz wszystko").
+- **`overwriteExisting: false` still overwrote changed objects** — `tia_import_file`, `tia_import_folder` and `tia_import_unit` with `overwriteExisting: false` compared every existing block (SCL, SD, XML, UDT source) and replaced it when it differed — without asking. With "compare" on, existing tag / watch tables, data types and technology objects were replaced as well, and without it an existing table was reported as an error. Now `overwriteExisting: false` leaves every object that exists in TIA Portal unchanged and only creates the missing ones (one rule for all object kinds); the tool schemas describe `overwriteExisting` and `compareBeforeImport`.
+- **Exporting a Software Unit to TIA Portal failed without a reason** — "Software Unit import failed" (Export Software Unit, whole-PLC export, `tia_import_unit`) for every unit folder with an empty `PLC data types` folder or with tag tables only as `.xlsx` — the default tag table format. Such a folder was counted as an error without a message, although the blocks had been imported. Fixed; a part of a unit that really fails is now named.
+- **Tag tables of a Software Unit never reached TIA Portal** — the unit export to TIA read only XML tag tables, while tag tables are exported as `.xlsx` by default. `.xlsx` tag tables of a unit are imported now (subfolders become tag table groups); an `.xml` next to an `.xlsx` of the same table wins.
+- **Unchanged `.xlsx` tag tables were rewritten on every export to TIA Portal** — "Check and overwrite differences" compared the table in TIA with the XML converted from the `.xlsx`, which never matched: every table was deleted (the default tag table cleared) and imported again, and a Software Unit table lost its *Published* state. Empty comments and empty lists no longer count as differences, and a table converted from `.xlsx` takes over the table attributes (Access) from TIA — unchanged tables are skipped, re-imported ones keep their state.
+- **Failed imports named no reason** — `tia_import_file`, `tia_import_folder` and `tia_import_unit` answered only "… import failed"; the error now names the failing items.
+- **The export to TIA Portal could delete blocks that still existed in the workspace** — the cleanup of objects missing in the workspace compared TIA names with file names: a block exported as `Pump_DB1.xml` (number suffix) or a group whose folder name had to be sanitized counted as missing and was deleted, and a local folder that was empty or could not be read deleted every object of its TIA group. Names are now mapped back from the files, an empty or unreadable folder deletes nothing, and know-how protected and system blocks are never deleted.
+- **A folder named "Units" was taken for a Software Unit** — files of a workspace below some `…\Units\…` folder, or of a block group named "Units", were imported into a Software Unit of that name (and the unit was created). A unit is now recognised only where the export puts units (`Devices/<Category>/<Device>/Units/<Unit>/`) or by its `_unit.json`.
+- **`tia_fix_compile_errors` ignored its iteration limit in Copilot** — `tiaImport.lmTools.maxFixIterations` never stopped the loop in the chat (the MCP server counted correctly). It now counts per chat request and per MCP session.
+- **Compile errors of PLCs in TIA device folders did not reach PROBLEMS** — errors of PLCs placed in TIA device folders (`Devices/PLCs/<folder…>/<Device>/`) were only logged ("could not find file for block"), and `tia_get_problems` / `tia_fix_compile_errors` returned no diagnostics for them.
+- **Headless device export waited for a question nobody saw** — `tia_export_device` / `tia_export_project` over MCP or the CLI asked "Generate cross-references?" in VS Code and waited for the answer; agents never get prompts now.
+- **Cross-references of the Copilot tool landed in a second folder** — `tia_export_cross_references` wrote to `Devices/PLCs/<device>/CrossReferences` while the device export uses the TIA device folders (`Devices/PLCs/<TIA folder>/<device>/`); both now use the device export folder.
+- **`tia_import_unit` did not start the extension by itself** — like the other tools, it now activates the extension.
+- **A missing wrapper for the selected TIA Portal version was reported as "edge-js is required"** — the message now names the version and the expected path.
+- **Groups TIA Portal could not read vanished from the tree silently** — the project structure now reports them as warnings in the output.
+- **Local servers (MCP, CLI bridge)** — requests with a foreign `Host` header or from a web page (`Origin`) are refused (DNS rebinding), request bodies are limited to 10 MB, tokens are compared in constant time, idle MCP sessions are closed after 30 minutes, and the `.tia` folder gets a `.gitignore` so session tokens are never committed.
+- **`@tia` ran no tools** — the chat participant passed the TIA tools to the model but dropped the tool calls the model made, so `@tia` never connected, exported, imported or compiled anything and could only answer in text. It now runs every tool the model calls (the confirmations for imports and for the PLC download appear in the chat) and passes the results back until the model answers, up to 25 rounds per request. `@tia` also gets every TIA tool now — Software Units, `tia_import_unit`, project languages and texts and the PLC download were missing from its list.
+- **A busy TIA Portal was reported as a lost connection** — right after a long project load, or while TIA Portal was busy with another operation or showed a dialog, the connection check got no answer in time: Copilot, `@tia` and MCP operations failed with "TIA Portal connection is broken", and commands in the UI even disconnected the healthy session ("Connection was lost. Disconnected automatically"). The check now waits up to 30 seconds and tells a busy TIA Portal ("did not answer … busy or not responding — the connection was kept") from a session that is really gone; only the latter disconnects. `tia_connect` now reconnects when the previous session is gone instead of answering that it is still connected.
+- **Errors in warnings were logged as `{}`** — an error attached to a warning or info line in the output (e.g. "Bridge: Ping failed") was printed as `{}`; the line now shows the error's message.
+- **Tool calls in the chat showed only their raw input** — every TIA tool now tells the chat what it does (e.g. *Export block "Main" of "PLC1"*), in `@tia` and in Copilot agent mode; the read-only tools appeared only as "Completed with input: {…}".
+- **The documentation asked for Node.js and pointed into the source code** — the README listed Node.js 20+ and the .NET 8 runtime among the requirements, although neither is needed: the extension runs on the .NET Framework 4.8 of Windows and on the runtime of VS Code, and the README now says that nothing else has to be installed. The CLI examples used `npm run tia:cli`, which works only in the source repository of the extension: the README, the agent instructions that **Prepare Workspace** copies (`.github/instructions/tia-import-cli.instructions.md`) and the help of `tia-cli.js` now call the bridge from PowerShell or with the `tia` function of the manual (section 13.4), which runs the helper on the runtime of VS Code instead of a separately installed Node.js. `Tools/tia_cli_example.py` no longer offers `--launch-extension-host` (it started VS Code on the source code of the extension). The README and the manual no longer link to folders of the repository — Appendix D of the manual builds the demo project from the files printed in it, with the tag table created in TIA Portal — and the *VS Code* and *License* badges no longer break when the package is built (their images did not show on the Marketplace page).
+- **Cross-reference export wrote empty records** — every line of `cross-references.jsonl` was `{}` in the released packages. The lines carry all fields again (`device`, `symbol`, `usedIn`, …); the CSV files were not affected. Export the cross-references again to replace JSONL files written by earlier versions.
+- **WinCC Unified export failed for screens and tag tables inside groups** — screens in screen groups, their subgroups and tag tables in tag table groups were skipped with "… does not contain a definition for 'ExportUnifiedScreen'" (or `ExportUnifiedTagTable`, `…Group`) in the released packages; screens and tag tables at the root level were not affected.
 
 ## [4.0.9] - 2026-09-24
 
@@ -32,7 +87,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 ### Added
 
 - **MCP server (Model Context Protocol)** — the extension now runs a localhost-only Streamable HTTP MCP server exposing the same 26 `tia_*` tools as the Copilot Language Model Tools to any MCP client (VS Code Copilot, Claude Desktop, Cursor, custom agents). **Enabled by default** via the new `tiaImport.mcp.enabled` setting (set it to `false` to stop the server); the **TIA Import: Start MCP Server** command re-enables it. The endpoint URL and Bearer token are written to `.tia/mcp.json` (workspace + global storage); VS Code 1.99+ discovers the server automatically through the `mcpServerDefinitionProviders` contribution. `tia_download_to_plc` stays gated by `tiaImport.lmTools.allowPlcDownload`, and PLC credentials are always prompted from the local user — never passed through the MCP client.
-- New parity test `npm run test:mcp-tool-parity` (part of `npm test`) that keeps the MCP tool registry in sync with `contributes.languageModelTools`.
 
 ## [4.0.0] - 2026-09-21
 
@@ -50,8 +104,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - **[`LICENSE.md`](LICENSE.md)** — End User License Agreement (license grant, restrictions, EU reverse-engineering carve-out, Siemens trademark and Openness notice, liability limits, Polish governing law). Section 14 states explicitly that **all content the extension imports, exports, converts or generates — including AI-generated code — is the user's responsibility**, and that it must be reviewed and tested before it reaches a machine.
 - **[`TERMS.md`](TERMS.md)** — terms of sale for future paid plans (subscription, renewal, EU right of withdrawal, refunds, support).
 - **[`PRIVACY.md`](PRIVACY.md)** — privacy policy. Confirms what has always been true: **no telemetry, no usage analytics, and no project data, PLC program or source code ever leaves your machine.** Only license activation — which you trigger explicitly — transmits data.
-- Manifest metadata required by the extension registries: `license`, `pricing`, `homepage`, `bugs`, `qna` and `capabilities` (the extension declares that it requires a trusted, non-virtual workspace).
-- `scripts/verify-vsix-contents.js` now fails the build if `LICENSE.md`, `TERMS.md`, `PRIVACY.md` or `THIRD_PARTY_NOTICES.md` is missing from the packaged VSIX.
+- The extension requires a trusted, non-virtual workspace.
 
 ### Removed
 
@@ -61,7 +114,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ### Fixed
 
-- **`export_block` wrote files into a duplicated `Program blocks\Program blocks` folder** ([#11](https://github.com/cmariusz/TiaImportExport.VSExt/issues/11)) — `list_blocks` reports the block's `groupPath` including the top-level group name (e.g. `Program blocks/00_OB`), while the single-block export path already targets the `Program blocks` folder — combining the two produced an extra directory level, and re-importing such a file could land the block in a wrong PLC program group. `exportBlock` now strips the root block-group name from the `groupPath` before exporting (matching the tree-view import semantics), via a new `relativeToRootBlockGroup` helper covered by unit tests.
+- **`export_block` wrote files into a duplicated `Program blocks\Program blocks` folder** ([#11](https://github.com/cmariusz/TiaImportExport.VSExt/issues/11)) — `list_blocks` reports the block's `groupPath` including the top-level group name (e.g. `Program blocks/00_OB`), while the single-block export path already targets the `Program blocks` folder — combining the two produced an extra directory level, and re-importing such a file could land the block in a wrong PLC program group. `exportBlock` now strips the root block-group name from the `groupPath` before exporting (matching the tree-view import semantics).
 
 ## [3.1.83] - 2026-09-15
 
@@ -73,7 +126,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ### Fixed
 
-- **Single-block export via CLI bridge / LM tool failed with "Could not find device/PLC path"** ([#9](https://github.com/cmariusz/TiaImportExport.VSExt/issues/9)) — `export_block` (and `import_blocks`, which shares the code path) resolved the block correctly but passed only the device id as the parent path to the import service, while `buildDevicePlcPath` expects the full `deviceId/plcName` PLC path — so the PLC lookup failed for every single-block export through the API (the tree-view import worked because it passes the full PLC id). `exportBlock` now resolves the PLC that owns the block (by the `block.id` prefix, falling back to the device's only PLC) and passes its full id, and `buildDevicePlcPath` additionally accepts a bare device id when the device has exactly one PLC software. Covered by a new `buildDevicePlcPath` unit test.
+- **Single-block export via CLI bridge / LM tool failed with "Could not find device/PLC path"** ([#9](https://github.com/cmariusz/TiaImportExport.VSExt/issues/9)) — `export_block` (and `import_blocks`, which shares the code path) resolved the block correctly but passed only the device id as the parent path to the import service, while `buildDevicePlcPath` expects the full `deviceId/plcName` PLC path — so the PLC lookup failed for every single-block export through the API (the tree-view import worked because it passes the full PLC id). `exportBlock` now resolves the PLC that owns the block (by the `block.id` prefix, falling back to the device's only PLC) and passes its full id, and `buildDevicePlcPath` additionally accepts a bare device id when the device has exactly one PLC software.
 
 ## [3.1.80] - 2026-08-27
 
@@ -85,7 +138,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
   - **Secure credential prompt** — when the PLC rejects the download as unauthorized ("illegitimate connection"), the tool asks the *user* (never the model) for credentials via masked VS Code input boxes: user name first (only for UMAC local user management, V19+, answered through the `OnlineLegitimation` event with `UserType.ProjectUser`), then password (legacy access-level / safety prompts answered through `DownloadPasswordConfiguration.SetPassword`). Credentials are never logged or stored.
   - **Full error transparency** — failed downloads return the complete TIA message list (not just errors) plus the top-level `error`, and are logged to the *TIA Portal Import* output channel.
 - **`download_to_plc` CLI bridge command** — external scripts can reload the PLC through the localhost bridge (`npm run tia:cli -- download_to_plc --device PLC_1 --scope changes --username admin --password secret`). Same `allowPlcDownload` gate as the LM tool; `username`/`password` are passed as per-call parameters (CLI has no interactive prompt).
-- **Docs** — README, both copilot-instruction files, the workspace templates (`CLI-instruction.md`, AGENTS.md, CLAUDE.md) and the CLI helper's `--help` text describe the new tool/command, its gate and the credential flow.
 
 ## [3.1.71] - 2026-08-26
 
@@ -100,11 +152,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - **Technology Objects import/export (round-trip)** — technological instance DBs (PID_Compact, Motion Control axes, counters, …) can now be pulled from TIA Portal and pushed back:
   - **TIA → workspace:** new **TIA Import: Import Technology Objects** device context-menu command exports every TO of the device to `Devices/<Category>/<Device>/Technology objects/` as SimaticML `.xml`, mirroring the TIA user group structure as subfolders (V19+; V18 exports the flat system group). Import Device / Import Entire Project now include Technology Objects automatically. Unchanged objects are detected by normalized XML comparison ("No changes"), and orphaned local `.xml` files/folders whose TO was deleted in TIA are removed, so the workspace mirrors the PLC.
   - **workspace → TIA:** TO XMLs are auto-detected by content (`SW.Technological*` elements) on any XML file/folder export and imported through the TechnologicalObjects API into the PLC's root *Technology objects* group, with the usual "Check and overwrite differences" comparison and overwrite handling. Whole-PLC unified export (*Export to TIA - Program and HW / Program without HW*) now includes the `Technology objects` folder and deletes orphaned TOs in TIA that no longer exist in the workspace.
-  - Covered by new C# and TS unit tests (SimaticML type detection, export ordering, folder matching); builds against TIA Portal V18–V21.
 
 ### Removed
 
-- **PLC viewer, HTML/web preview and ACT preview moved out of tia-import** — the LAD/FBD/SCL/GRAPH block viewer (custom viewer + `dotnet/TiaViewer`), the standalone HTML preview generation (`tia_generate_html_preview` LM tool, `generateHtmlPreview` / `generateWebPreview` commands) and the SIMATIC Automation Compare Tool integration (preview engine, `Compare with Git Revision in ACT`) were removed from this extension. The graphical viewer and the web generator now live in the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — install it to keep viewing blocks and generating whole-PLC web previews from the exports produced by this extension. The related settings (`tiaImport.previewEngine`, `tiaImport.automationCompareTool.*`, `tiaImport.customViewer.maxNetworks`, `tiaImport.s7dclPreviewXml.enabled`) and the `xml2js` / `linkedom` dependencies were dropped.
+- **PLC viewer, HTML/web preview and ACT preview moved out of tia-import** — the LAD/FBD/SCL/GRAPH block viewer (custom viewer + `dotnet/TiaViewer`), the standalone HTML preview generation (`tia_generate_html_preview` LM tool, `generateHtmlPreview` / `generateWebPreview` commands) and the SIMATIC Automation Compare Tool integration (preview engine, `Compare with Git Revision in ACT`) were removed from this extension. The graphical viewer and the web generator now live in the companion **[TIA Viewer](https://marketplace.visualstudio.com/items?itemName=MariuszCzyrnek.tia-viewer)** extension ([source on GitHub](https://github.com/cmariusz/TiaViewer.VSExt)) — install it to keep viewing blocks and generating whole-PLC web previews from the exports produced by this extension. The related settings (`tiaImport.previewEngine`, `tiaImport.automationCompareTool.*`, `tiaImport.customViewer.maxNetworks`, `tiaImport.s7dclPreviewXml.enabled`) were dropped.
 
 ## [3.1.60] - 2026-08-06
 
@@ -191,8 +242,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ### Added
 
-- **Runtime self-repair of the edge-js loader files** — the extension now embeds base64 copies of every JS file the `electron-edge-js` / `edge-js` / `edge-cs` family requires at load time (generated at build time from the actual require graph, `scripts/generate-edge-repair-manifest.js`). When such a require fails because a file went missing from the install directory (broken VSIX, partial extension update, antivirus quarantine), the bridge restores the missing files from the embedded manifest and retries once, instead of failing with "edge-js not available - cannot connect to TIA Portal". Only missing files are restored; existing files are never overwritten.
-- **VSIX content verification on every packaging path** — `npm run package`, `npm run release:vsix` and the CI publish workflow now walk every static `require()` reachable from the runtime packages and fail the build if any resolved file — or any dynamically loaded asset (native `.node` binaries, CLR bootstrap DLLs, .NET wrapper DLLs, `out/extension.js`) — is missing from the package, so this class of packaging error is caught before release instead of on the user's machine.
+- **Runtime self-repair of the edge-js loader files** — the extension now embeds base64 copies of every JS file the `electron-edge-js` / `edge-js` / `edge-cs` family requires at load time. When such a require fails because a file went missing from the install directory (broken VSIX, partial extension update, antivirus quarantine), the bridge restores the missing files from the embedded manifest and retries once, instead of failing with "edge-js not available - cannot connect to TIA Portal". Only missing files are restored; existing files are never overwritten.
 
 ## [3.0.122] - 2026-07-21
 
@@ -219,7 +269,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 - **Connection phase timing diagnostics** — every phase of "Connect to TIA Portal" is now measured inside the .NET wrapper and reported in the output channel: Openness resolver initialization, `GetProcesses`, `Attach` to the running portal, project enumeration, TIA Portal start / project open (file-based path, including the time the project file dialog was open) and the full project-structure build with retry count after an Openness session loss. Connect / select / open operations also log their total duration, and each bridge call gets a `Bridge call '<method>' completed in X ms` debug entry.
 - **Project structure read statistics** — after project selection the log breaks the structure build down by element category (blocks, tag tables, UDTs, watch tables, software units, device-item scans, HMI, library master copies / types) with item counts, plus a top-10 list of the slowest devices with a scan/PLC time split and block/tag-table counts — making it obvious which parts of a large project dominate selection time.
-- **New `GetHmiSoftwareStructure` bridge method** — builds the full HMI structure (screens, tags, connections) of a single device on demand, complementing the lazy HMI loading below.
 - **Timing logs are gated behind Log Details** — phase timings and structure statistics are only written when `tiaImport.showImportExportDetails` is enabled, keeping normal logs compact.
 
 ### Changed
@@ -271,10 +320,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - **HW Config export path for devices inside TIA Portal folders** — importing hardware configuration for PLCs, HMIs and IO devices placed in TIA Portal device folders now writes files to the correct mirrored workspace path: `Devices/<Category>/<FolderPath>/<Device>/DeviceConfiguration`. Previously foldered PLCs landed directly under `Devices/<Category>/<Device>/DeviceConfiguration` because the TypeScript callers ignored `folderPath`.
 - **TIA folder structure for IO devices** — IO devices inside TIA Portal folders are now exported with their folder hierarchy preserved (`Devices/IO_Devices/<FolderPath>/<Device>/DeviceConfiguration`) instead of being flattened into `Devices/IO_Devices/`. Root IO devices still use the legacy flat layout for backward compatibility.
 
-### Changed
-
-- **Unified HW Config path builder** — all HW Config import callers now use the shared `buildDeviceHwConfigPath` helper, which centralizes the decision between legacy flat IO layout and per-device folder-mirrored layout.
-
 ## [3.0.46] - 2026-06-22
 
 ### Added
@@ -320,7 +365,6 @@ Major version bump for the external automation CLI bridge and script-driven TIA 
 ### Changed
 
 - **CLI block import honours extension file-format settings** — `import_blocks` / `tia_import_blocks` now pulls selected blocks, or all blocks from a device, using the configured `tiaImport.exportFormat`, `tiaImport.dbExportFormat` and SD preview mirror behavior instead of forcing XML. `import_file` and `import_folder` remain the workspace-to-TIA push commands.
-- **CLI documentation and workspace templates refreshed** — README, generated CLI instructions and Copilot workspace instructions now describe the bridge state file, authentication model, command aliases and the distinction between pulling blocks from TIA and pushing local files back to TIA.
 - **Native dependency detection hardened for modern VS Code/Electron** — the startup checker validates the actual `electron-edge-js` payload (`lib/edge.js` and `edge_nativeclr.node`) and accepts future compatible versions via the minimal dependency range `electron-edge-js >=8.2.2`.
 
 ---
@@ -363,8 +407,7 @@ Major version bump for the external automation CLI bridge and script-driven TIA 
 ### Changed
 
 - **Improved offline error messages** — when native module repair fails in offline mode, the output now shows which Electron versions are bundled (`35–40`) and which version the current VS Code requires, making it easier to diagnose compatibility issues without internet access.
-- **Smaller multi-version VSIX package** — shared .NET wrapper dependencies are now deduplicated into `dotnet/TiaOpennessWrapper/bin/Release/net48/common/` after building V18–V21 wrappers. Version-specific folders now ship only their own `TiaOpennessWrapper.dll`, while the runtime resolver loads common DLLs from the shared folder.
-- **Windows x64 native payload trimming** — VSIX packaging now excludes unused `darwin`, `ia32`, and `arm64` native binaries from `edge-js` and `electron-edge-js`, while keeping Windows x64 offline binaries for Electron 35–40.
+- **Smaller package** — the .NET wrappers of the TIA Portal versions share their common libraries, and the native modules ship only their Windows x64 binaries (Electron 35–40 for offline use).
 
 ---
 
@@ -449,10 +492,6 @@ Major version bump for the external automation CLI bridge and script-driven TIA 
 - **Dark-theme support for the embedded SIMATIC Automation Compare Tool preview** — the in-VS-Code ACT preview panel now follows the active VS Code color theme. All ACT surfaces (Overview sidebar, Interface / Attributes tables, Options pane, tabs, splitters) are repainted with `--vscode-*` colors and the LAD/FBD diagram canvas, block bodies, wires and SVG operand text are inverted into a dark palette so block contours and labels stay readable on the dark background.
 - **Full operand label expansion in LAD/FBD networks** — ACT renders truncated operand names like `#ManMs…gToRun`, but keeps the full name in a child SVG `<title>` element. The webview now walks the rendered SVG (with a `MutationObserver` to cover lazy-rendered networks) and replaces each truncated `<tspan>` text with the full name, so `#ManMsgL1ToL2.oCountMsgToRun` is shown verbatim. Long input labels that previously got clipped on the left are now displayed fully — the diagram is shifted right with a left margin and parents have `overflow: visible`, with horizontal scroll on the outer split-area as a fallback when the network is wider than the panel.
 
-### Changed
-
-- **Prerequisite emphasised in README** — the *Previewing local SimaticML XML* section and the *Requirements* table now link directly to the Siemens Support download page for the [SIMATIC Automation Compare Tool](https://support.industry.siemens.com/cs/document/109797235/simatic-automation-compare-tool-?dti=0&lc=en-PL). The extension does not bundle ACT; you must install it separately to use the preview.
-
 ---
 
 ## [2.0.0] - 2026-05-06
@@ -471,10 +510,6 @@ Major version bump consolidating the autonomous-agent feature wave.
 - **Setting `tiaImport.autoExportCrossReferences`** (`always` / `ask` / `never`, default `ask`) — controls automatic cross-reference dump after a device or project import. In `ask` mode the prompt is shown **per PLC** at the moment the dump would start, never during plain block imports, and **auto-skips after 5 s** if you don't respond so the rest of the import can run unattended. ⚠️ Generating cross-references is performed by TIA Portal itself and can take **several minutes — sometimes 10 min+ on large PLCs** (thousands of blocks, fault-tolerant projects); progress is streamed line-by-line into the *TIA Portal Import* output channel.
 - Total LM tool count is now **18** (`tia_*`). The `tia_export_cross_references` tool is also long-running for the same reason — don't impose short client-side timeouts.
 
-### Changed
-
-- README, CHANGELOG and copilot-instructions updated to reflect the 4 supported TIA Portal versions (V18, V19, V20, V21) and the new auto-export setting.
-
 ---
 
 ## [1.0.223] - 2026-05-06
@@ -486,10 +521,6 @@ Major version bump consolidating the autonomous-agent feature wave.
   - **`AGENTS.md`** — follows the open [agents.md](https://agents.md) standard supported by Cursor, Aider, OpenAI Codex, Gemini CLI, Jules and other AI coding agents.
 - **`CLAUDE.local.md` is git-ignored** in the template `.gitignore` so per-machine overrides never get committed.
 
-### Changed
-
-- README **Workspace Templates** section documents the new files.
-
 ---
 
 ## [1.0.221] - 2026-05-06
@@ -498,14 +529,13 @@ Major version bump consolidating the autonomous-agent feature wave.
 
 - **Full UI ↔ Copilot parity for Language Model Tools** — every workflow available from the UI is now reachable from Copilot / `@tia` chat participant. Three new tools bring the total to **17**:
   - **`tia_export_project`** — export every device in the active project (program blocks, tag tables, UDTs, watch tables) plus optionally HW configuration in a single call. Equivalent of the UI command **TIA Import: Import Entire Project**. Inputs: `includeHwConfig?` (default `true`), `hwConfigFormat?` (`xml` | `cax`). Returns per-device results with `programOk` / `hwOk` flags.
-  - **`tia_import_hw_config`** — push HW Config from the workspace into TIA Portal. Accepts a single `.xml` / `.aml` file or a folder (`Devices/<Cat>/<Dev>/DeviceConfiguration/` or flat `Devices/IO_Devices/`). **Required** for HW Config — the existing `tia_import_file` does not handle HW Config files because they go through a separate `HwConfigBridgeMixin` endpoint. Honours `tiaImport.hwConfigFormat` and supports `overwriteExisting` / `updateExisting` / `importNetworkConfig` / `skipIfIdentical`. Force-overwrite triggers a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled.
+  - **`tia_import_hw_config`** — push HW Config from the workspace into TIA Portal. Accepts a single `.xml` / `.aml` file or a folder (`Devices/<Cat>/<Dev>/DeviceConfiguration/` or flat `Devices/IO_Devices/`). **Required** for HW Config — `tia_import_file` does not handle HW Config files. Honours `tiaImport.hwConfigFormat` and supports `overwriteExisting` / `updateExisting` / `importNetworkConfig` / `skipIfIdentical`. Force-overwrite triggers a confirmation dialog unless `tiaImport.lmTools.autoConfirmImports` is enabled.
   - **`tia_refresh`** — re-read the project structure from TIA Portal (devices, blocks, tag tables) into the in-memory cache. Use after the user changed something in TIA Portal between tool calls.
 
 ### Changed
 
-- **`@tia` chat participant** now advertises all 17 tools (added `tia_export_project`, `tia_import_hw_config`, `tia_refresh` to `TIA_TOOL_NAMES`).
-- **`.github/copilot-instructions.md`** (and the workspace template under `Documentation/Templates/`) updated to document the new tools and clarify that HW Config must be pushed via `tia_import_hw_config`, not `tia_import_file`.
-- **README** gained a *Copilot / AI Agent Integration* subsection summarising the LM tool surface.
+- **`@tia` chat participant** now offers all 17 tools.
+- The Copilot instructions of the workspace template describe the new tools and that HW Config is pushed with `tia_import_hw_config`, not `tia_import_file`.
 
 ---
 
@@ -541,10 +571,6 @@ Major version bump consolidating the autonomous-agent feature wave.
 - **TIA Portal version selector in the Connection panel** — new top-most entry "**TIA Portal**" shows the currently selected major version (V19/V20/V21) and opens a quick-pick to switch versions without diving into Settings. The selection is persisted in `tiaImport.tiaPortalVersion`; the existing change-listener prompts for a window reload to apply it.
 - New command `TIA Import: Select TIA Portal Version` (`tia-import.selectTiaPortalVersion`).
 
-### Changed
-
-- **Wrapper build script skips V17** — `scripts/build-dotnet-all.ps1` now ignores reference assemblies under `dotnet/refs/V17/` (V17 is no longer a supported target). V18 is also out of scope; only V19/V20/V21 are built.
-
 ---
 
 ## [1.0.172] - 2026-04-30
@@ -557,12 +583,10 @@ Major version bump consolidating the autonomous-agent feature wave.
 ### Changed
 
 - **Default TIA Portal version is now V21.**
-- New `scripts/build-dotnet.js` build orchestrator: iterates over V19/V20/V21 and builds each only when the corresponding `C:\Program Files\Siemens\Automation\Portal V<n>\PublicAPI\V<n>\net48` directory is present, skipping missing installations gracefully (Siemens NuGet does not bundle reference assemblies — they are resolved from the local TIA install).
-- `TiaOpennessWrapper.csproj` no longer appends the framework moniker twice to the output path; binaries land directly in `bin\Release\net48\V<n>\`.
 
 ### Notes
 
-- This VSIX ships with the V21 wrapper only because V19/V20 binaries can only be produced on machines with TIA Portal V19/V20 installed. To enable V19 or V20, install the corresponding TIA Portal version and run `npm run build:dotnet` before packaging.
+- This VSIX ships with the V21 wrapper only.
 
 ---
 
@@ -571,18 +595,12 @@ Major version bump consolidating the autonomous-agent feature wave.
 ### Added
 
 - **TIA Portal V19 / V20 backward compatibility** — extension now supports TIA Portal V19, V20 and V21 with a single binary. Version is selected via `tiaImport.tiaPortalVersion` (V18 is no longer offered, since SD-format paths require V20+ and V18 lacks several APIs used internally).
-- **`TiaCapabilities` runtime gating** — new helper in the .NET wrapper that exposes the initialized TIA Portal version and feature flags (e.g. `SupportsSdFormat` for V20+). Used to guard newer Openness APIs and degrade gracefully on older versions.
 
 ### Changed
 
 - **SD format auto-fallback on V19** — when `exportFormat="sd"` is selected on TIA Portal V19, LAD/FBD/STL blocks are now exported as XML instead of `.s7dcl`/`.s7res` (the `ExportAsDocuments` API was added in V20). SCL blocks continue to use `GenerateSource` (`.scl`) which is available on V19.
 - **SD import blocked with clear error on V19** — exporting `.s7dcl` files back to a V19 project now returns an explicit error message ("SD format requires V20+") instead of failing inside the Openness call.
 - **UI strings de-versioned** — removed hardcoded `V21` from progress titles and command descriptions in the export commands; the active TIA Portal version is shown in the status bar.
-
-### Internal
-
-- `TiaConnector.GetInitializedVersionNumber()` exposed for capability checks.
-- `tsconfig.json` now excludes `test/` from the compilation root so unit tests don't break the production build.
 
 ---
 
@@ -609,14 +627,6 @@ Major version bump consolidating the autonomous-agent feature wave.
 
 ---
 
-## [1.0.127] - 2026-03-28
-
-### Changed
-
-- **Copilot instructions update** - Refined `.github/copilot-instructions.md` guidance for TIA Portal Openness API usage, including required API XML references, key HW classes, common navigation patterns, block export format rules, and build command reminders.
-
----
-
 ## [1.0.126] - 2026-03-17
 
 ### Fixed
@@ -639,7 +649,6 @@ Major version bump consolidating the autonomous-agent feature wave.
 
 - **`Tools/` workspace directory** — Utility scripts (Python, PowerShell, etc.) are now scaffolded into the workspace on first connection. Each script has a matching `.md` description file with usage instructions and dependencies.
 - **`UserFiles/` workspace directory** — Default output location for files generated by `Tools/` scripts (Excel reports, CSV exports, logs). Excluded from TIA Portal import and version control.
-- **Community contribution call** — README now includes a section encouraging users to share their utility scripts and `copilot-instructions.md` improvements via Pull Requests on GitHub.
 
 ---
 
