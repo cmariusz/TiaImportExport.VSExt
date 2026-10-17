@@ -1,9 +1,9 @@
 # End User License Agreement (EULA)
 
-**Product:** TIA Portal Import — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
-**Licensor:** CmSoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59 — `office@cmsoft.com.pl`, <https://www.cmsoft.com.pl> ("Licensor", "we", "us")
+**Product:** CMsoft Import for TiaPortal (formerly TIA Portal Import) — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
+**Licensor:** Mariusz Czyrnek CM-SOFT, trading as CMsoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59 — `office@cmsoft.com.pl`, <https://shop.cmsoft.com.pl> ("Licensor", "we", "us")
 **Applies to:** version **4.0.0** and later
-**Version of this EULA:** 1.1 — 2026-09-23
+**Version of this EULA:** 1.3 — 2026-10-12
 
 > **IMPORTANT — READ CAREFULLY.** This End User License Agreement ("Agreement")
 > is a legal agreement between you (an individual or a legal entity, "you") and
@@ -23,8 +23,7 @@
 
 - **"Seat"** — the right of one named individual, identified by an e-mail
   address, to use Paid Features on one activated workstation (physical or
-  virtual) at a time, unless your order states a different number of
-  activations per Seat.
+  virtual). Every license covers exactly one Seat.
 - **"Business Customer"** — anyone who acquires or uses the Software in
   connection with a trade, business, craft or profession, including public
   bodies. **"Consumer"** — a natural person acting for purposes outside such
@@ -57,8 +56,9 @@ to install and use the Software:
 
 1. **Free Features** — free of charge, for an unlimited time, for internal
    business or personal purposes, on any number of workstations you control.
-2. **Paid Features** — only for the number of Seats you have purchased and only
-   for the duration of the corresponding subscription or license term.
+2. **Paid Features** — one license, one Seat: only on the workstation on which
+   the license is activated, and only for the duration of the corresponding
+   subscription or license term.
 
 You may make a reasonable number of backup copies of the installation package
 for archival purposes.
@@ -69,12 +69,14 @@ Features, each such instance counts as a workstation; the activation must remain
 bound to exactly one instance, and cloning an activated instance does not create
 additional Seats.
 
-**Multi-Seat and organisation licenses.** Where Seats are purchased by an
-organisation, the organisation (a) assigns each Seat to one named individual and
-may reassign it when that individual leaves or changes role, (b) ensures that
-its users comply with this Agreement, and (c) is responsible for their breaches
-of it as for its own. When the organisation's subscription ends, the Paid
-Features of all assigned Seats end with it.
+**Licenses of an organisation.** Every license is a single-Seat license; an
+organisation that needs Paid Features on several workstations acquires one
+license per workstation. The organisation (a) assigns each license to one named
+individual and may reassign it when that individual leaves or changes role
+(moving a license to another workstation goes through the Licensor), (b) ensures
+that its users comply with this Agreement, and (c) is responsible for their
+breaches of it as for its own. When a license ends, its Paid Features end with
+it.
 
 ## 3. Restrictions
 
@@ -90,8 +92,8 @@ applicable law, you must **not**:
    notice contained in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md);
 4. circumvent, disable or tamper with the activation, licensing, quota or
    integrity mechanisms of the Software, or use a License Key you did not
-   lawfully obtain, or share a License Key beyond the Seats you purchased, or
-   let several individuals use one Seat (including through a shared account);
+   lawfully obtain, or use one License Key on more than one workstation, or let
+   several individuals use one Seat (including through a shared account);
 5. use the Software to develop a competing product, or to provide the
    functionality of the Software to third parties as a service or in a
    time-sharing, service-bureau or hosting arrangement;
@@ -489,13 +491,13 @@ Software outside its intended purpose.
 
 ## 23. Contact
 
-**CmSoft**
+**Mariusz Czyrnek CM-SOFT**
 Kornatka 23, 32-410 Dobczyce, Poland
 NIP (VAT-ID): PL 894-253-07-59
 E-mail: `office@cmsoft.com.pl`
-Web: <https://www.cmsoft.com.pl>
+Web: <https://shop.cmsoft.com.pl>
 Issue tracker: <https://github.com/cmariusz/TiaImportExport.VSExt/issues>
 
 ---
 
-© 2026 CmSoft. All rights reserved.
+© 2026 Mariusz Czyrnek CM-SOFT. All rights reserved.

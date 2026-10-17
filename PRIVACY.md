@@ -1,8 +1,8 @@
 # Privacy Policy
 
-**Product:** TIA Portal Import — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
-**Controller:** CmSoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP PL 894-253-07-59 — `office@cmsoft.com.pl`
-**Version:** 1.1 — 2026-09-23 (applies to extension version 4.0.0 and later)
+**Product:** CMsoft Import for TiaPortal (formerly TIA Portal Import) — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
+**Controller:** Mariusz Czyrnek CM-SOFT, trading as CMsoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP PL 894-253-07-59 — `office@cmsoft.com.pl`
+**Version:** 1.3 — 2026-10-12 (applies to extension version 4.0.0 and later)
 
 ---
 
@@ -20,7 +20,7 @@
 
 The extension reads and writes files inside your workspace (for example
 `TiaExport/`, `.tia/`), reads TIA Portal project data through the Siemens
-Openness API, and writes diagnostic messages to the *TIA Portal Import* output
+Openness API, and writes diagnostic messages to the *CMsoft Import for TiaPortal* output
 channel. This processing happens **entirely on your computer**. The Licensor has
 no access to it.
 
@@ -69,7 +69,7 @@ provider acting as merchant of record:
 | --- | --- | --- |
 | E-mail address you enter | Issuing and delivering the license key, license support | Art. 6(1)(b) — performance of a contract |
 | Company / billing data | Invoicing, tax obligations | Art. 6(1)(b) and 6(1)(c) |
-| Derived hardware identifier (a one-way hash of machine characteristics — never the raw serial numbers) | Binding the license to the purchased number of seats, preventing abuse | Art. 6(1)(b) and 6(1)(f) — legitimate interest in protecting against unlicensed use |
+| Derived hardware identifier (a one-way hash of machine characteristics — never the raw serial numbers) | Binding each license to the one workstation it covers, preventing abuse | Art. 6(1)(b) and 6(1)(f) — legitimate interest in protecting against unlicensed use |
 | Product name, extension version, operating-system version, TIA Portal major versions installed | Issuing a compatible key, technical support | Art. 6(1)(b) |
 | License status, activation and deactivation events | Seat management, revocation | Art. 6(1)(b) |
 | License Key identifier, hardware identifier hash and extension version sent during periodic online validation (versions that use it) | Confirming that the license is still valid, enforcing the Seat limit | Art. 6(1)(b) and 6(1)(f) |
@@ -105,10 +105,10 @@ resolved, they may terminate the affected subscription with a pro-rata refund.
 
 **Data processing agreement.** Where the Licensor processes personal data on
 behalf of a Business Customer (for example the names and e-mail addresses of
-users to whom the customer assigns Seats), it does so as a processor under
-Article 28 GDPR, only for license and Seat administration. A data processing
-agreement with the content required by Article 28(3) GDPR is available on
-request at `office@cmsoft.com.pl`.
+users to whom the customer assigns licenses), it does so as a processor under
+Article 28 GDPR, only for license administration. A data processing agreement
+with the content required by Article 28(3) GDPR is available on request at
+`office@cmsoft.com.pl`.
 
 The Licensor does not sell personal data and does not use it for advertising or
 profiling.
@@ -158,8 +158,8 @@ changes will be announced in the [`CHANGELOG.md`](CHANGELOG.md).
 
 ## 11. Contact
 
-**CmSoft**
+**Mariusz Czyrnek CM-SOFT**
 Kornatka 23, 32-410 Dobczyce, Poland
 NIP: PL 894-253-07-59
 E-mail: `office@cmsoft.com.pl`
-Web: <https://www.cmsoft.com.pl>
+Web: <https://shop.cmsoft.com.pl>

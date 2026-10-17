@@ -1,10 +1,10 @@
 # Security Policy
 
-**Product:** TIA Portal Import — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
-**Manufacturer:** CmSoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59
-**Version:** 1.0 — 2026-09-23
+**Product:** CMsoft Import for TiaPortal (formerly TIA Portal Import) — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
+**Manufacturer:** Mariusz Czyrnek CM-SOFT, trading as CMsoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP (VAT-ID) PL 894-253-07-59
+**Version:** 1.1 — 2026-10-12
 
-This policy describes how CmSoft handles security vulnerabilities in the
+This policy describes how CMsoft handles security vulnerabilities in the
 Software, in line with the vulnerability-handling requirements of Regulation
 (EU) 2024/2847 (Cyber Resilience Act).
 
