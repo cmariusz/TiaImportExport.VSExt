@@ -21,6 +21,20 @@ Scans all Data Blocks (GlobalDB, InstanceDB) in the PLC `Program blocks` directo
 
 ## Usage
 
+## Installation
+
+Install required Python packages before first run:
+
+```powershell
+pip install pyyaml openpyxl
+```
+
+If Python reports `ModuleNotFoundError: No module named 'yaml'`, install:
+
+```powershell
+pip install pyyaml
+```
+
 ```powershell
 # Auto-detect PLC folder from TiaExport/ in current directory
 python Tools\_extractHMI.py
@@ -35,6 +49,8 @@ python Tools\_extractHMI.py <plc_base_dir> -o output.xlsx
 ## Output
 
 Default: `UserFiles\HMI_Variables_{plc_name}.xlsx`
+
+The output directory is created automatically if it does not already exist.
 
 ### Excel columns
 
