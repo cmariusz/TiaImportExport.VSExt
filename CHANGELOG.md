@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.2.0] - 2026-10-17
+
+### Fixed
+
+- **License panel: the FREE vs PRO table** — the table listed the *HW Config export* from TIA Portal among the FREE functions, although the license check makes the hardware configuration PRO in both directions. It now shows what the license check does, like the README and the user manual: the free import with watch tables and technology objects, the hardware configuration in both directions as PRO, the MCP server with the FREE operations only, the CLI bridge and **Prepare Workspace** as PRO.
+
+### Changed
+
+- **README: FREE and PRO, website link** — the README starts with a link to [www.cmsoft.com.pl](https://www.cmsoft.com.pl) and has a *FREE and PRO* table: what the free version covers, what PRO adds, the free trial and the purchase.
+
 ## [4.1.0] - 2026-10-17
 
 ### Added

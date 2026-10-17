@@ -1,7 +1,9 @@
 # CMsoft Import for TiaPortal — VS Code Extension
 
+🌐 **[www.cmsoft.com.pl](https://www.cmsoft.com.pl)** — all CMsoft extensions, the shop and contact
+
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-4.1.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.2.0-blue)](CHANGELOG.md)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -16,6 +18,28 @@
 > 📖 **User manual:** built into the extension — Command Palette → **CMsoft Import for TiaPortal: Open User Manual** (screenshots, a complete worked example, Copilot / MCP / CLI examples, troubleshooting; works offline).
 
 ![CMsoft Import for TiaPortal Overview](Screenshots/Overview.png)
+
+---
+
+## FREE and PRO
+
+| Feature                                                                                                                | FREE                           | PRO          |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------ |
+| Connect to TIA Portal, open projects, browse the project structure                                                     | ✅                             | ✅           |
+| Import from TIA Portal to the workspace — program blocks, tag tables, PLC data types, watch tables, technology objects | ✅                             | ✅           |
+| Compile the PLC software, compile errors in the PROBLEMS panel                                                         | ✅                             | ✅           |
+| Export from the workspace to TIA Portal                                                                                | up to 10 objects per operation | ✅ unlimited |
+| Hardware configuration — import from and export to TIA Portal (XML, AutomationML)                                      | ⛔                             | ✅           |
+| Software Units, HMI, project library types, languages and project texts                                                | ⛔                             | ✅           |
+| Cross-references, download to PLC                                                                                      | ⛔                             | ✅           |
+| Copilot Language Model tools (`tia_*`) and the `@tia` chat participant                                                 | ⛔                             | ✅           |
+| MCP server for AI agents                                                                                               | FREE operations only           | ✅           |
+| CLI bridge for scripts and automation                                                                                  | ⛔                             | ✅           |
+| Prepare Workspace (AI instructions, XSD schemas, templates, Tools)                                                     | ⛔                             | ✅           |
+
+- **14-day free trial**, no payment details needed: **CMsoft Import for TiaPortal: Manage License / Subscription** → *Try for free*.
+- Subscription (monthly or yearly, renews automatically) or one-time payment: **CMsoft Import for TiaPortal: Buy License** — prices on the [pricing page](https://extensions.cmsoft.com.pl/pricing?product=tia-import). A license covers one Seat (one named user on one activated workstation).
+- The license is shown in the shared **CMsoft** status bar item (one item for all installed CMsoft extensions) and in the **License** row of the *Connection* view; both open the license panel. Without a license the extension stays in FREE — nothing is deleted when a trial or a license ends.
 
 ---
 
