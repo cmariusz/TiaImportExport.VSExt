@@ -3,7 +3,7 @@
 🌐 **[www.cmsoft.com.pl](https://www.cmsoft.com.pl)** — all CMsoft extensions, the shop and contact
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-4.2.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.4.0-blue)](CHANGELOG.md)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -26,9 +26,11 @@
 | Feature                                                                                                                | FREE                           | PRO          |
 | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------ |
 | Connect to TIA Portal, open projects, browse the project structure                                                     | ✅                             | ✅           |
-| Import from TIA Portal to the workspace — program blocks, tag tables, PLC data types, watch tables, technology objects | ✅                             | ✅           |
-| Compile the PLC software, compile errors in the PROBLEMS panel                                                         | ✅                             | ✅           |
+| Import from TIA Portal to the workspace — program blocks, tag tables, PLC data types, watch tables, technology objects | up to 10 objects per operation | ✅ unlimited |
 | Export from the workspace to TIA Portal                                                                                | up to 10 objects per operation | ✅ unlimited |
+| Next import or export                                                                                                  | 15 minutes after the previous  | ✅ at once   |
+| Compile the PLC software (**Compile PLC Software**), compile errors in the PROBLEMS panel                              | ✅                             | ✅           |
+| Compile after export (Always / Ask), the import → compile loop `tia_fix_compile_errors`                               | ⛔                             | ✅           |
 | Hardware configuration — import from and export to TIA Portal (XML, AutomationML)                                      | ⛔                             | ✅           |
 | Software Units, HMI, project library types, languages and project texts                                                | ⛔                             | ✅           |
 | Cross-references, download to PLC                                                                                      | ⛔                             | ✅           |
@@ -37,8 +39,9 @@
 | CLI bridge for scripts and automation                                                                                  | ⛔                             | ✅           |
 | Prepare Workspace (AI instructions, XSD schemas, templates, Tools)                                                     | ⛔                             | ✅           |
 
+- **FREE limits:** one operation is one command — a whole device or project import, a folder export, one AI tool call. It counts every block, tag table, data type, watch table and technology object it reads from or writes to TIA Portal; an operation with more than 10 objects is refused before anything is changed (import or export a smaller folder or single objects). After an operation the next import or export is available 15 minutes later.
 - **14-day free trial**, no payment details needed: **CMsoft Import for TiaPortal: Manage License / Subscription** → *Try for free*.
-- Subscription (monthly or yearly, renews automatically) or one-time payment: **CMsoft Import for TiaPortal: Buy License** — prices on the [pricing page](https://extensions.cmsoft.com.pl/pricing?product=tia-import). A license covers one Seat (one named user on one activated workstation).
+- Subscription (monthly or yearly, renews automatically): **CMsoft Import for TiaPortal: Buy License** — prices on the [pricing page](https://extensions.cmsoft.com.pl/pricing?product=tia-import). A license covers one Seat (one named user on one activated workstation).
 - The license is shown in the shared **CMsoft** status bar item (one item for all installed CMsoft extensions) and in the **License** row of the *Connection* view; both open the license panel. Without a license the extension stays in FREE — nothing is deleted when a trial or a license ends.
 
 ---
@@ -80,11 +83,12 @@ The block viewer and web preview generator were moved to the separate **[CMsoft 
 | **Export UDTs / Watch Tables** | Export data types and watch tables                                                                                                                                                                |
 | **Export Technology Objects**  | Export Technology Object XMLs back to TIA Portal (auto-detected by content) — objects are imported into the PLC's root*Technology objects* group                                               |
 | **Export HW Config**           | Export hardware configuration as XML or**CAx / AutomationML (`.aml`)** via `CaxProvider`                                                                                                |
+| **Bind SVGHMI Widget** (PRO)   | Place a dynamic SVG widget that **CMsoft Viewer for TiaPortal** generated from an S7-GRAPH sequence on a WinCC Unified screen (TIA Portal V18+) and bind its parameters to the PLC tags of its `<widget>.bindings.json` — screen, screen window, HMI tags and dynamizations in one step |
 | **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → Technology Objects → HW)                                                              |
 | **Smart Comparison**           | Only overwrite items that actually changed (normalized XML diff; Instance DBs compared by StartValues only)                                                                                       |
 | **Orphan Cleanup**             | Auto-delete blocks, groups, tag tables, UDTs and Technology Objects in TIA that no longer exist locally (and orphaned local files on import from TIA)                                             |
 | **Dependency Ordering**        | Files sorted automatically: UDT → FB → FC → OB → GlobalDB → InstanceDB                                                                                                                       |
-| **Compile after Export**       | Automatically compile PLC software in TIA Portal after export — configurable: Always / Ask / Never                                                                                               |
+| **Compile after Export** (PRO) | Automatically compile PLC software in TIA Portal after export — configurable: Always / Ask / Never. FREE: **Compile PLC Software** on a PLC in the project tree                                   |
 | **Compile Error Tracking**     | Compile results mapped to VS Code PROBLEMS panel with file and line resolution (network / SCL line mapping)                                                                                       |
 
 ### Smart Capabilities
@@ -95,7 +99,7 @@ The block viewer and web preview generator were moved to the separate **[CMsoft 
 - **Cancellation support** — cancel long-running operations via VS Code progress UI
 - **Status bar** — real-time connection state and project info; the **CMsoft** item lists your CMsoft add-on licenses and the user manuals of the installed CMsoft add-ons (hover for details, click to pick a license and manage it or a manual and open it; **Help: CMsoft Manuals…** in the Command Palette lists the manuals alone)
 - **Time-based import progress** — long-running project, device, device-category, and category HW Config imports show a live numeric percentage, weighted work counter, and ETA in both the notification progress UI and the status bar; block imports are weighted by export type (SD, SCL/DB source, XML, UDTs, tag/watch tables) and category HW Config imports are weighted per device with a small safety buffer so very large TIA exports do not look stalled
-- **Compile after export** — optional PLC software compilation in TIA Portal after each export (Always / Ask / Never); results shown in OUTPUT panel
+- **Compile after export** (PRO) — optional PLC software compilation in TIA Portal after each export (Always / Ask / Never); results shown in OUTPUT panel. In the FREE plan compile with **CMsoft Import for TiaPortal: Compile PLC Software** (also in the context menu of a PLC in the project tree)
 - **Compile error tracking** — compile errors and warnings mapped to VS Code PROBLEMS panel with automatic file matching, network-to-line resolution (XML, S7DCL, SCL), and direct navigation to the error location
 
 ### Copilot / AI Agent Integration
@@ -236,8 +240,9 @@ Nothing else needs to be installed — no Node.js, npm or build tools: the exten
    - **Export to TIA - Program and HW** — unified export (program + HW config, incl. `Technology objects`)
    - **Export to TIA - Program without HW** — unified export (program only, incl. `Technology objects`)
    - **Export to TiaPortal: HW Config XML** — hardware configuration
+   - **Bind SVGHMI Widget to WinCC Unified** — for a `.svghmi` widget of CMsoft Viewer for TiaPortal (user manual, section 8.10)
 4. Select overwrite mode: *Compare & overwrite changes* or *Force overwrite all*
-5. If **Compile after Export** is enabled (`always` or `ask`), the extension compiles PLC software in TIA Portal after a successful export
+5. If **Compile after Export** is enabled (`always` or `ask`, PRO), the extension compiles PLC software in TIA Portal after a successful export; in the FREE plan run **CMsoft Import for TiaPortal: Compile PLC Software**
 6. Compile results are shown in the **OUTPUT** panel; errors and warnings appear in the **PROBLEMS** panel with clickable file links
 
 ### Viewing local blocks and web previews
@@ -338,7 +343,7 @@ On first connection to TIA Portal (or when you run `CMsoft Import for TiaPortal:
 | `tiaImport.udtExportFormat`               | UDT (PLC data type) export format (`udt` / `xml`)                                                                                                                                                                                                                                                                                                                                    | `udt`              |
 | `tiaImport.showImportExportDetails`       | Show detailed import/export messages plus wrapper and TIA Openness warnings/errors in the output log                                                                                                                                                                                                                                                                                     | `false`            |
 | `tiaImport.importProgress.itemsPerSecond` | Speed multiplier for the time-based import progress model used by project/device/category and category HW Config imports.`1.0` uses the built-in weighted calibration plus a 10% safety buffer; increase it if your TIA exports are faster, decrease it if they are slower.                                                                                                            | `1`                |
-| `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`)                                                                                                                                                                                                                                                                                                                     | `ask`              |
+| `tiaImport.compileAfterExport`            | Compile PLC software after export (`always` / `ask` / `never`). PRO — in the FREE plan it acts as `never`; compile with **Compile PLC Software**                                                                                                                                                                                                                                 | `ask`              |
 | `tiaImport.autoExportCrossReferences`     | Generate cross-reference dump after import (`always` / `ask` / `never`). In `ask` mode the prompt is shown **per PLC** when the dump is about to start and auto-skips after **5 s** if you don't respond. ⚠️ Building the table can take **several minutes — 10 min+ on large PLCs** because TIA Portal computes it itself. Default is therefore `ask`. | `ask`              |
 
 ### Block Export Formats
@@ -420,6 +425,7 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 | `Export to TiaPortal: HW Config Folder`   | Export HW config folder                            |
 | `Export to TIA - Program and HW`          | Unified export (program + HW config)               |
 | `Export to TIA - Program without HW`      | Unified export (program only, no HW)               |
+| `CMsoft Import for TiaPortal: Compile PLC Software` | Compile the PLC software of a device (FREE; also in the context menu of a PLC in the project tree) |
 
 ### Utility Commands
 

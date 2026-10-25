@@ -6,6 +6,38 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.3.1] - 2026-10-24
+
+### Changed
+
+- **User manual: SVGHMI widgets** — the new section 8.10 shows **Bind SVGHMI Widget to WinCC Unified** step by step with an example (the sequence of a GRAPH FB on a WinCC Unified panel): what the command creates in TIA Portal, its log, the bindings file, the *Dynamic widgets* update and **Retry**; the command is also listed in the overview, the Explorer menu table, the command reference (68 commands) and the troubleshooting. The README lists it too.
+
+## [4.3.0] - 2026-10-24
+
+### Added
+
+- **Compile PLC Software** — a command (Command Palette, and the context menu of a PLC in the project tree) that compiles the PLC software of a device whenever you want, with the results in the OUTPUT and PROBLEMS panels. It is FREE.
+- **Bind SVGHMI Widget to WinCC Unified** — right-click a `.svghmi` widget that **CMsoft Viewer for TiaPortal** generated from a GRAPH sequence: the command places it on a WinCC Unified screen of the connected project and binds its parameters to the PLC tags listed in `<widget>.bindings.json` next to it, creating or updating the HMI tags. Until TIA Portal has taken the widget into its *Dynamic widgets* palette, the command says how and offers **Retry**. PRO, TIA Portal V18 or newer.
+
+### Changed
+
+- **License check after an update** — the first start after an update of the extension asks the license server about the license once, as the license panel does when it opens: a renewed term, changed PRO features or a revoked license arrive right away, not only in the last seven days of the license. Offline, the next start asks again. **Privacy Policy 1.4** names the check.
+- **FREE plan: 10 objects per import or export, 15 minutes between operations** — in the FREE plan one operation (one command such as a block, folder, device or project import, a folder export, or one AI tool call) transfers at most 10 objects in either direction; the import from TIA Portal was unlimited before. The next import or export is available 15 minutes after the previous one has ended, in every VS Code window. An operation over the limit is refused before anything is changed, and the dialog says what the limit is and when the next operation is possible. The limit now also covers folder exports, which sent their files one by one and slipped past it before. PRO and the free trial have no limits.
+- **Compile after export is PRO** — **Compile after Export** (`tiaImport.compileAfterExport`: Always / Ask) works with PRO and the free trial; in FREE it acts as Never and says so once per session. The Copilot / MCP / CLI tool `tia_fix_compile_errors` (the import → compile loop) is PRO as well; `tia_compile` and **Compile PLC Software** stay FREE.
+- **License dialog: one button** — the dialog of a PRO function or a FREE limit has one button, **Buy License**, which opens the license panel (buy a subscription, start the free trial or activate a license key). The second button **Activate License** and the direct jump to the purchase page are gone. The notice that compile after export is PRO opens the license panel too.
+- **Purchase wording** — the README, the purchase step of the license panel and the message of the Copilot tools without a license name the way PRO is sold: a monthly or yearly subscription that renews automatically until cancelled.
+
+### Fixed
+
+- **Extension version in purchase and trial requests** — the activation request (`TIAREQ-…`) carried the version of the .NET library (always 1.0.0.0) instead of the extension's; the license server now records which version of CMsoft Import for TiaPortal made the purchase or trial request.
+- **Hardware configuration in FREE** — **Import HW Configuration**, **Import Device HW Configuration** and **Import HW Config for All Devices in Category** asked for their options and then failed once per device; like every other PRO function they now show the license dialog first.
+- **Project texts exported again** — a second **Import Languages & Project Texts** (or `tia_export_project_texts`) failed, because TIA Portal does not write over an existing workbook; the workbook is now replaced.
+- **Compare and skip identical with AutomationML** — **Export to TIA Portal: HW Config** imported an unchanged `.aml` file again; the device is now compared with a fresh CAx export from TIA Portal and skipped when nothing changed, as an `.xml` file is.
+- **Project texts with warnings** — **Export Project Texts to TIA Portal** (and `tia_import_project_texts`) reported only *state: Warning*; they now say how many texts TIA Portal did not take over and why (for example read-only texts), and open TIA Portal's log.
+- **License messages for AI agents and scripts** — the Copilot tools, the MCP server and the CLI answered a PRO function in FREE with the bare code `LICENSE_REQUIRED`, and a hardware export that failed for every device with *failed for all N device(s)*; they now say what is missing and how to activate a license.
+- **CLI Bridge row in FREE** — the **Connection** view showed `On` although the CLI bridge does not run without PRO; it now shows `On (PRO)`.
+- **Project tree** — an HMI device offered **Import Device**, **Import Technology Objects** and **Compile PLC Software**, which apply to PLCs; it now offers its hardware configuration. The commands of a tree node are no longer in the Command Palette, where they could only answer *No … selected*, and the messages of the imports from the tree begin with the extension's name.
+
 ## [4.2.0] - 2026-10-17
 
 ### Fixed
@@ -28,7 +60,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 - **Reinitializing data blocks during a PLC download** — when a download (`tia_download_to_plc`) needs TIA Portal to reinitialize data blocks (their structure in the PLC differs from the project: the PLC is stopped and their values, retain data included, are reset to the start values), the new row **DB Reinit on Download** of the **Connection** view (setting `tiaImport.lmTools.reinitializeDataBlocks`) decides: **Never**, **Ask** (default) or **Always**. *Ask* shows a question in VS Code — also for MCP clients, never to the model — and downloads only after **Reinitialize and Download** (or **Keep Actual Values** where TIA Portal V21 offers it); *Never* downloads keeping the actual values where TIA Portal offers that and otherwise stops. A download that is not allowed to reinitialize loads nothing and says why. Before, such a download always failed. The download result lists what TIA Portal asked and the answers in the Output channel.
 - **`tiaImport.lmTools.allowOutputOutsideWorkspace`** — Copilot tools, the MCP server and the CLI bridge write exports (cross-references, project texts) only into the open workspace folders unless this setting allows other folders. Relative paths are resolved against the workspace folder.
 - **A failed connection says so** — when **Connect** cannot attach to TIA Portal (the Openness API of the selected version is not installed, the user is not in the *Siemens TIA Openness* group, …), a message shows the reason with **Open Help** (the troubleshooting section of the manual) and **Show Logs**; before, the error was only logged. A cancelled connection shows nothing, as before.
-- **License panel** — in English; with an active license it shows *Your license* (plan, validity, renewal) with **Extend license** and **Cancel subscription**. When buying you choose between a subscription that renews automatically and a one-time payment for one or twelve months; the order asks for the company and the country that go on the license. Every purchase comes with a 14-day money-back guarantee, and each license covers one computer ([Terms of Sale](TERMS.md)). The **CMsoft** item in the status bar replaces *TIA: PRO / FREE* and lists the licenses of all installed CMsoft extensions.
+- **License panel** — in English; with an active license it shows *Your license* (plan, validity, renewal) with **Extend license** and **Cancel subscription**. When buying you choose a monthly or yearly subscription that renews automatically; the order asks for the company and the country that go on the license. Every purchase comes with a 14-day money-back guarantee, and each license covers one computer ([Terms of Sale](TERMS.md)). The **CMsoft** item in the status bar replaces *TIA: PRO / FREE* and lists the licenses of all installed CMsoft extensions.
 
 ### Changed
 

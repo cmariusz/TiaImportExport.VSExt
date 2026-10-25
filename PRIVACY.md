@@ -2,7 +2,7 @@
 
 **Product:** CMsoft Import for TiaPortal (formerly TIA Portal Import) — Visual Studio Code extension (`MariuszCzyrnek.tia-import`)
 **Controller:** Mariusz Czyrnek CM-SOFT, trading as CMsoft, Kornatka 23, 32-410 Dobczyce, Poland, NIP PL 894-253-07-59 — `office@cmsoft.com.pl`
-**Version:** 1.3 — 2026-10-12 (applies to extension version 4.0.0 and later)
+**Version:** 1.4 — 2026-10-23 (applies to extension version 4.0.0 and later)
 
 ---
 
@@ -13,7 +13,7 @@
 | Does the extension collect telemetry or usage analytics? | **No.** |
 | Does it send your project files, PLC programs, tags or source code to the Licensor? | **No.** The extension itself keeps everything on your machine. |
 | Can project data reach an AI provider? | **Yes, if you connect an AI Assistant** (for example GitHub Copilot or an MCP client). The assistant receives the results of the tools it calls and forwards them to its model provider — see Section 2a. |
-| Does it phone home on start-up? | **No.** |
+| Does it phone home on start-up? | **Not for Free Features.** The extension contacts the license server at start-up only when a license is stored on the computer and it is the first start after an update of the extension or the license is close to or past its end date (license check), or when a purchase started in the license panel has not reached the computer yet (Section 3). |
 | What leaves your machine? | Only what you explicitly submit when activating a paid plan (Section 3), periodic license validation of paid plans (Section 3), data forwarded by AI Assistants you connect (Section 2a), and requests the Visual Studio Code Marketplace / Open VSX make to deliver updates (Section 5). |
 
 ## 2. Data processed locally only
@@ -72,7 +72,7 @@ provider acting as merchant of record:
 | Derived hardware identifier (a one-way hash of machine characteristics — never the raw serial numbers) | Binding each license to the one workstation it covers, preventing abuse | Art. 6(1)(b) and 6(1)(f) — legitimate interest in protecting against unlicensed use |
 | Product name, extension version, operating-system version, TIA Portal major versions installed | Issuing a compatible key, technical support | Art. 6(1)(b) |
 | License status, activation and deactivation events | Seat management, revocation | Art. 6(1)(b) |
-| License Key identifier, hardware identifier hash and extension version sent during periodic online validation (versions that use it) | Confirming that the license is still valid, enforcing the Seat limit | Art. 6(1)(b) and 6(1)(f) |
+| License key (license identifier, e-mail address, company, hardware identifier, validity) sent for license checks — once at the first start after an update of the extension, within 7 days before the end of the license and after it, when the license panel opens, on *Refresh license status*, once after you enter a key — and when you cancel a subscription | Confirming that the license is still valid, delivering renewed keys, showing the plan and renewal status, cancelling the subscription at your request, removing revoked licenses from the computer, enforcing the Seat limit | Art. 6(1)(b) and 6(1)(f) |
 
 **No project content is ever transmitted** — no block sources, tag tables, device
 names, project names or file contents.
