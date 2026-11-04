@@ -3,7 +3,7 @@
 🌐 **[www.cmsoft.com.pl](https://www.cmsoft.com.pl)** — all CMsoft extensions, the shop and contact
 
 <!-- VERSION-BADGE -->
-[![Version](https://img.shields.io/badge/version-4.5.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.6.0-blue)](CHANGELOG.md)
 <!-- /VERSION-BADGE -->
 
 [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.95.0-blue?logo=visualstudiocode)](https://code.visualstudio.com/)
@@ -33,7 +33,7 @@
 | Next import or export                                                                                                  | 15 minutes after the previous  | ✅ at once   |
 | Compile the PLC or HMI software (**Compile PLC Software**, **Compile HMI**), compile errors in the PROBLEMS panel       | ✅                             | ✅           |
 | Compile after export (Always / Ask), the import → compile loop `tia_fix_compile_errors`                               | ⛔                             | ✅           |
-| Hardware configuration — import from and export to TIA Portal (XML, AutomationML)                                      | ⛔                             | ✅           |
+| Hardware configuration — import from and export to TIA Portal (XML, AutomationML, network file)                        | ⛔                             | ✅           |
 | Software Units, HMI, project library types, languages and project texts                                                | ⛔                             | ✅           |
 | Cross-references, download to PLC                                                                                      | ⛔                             | ✅           |
 | Copilot Language Model tools (`tia_*`) and the `@tia` chat participant                                                 | ⛔                             | ✅           |
@@ -85,6 +85,7 @@ The block viewer and web preview generator were moved to the separate **[CMsoft 
 | **Export UDTs / Watch Tables** | Export data types and watch tables                                                                                                                                                                |
 | **Export Technology Objects**  | Export Technology Object XMLs back to TIA Portal (auto-detected by content) — objects are imported into the PLC's root*Technology objects* group                                               |
 | **Export HW Config**           | Export hardware configuration as XML or**CAx / AutomationML (`.aml`)** via `CaxProvider`                                                                                                |
+| **Export Network File**        | A **network file** (`*.network.json`) into TIA Portal: PROFINET devices with modules and I/O addresses, IP addresses, PROFINET names and numbers, topology and MRP roles - for networks a script generates in bulk. Checked, compared with the project, only the differences written in one transaction after you confirm the planned changes. **Import Network File** writes the network of the project into such a file. |
 | **Export HMI** (PRO)           | Write the HMI files back, like the export of blocks: **Check and Overwrite Differences** skips what TIA Portal already has (an unchanged WinCC Unified screen keeps its groups) or **Overwrite All**. WinCC Unified — changed screens replaced as a whole and created without groups, in the screen group of their folder; tag tables, alarms, logs, connections and runtime settings updated value by value (missing ones created); lists and script modules overwritten. Classic WinCC — every SimaticML file into the folder of its file. Empty folders become groups; after the export of a folder the deletion preview lists what the folder no longer has (Keep is the default). The command lists what it replaces, skips and creates before it writes |
 | **Bind SVGHMI Widget** (PRO)   | Place a dynamic SVG widget that **CMsoft Viewer for TiaPortal** generated from an S7-GRAPH sequence on a WinCC Unified screen (TIA Portal V18+) and bind its parameters to the PLC tags of its `<widget>.bindings.json` — screen, screen window, HMI tags and dynamizations in one step |
 | **Unified Export**             | One-click export of an entire device folder in dependency order (UDTs → Blocks → Tags → Watch Tables → Technology Objects → HW)                                                              |
@@ -110,8 +111,8 @@ The block viewer and web preview generator were moved to the separate **[CMsoft 
 The extension exposes **26 Language Model Tools** (prefix `tia_`) plus a `@tia` chat participant, so GitHub Copilot (and any other VS Code LM-tool consumer) can drive TIA Portal end-to-end without manual clicks:
 
 - **Connection / discovery** — `tia_connect`, `tia_disconnect`, `tia_list_projects`, `tia_select_project`, `tia_refresh`, `tia_list_devices`, `tia_list_blocks`
-- **Pull from TIA → workspace** — `tia_export_block`, `tia_export_device` (also the HMI software of a device: WinCC Unified screens, tag tables, alarms, logs, connections and runtime settings as JSON, lists and script modules; classic WinCC as SimaticML), `tia_export_project` (entire project), `tia_export_hw_config` (per-device or project-wide HW Config; honours `tiaImport.hwConfigFormat`)
-- **Push workspace → TIA** — `tia_import_file`, `tia_import_folder` (blocks, tags, UDTs, watch tables; the HMI files of WinCC Unified and classic WinCC), `tia_import_unit` (complete Software Unit), `tia_import_hw_config` (HW Config XML/AML — required for HW; `tia_import_file` does not handle HW)
+- **Pull from TIA → workspace** — `tia_export_block`, `tia_export_device` (also the HMI software of a device: WinCC Unified screens, tag tables, alarms, logs, connections and runtime settings as JSON, lists and script modules; classic WinCC as SimaticML), `tia_export_project` (entire project), `tia_export_hw_config` (per-device or project-wide HW Config; honours `tiaImport.hwConfigFormat`; `format: "network"` = one network file of the project)
+- **Push workspace → TIA** — `tia_import_file`, `tia_import_folder` (blocks, tags, UDTs, watch tables; the HMI files of WinCC Unified and classic WinCC), `tia_import_unit` (complete Software Unit), `tia_import_hw_config` (HW Config XML/AML and network files `*.network.json` — required for HW; `tia_import_file` does not handle HW)
 - **Languages & project texts** — `tia_get_project_languages` (language settings), `tia_export_project_texts` (project texts to xlsx for translation), `tia_import_project_texts` (re-import translated xlsx into the same project)
 - **Compile loop** — `tia_compile`, `tia_get_problems`, `tia_fix_compile_errors` (orchestrates import → compile → diagnostics until clean or `tiaImport.lmTools.maxFixIterations` is reached) — for PLC software and WinCC Unified HMI devices
 - **Download to PLC** — `tia_download_to_plc` (loads changed software / full program / hardware+software into the physical PLC; **disabled by default** — requires `tiaImport.lmTools.allowPlcDownload`)
@@ -414,6 +415,7 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 | `CMsoft Import for TiaPortal: Import All HMI Elements`                     | Import all HMI elements                                     |
 | `CMsoft Import for TiaPortal: Import HW Configuration`                     | Import full HW configuration                                |
 | `CMsoft Import for TiaPortal: Import Device HW Configuration`              | Import HW config for a single device                        |
+| `CMsoft Import for TiaPortal: Import Network File`                         | The PROFINET network of the project into a network file     |
 | `CMsoft Import for TiaPortal: Import Programs for All Devices in Category` | Import all devices in a category                            |
 | `CMsoft Import for TiaPortal: Import Languages & Project Texts`            | Import language settings + project texts (xlsx)             |
 
@@ -430,6 +432,7 @@ Controlled by `tiaImport.udtExportFormat` (applies to PLC data types):
 | `Export Project Texts to TIA Portal`      | Import a project texts xlsx into the TIA project   |
 | `Export to TiaPortal: HW Config XML`      | Export HW config (XML/AML)                         |
 | `Export to TiaPortal: HW Config Folder`   | Export HW config folder                            |
+| `Export to TIA Portal: Network File`      | Export a network file (`*.network.json`)           |
 | `Export to TIA - Program and HW`          | Unified export (program + HW config)               |
 | `Export to TIA - Program without HW`      | Unified export (program only, no HW)               |
 | `Export HMI to TIA Portal` | Write the HMI files of an HMI import to TIA Portal — WinCC Unified and classic WinCC (PRO) |
