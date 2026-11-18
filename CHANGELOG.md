@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.9.0] - 2026-11-18
+
+### Added
+
+- **CFC charts back to TIA Portal** — **Export CFC Charts to TIA Portal** on the **CFC Charts** node of a PLC or on chart files and folders in the Explorer, and the AI tool `tia_import_cfc_charts` (Copilot, MCP, CLI `import_cfc_charts`), put `<chart>.cfc.xml` files into the PLC: each chart becomes exactly like its file, a new chart is created in the chart group of its folder, unchanged charts are left alone. **Export to TIA Portal** on a folder takes its chart files too, after the blocks. The files are checked first (block types, pins, connections, partitions, with the line in PROBLEMS), and what TIA Portal needs is completed; afterwards the charts are read back and whatever TIA Portal did not take is listed per chart. The FBs and FCs of the charts must be in the PLC. Needs TIA Portal V21 with SIMATIC STEP 7 CFC; the PLC must be offline. FREE: 10 chart files per operation.
+
 ## [4.8.0] - 2026-11-18
 
 ### Added
