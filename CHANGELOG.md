@@ -6,15 +6,45 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
-## [4.10.0] - 2026-11-18
+## [4.11.0] - 2026-11-20
 
 ### Added
 
+- **Check before the export to TIA Portal** — **Export to TIA Portal** of files and folders (XML and block files, folders, the PLC program, a software unit, CFC charts) first checks the files, without TIA Portal: blocks, data types and S7 sources with the check of CMsoft Viewer for TiaPortal 2.5 or newer (when it is installed - its graphical preview shows the same findings as soon as a file opens), CFC charts with the rules of the CFC export. It never blocks an export: when TIA Portal would probably refuse files, one question names them with the first error and its line - **Export All**, **Export Only the N Files Without Errors**, or **Show Problems** / Cancel. A choice to export files with errors is not asked again while those files do not change. Every finding is in PROBLEMS on its line. Setting `tiaImport.export.checkBeforeExport`: `ask` (default), `summary` (findings only in the log and PROBLEMS) or `off`.
+- **The AI tools report the check** — the answers of `tia_import_file`, `tia_import_folder` and `tia_import_unit` (Copilot, MCP, CLI) carry the findings of the check before the export (`checkBeforeExport`), so an agent can correct its files; they never ask and never stop.
+
+### Changed
+
+- **CFC charts with errors in their files can be exported** — after the check before the export, **Export All** sends chart files with errors to TIA Portal too; what TIA Portal does not take is listed per chart after the export, as before. A chart that waits for a block type update in TIA Portal is still not exported: such an export once hung TIA Portal - update the block types first (*Charts > Chart sequence & extras > Block types > Update block(s)*).
+- **Check CFC Charts is no longer in the context menus** (Explorer, editor, the CFC Charts node): chart files are checked when they open in the preview of CMsoft Viewer for TiaPortal 2.5 or newer and before every export. The command stays in the Command Palette, and the AI tool `tia_check_cfc_charts` / CLI `check_cfc_charts` stay for agents.
+
+## [4.10.0] - 2026-11-20
+
+### Added
+
+- **CFC charts: block type update after a change of an FB or FC** — STEP 7 CFC keeps the old block type of an FB or FC the charts use until the block types are updated in TIA Portal, and TIA Portal Openness cannot do that. When an export to TIA Portal writes such a block, the extension now says so (not for a new FB: it has no block type yet) — a notification, a warning in PROBLEMS on the block's file, the answer of the AI tools — with the steps: *Charts > Chart sequence & extras > Block types > Update block(s)*. A compilation that reports the type update shows the same steps in PROBLEMS and in the answer of `tia_compile`.
 - **Check CFC Charts** — the new command (on the **CFC Charts** node of a PLC, on chart files and folders in the Explorer, in an open `.cfc.xml` file) and the AI tool `tia_check_cfc_charts` (Copilot, MCP, CLI `check_cfc_charts`) check chart files the way the export to TIA Portal does, without exporting and without changing them, so a chart you or an AI agent wrote can be corrected first. Errors and warnings go to PROBLEMS on their lines: elements and attributes TIA Portal would silently ignore (a typo), IDs used twice, unknown block types and pins, values that do not fit their pins, connections to blocks that do not exist, blocks outside the sheets. Connected to TIA Portal, the FBs and FCs in the PLC are checked too. Free, no limits.
 - **CFC chart files explained for AI agents** — **Prepare Workspace** adds `.github/instructions/tia-import-cfc.instructions.md`: the exact structure of a chart file with a complete example, the value formats, connections, sheets, nested charts and run order, and a checklist for agents. GitHub Copilot reads it for every `*.cfc.xml` file; `AGENTS.md` and `CLAUDE.md` point to it.
 
+### Changed
+
+- **Export to TIA Portal of a folder with CFC charts** — a changed chart that uses an FB or FC the same export wrote is no longer exported: it would keep the old block type. Update the block types in TIA Portal, then export the chart again. Unchanged charts, and a new FB with its new chart, go in as before.
+- **Export of a changed CFC chart while a block type update is pending** — when the compile reports a block type of the chart as not up-to-date, the chart is not exported (it would keep the old type). Update the block types in TIA Portal, then export it again.
+- **`tia_import_folder` skips identical files** — like *Check and Overwrite Differences* of the commands (`compareBeforeImport`, default true): an unchanged block is no longer written again, so its charts need no block type update.
+
 ### Fixed
 
+- **Run sequence of CFC charts** — an export of several charts to TIA Portal could change the order of the charts in their task. TIA Portal's order is kept; a changed order is reported.
+- **New CFC charts ran first** — TIA Portal puts a chart created by an export at the start of the run sequence of its task, before the charts there. The export now says so on the chart, so you can move it in *Chart sequence & extras*.
+- **Messages of TIA Portal about a CFC chart export as a whole** — a changed run sequence or a refused import was missing in the output and in the answer of the AI tools; it is shown now (`issues`).
+- **CFC charts refused with "… is not compiled and does not compile"** — when the export compiled an FB of the charts and TIA Portal reported errors of other objects only (charts waiting for a block type update), the charts were not exported although the FB was compiled. The FB itself decides now.
+- **CFC chart with a block without a partition** — *Check CFC Charts* called it valid and the export to TIA Portal failed. The block now goes on the chart's first partition, with a warning.
+- **CFC chart export that exported nothing** — the AI tools answered without the reason; the reason of every chart is in the answer now.
+- **CFC chart file that is no valid XML** — the error was partly in the language of Windows; it is in English now, with line and position.
+- **CFC charts of an S7-1200** — the export said only that TIA Portal wrote no file; it now says that STEP 7 CFC does not support every CPU.
+- **Compile-and-fix loop** — `tia_fix_compile_errors` also returned problems of other files (a chart check); it returns those of the compilation and of the files it wrote.
+- **FREE plan wait** — the license dialog of *Import CFC Charts* did not say how long to wait; it names the minutes now.
+- **Disconnect from a TIA Portal the extension opened** — TIA Portal V21 stays open with the project; the extension now says so, so you can close it when you are done.
 - **Export CFC Charts to TIA Portal on folders** — the command was missing from the Explorer menu of the `Charts` folder and its chart groups; it is there now, next to **Check CFC Charts**.
 - **Export CFC Charts to TIA Portal ended with an error** — when a chart had a warning or an error, the export ran but then showed *Cannot read properties of undefined (reading 'logLevel')* instead of its summary, and the log stopped at that chart.
 - **CFC chart files reported as wrong** — the export to TIA Portal rejected valid connections to blocks whose name contains `/` (written in quotes), to the inputs and outputs of nested charts and to the extensible outputs of instructions such as TERMINAL. A symbolic reference whose target is missing is now a warning: TIA Portal keeps it open.
