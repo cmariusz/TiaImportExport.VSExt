@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 
 ---
 
+## [4.12.0] - 2026-11-21
+
+### Fixed
+
+- **WinCC Unified screens written from files: selecting an item no longer closes TIA Portal** — on a screen that **Export HMI to TIA Portal** or the AI tools (`tia_import_file`, `tia_import_folder`) created or replaced, TIA Portal V21 put the items on no layer: the *Layers* pane listed none of them, and selecting one closed TIA Portal. The items are now on the first layer (*Layer_0*). A screen written by an earlier version keeps the problem until it is written again: export its file with **Overwrite All** (the AI tools: `compareBeforeImport: false`), because a compare skips a screen whose content did not change — or delete the screen in TIA Portal first.
+- **Values a property does not have** — the warning for a value in a screen or HMI file that the property does not have now lists the values it accepts (for example *'TextOnly' is not a value of HmiContentMode - use one of: GraphicOrText, GraphicAndText, Text, Graphic*), so you or an AI agent can correct the file. A number that is none of the values is reported the same way.
+- **Export to TIA Portal from the Command Palette checks the files too** — files and folders picked in the file dialog of an export command (for example **Export Blocks to TIA** run from the Command Palette) went to TIA Portal without the check before the export; they now get the same question as a selection in the Explorer.
+- **`tia_connect` to another TIA Portal instance** — while connected, `tia_connect` with the `processId` of another instance answered "connected" for the instance already connected, with its project; with the `projectName` of a project open in another instance it said the project was not found. It now switches to that instance. A process or project that no running instance has is an error that lists the running instances, and the connection stays.
+
 ## [4.11.0] - 2026-11-20
 
 ### Added
